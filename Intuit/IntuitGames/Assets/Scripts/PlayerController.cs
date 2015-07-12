@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 	public float rotationDamping;
 	public float JumpForce;
 	public float dashCooldown;
+	public float heavyForce;
 
 	private string horizInput;
 	private string vertInput;
@@ -22,13 +23,16 @@ public class PlayerController : MonoBehaviour {
 	private bool grounded;
 	private bool jump;
 	private bool hasDashed;
+	private bool heavy;
+	private bool heavyForced;
+
+	private float defaultMass;
 
 	private float dashCooldownCounter;
 
 	private Rigidbody rb;
 	private Vector3 movement = Vector3.zero;
 	private Vector3 vLookPos = Vector3.forward;
-	private RaycastHit hit;
 
 //	// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
 //	grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));  
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour {
 
 		dashCooldownCounter = dashCooldown;
 
+		defaultMass = rb.mass;
 		//set our Inputs depending on what player we are
 		if(IsPlayer1) {
 			horizInput = "Horizontal_P1";
@@ -65,9 +70,9 @@ public class PlayerController : MonoBehaviour {
 
 	void Update () {
 		int layermask = 1 << 8;
-		grounded =  Physics.Raycast(transform.position, -transform.up, 1.5f, layermask);
+		grounded =  Physics.Raycast(transform.position, -transform.up, 1.1f, layermask);
 
-		if (Input.GetButton(jumpInput) && grounded) {
+		if (Input.GetButtonDown(jumpInput) && grounded) {
 			jump = true;
 		}
 
@@ -79,6 +84,13 @@ public class PlayerController : MonoBehaviour {
 			else {
 				dashCooldownCounter = dashCooldown;
 				hasDashed = false;
+			}
+		}
+
+		if(Input.GetButtonDown(heavyInput)) {
+			heavy = !heavy;
+			if(heavy) { 
+				heavyForced = true;
 			}
 		}
 	}
@@ -109,6 +121,27 @@ public class PlayerController : MonoBehaviour {
 			rb.AddForce(transform.up * JumpForce);
 			jump = false;
 		}
+
+		
+		if(heavyForced) {
+			rb.AddForce(-transform.up * heavyForce);
+			heavyForced = false;
+		}
+
+		if(heavy) {
+			if(rb.mass != defaultMass * 20f) {
+				rb.mass = defaultMass * 20f;
+				Debug.Log("heavy");
+			}
+		}
+
+		if(!heavy) {
+			if(rb.mass != defaultMass) {
+				rb.mass = defaultMass;
+			}
+
+		}
+
 	
 	}
 }
