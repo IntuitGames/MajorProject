@@ -33,13 +33,7 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	private Vector3 movement = Vector3.zero;
 	private Vector3 vLookPos = Vector3.forward;
-
-//	// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
-//	grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));  
-//	
-//	// If the jump button is pressed and the player is grounded then the player should jump.
-//	if(Input.GetButtonDown("Jump") && grounded)
-//		jump = true;
+	private GameObject parent;
 
 	// Use this for initialization
 	void Start () {
