@@ -11,13 +11,13 @@ using System.Linq;
 public class SpringJointTether : MonoBehaviour
 {
     // Component references
-    public Transform ObjectA;
-    public Transform ObjectB;
+    public Transform objectA;
+    public Transform objectB;
 
     private void Awake()
     {
         // Check for reference validity
-        if(!ObjectA || !ObjectB)
+        if(!objectA || !objectB)
         {
             Debug.LogWarning("Both objects must be specified.");
             return;
@@ -26,19 +26,19 @@ public class SpringJointTether : MonoBehaviour
 
     private void Update()
     {
-        if (!ObjectA || !ObjectB)
+        if (!objectA || !objectB)
             return;
 
         // Determine the scale of the tether
-        float DistanceBetweenCharacters = Vector3.Distance(ObjectA.position, ObjectB.position);
+        float DistanceBetweenCharacters = Vector3.Distance(objectA.position, objectB.position);
         Vector3 ScaleVec = new Vector3(transform.localScale.x, transform.localScale.y, DistanceBetweenCharacters);
         transform.localScale = ScaleVec;
 
         // Determine the position of the tether (half-way between the characters)
-        Vector3 PositionVec = ObjectB.position + (ObjectA.position - ObjectB.position) * 0.5f;
+        Vector3 PositionVec = objectB.position + (objectA.position - objectB.position) * 0.5f;
         transform.localPosition = PositionVec;
 
         // Determine the rotation
-        transform.localRotation = Quaternion.LookRotation(ObjectA.position - ObjectB.position);
+        transform.localRotation = Quaternion.LookRotation(objectA.position - objectB.position);
     }
 }

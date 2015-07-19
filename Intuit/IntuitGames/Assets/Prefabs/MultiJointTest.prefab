@@ -202,11 +202,11 @@ GameObject:
   - 4: {fileID: 433366}
   m_Layer: 0
   m_Name: MultiJointTest
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &403842
 Transform:
   m_ObjectHideFlags: 1
@@ -306,7 +306,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 183724}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 1, z: 0}
+  m_LocalPosition: {x: -2.07999992, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 473700}
@@ -892,11 +892,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 012a594455c83374cb1ab38461286b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPlayer1: 0
-  Speed: 1000
-  DashForce: 1000
+  isPlayer1: 0
+  speed: 0
+  dashForce: 0
   rotationDamping: 20
-  JumpForce: 60
+  jumpForce: 0
   dashCooldown: 5
   heavyForce: 0
 --- !u!114 &11473100
@@ -910,11 +910,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 012a594455c83374cb1ab38461286b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPlayer1: 1
-  Speed: 1000
-  DashForce: 1000
+  isPlayer1: 0
+  speed: 0
+  dashForce: 0
   rotationDamping: 20
-  JumpForce: 60
+  jumpForce: 0
   dashCooldown: 5
   heavyForce: 0
 --- !u!136 &13659506

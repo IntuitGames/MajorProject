@@ -10,27 +10,27 @@ using System.Linq;
 [RequireComponent(typeof(Camera))]
 public class SmoothCameraFollow : MonoBehaviour
 {
-    public Transform Target;
-    public float Distance = 5;
-    public float SmoothTime = 0.3f;
-    public bool OverrideOffset = false;
-    public Vector3 OverridenOffsetDirection = new Vector3(0, 0.5f, -1);
+    public Transform target;
+    public float distance = 5;
+    public float smoothTime = 0.3f;
+    public bool overrideOffset = false;
+    public Vector3 overridenOffsetDirection = new Vector3(0, 0.5f, -1);
 
-    private Vector3 NewOffset;
-    private Vector3 InitialOffsetDirection;
-    private Vector3 Velocity = Vector3.zero;
+    private Vector3 newOffset;
+    private Vector3 initialOffsetDirection;
+    private Vector3 velocity = Vector3.zero;
 
     void Awake()
     {
-        InitialOffsetDirection = (Target.transform.position - transform.position).normalized;
+        initialOffsetDirection = (target.transform.position - transform.position).normalized;
     }
 
     void Update()
     {
-        NewOffset = OverrideOffset ?
-            Target.transform.position + (OverridenOffsetDirection.normalized * Distance) :
-            Target.transform.position + (-InitialOffsetDirection * Distance);
+        newOffset = overrideOffset ?
+            target.transform.position + (overridenOffsetDirection.normalized * distance) :
+            target.transform.position + (-initialOffsetDirection * distance);
 
-        transform.position = Vector3.SmoothDamp(transform.position, NewOffset, ref Velocity, SmoothTime);
+        transform.position = Vector3.SmoothDamp(transform.position, newOffset, ref velocity, smoothTime);
     }
 }

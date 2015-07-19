@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
 	//as we only have 2 players, I figured a bool would be best to determine what controls the character will respond to
-	public bool IsPlayer1;
+	public bool isPlayer1;
 
-	public float Speed;
-	public float DashForce;
+	public float speed;
+	public float dashForce;
 	public float rotationDamping;
-	public float JumpForce;
+	public float jumpForce;
 	public float dashCooldown;
 	public float heavyForce;
 
@@ -43,7 +44,7 @@ public class PlayerController : MonoBehaviour {
 
 		defaultMass = rb.mass;
 		//set our Inputs depending on what player we are
-		if(IsPlayer1) {
+		if(isPlayer1) {
 			horizInput = "Horizontal_P1";
 			vertInput = "Vertical_P1";
 			jumpInput = "Jump_P1";
@@ -95,7 +96,7 @@ public class PlayerController : MonoBehaviour {
 		
 		movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 		
-		rb.AddForce(movement*Speed*Time.deltaTime);
+		rb.AddForce(movement*speed*Time.deltaTime);
 
 		if(movement != Vector3.zero) {
 			vLookPos = movement;		
@@ -107,12 +108,12 @@ public class PlayerController : MonoBehaviour {
 		                                      Time.deltaTime * rotationDamping);	
 
 		if(Input.GetButton(dashInput) && !hasDashed) {
-			rb.AddForce(transform.forward * DashForce);
+			rb.AddForce(transform.forward * dashForce);
 			hasDashed = true;
 		}
 
 		if(jump) {
-			rb.AddForce(transform.up * JumpForce);
+			rb.AddForce(transform.up * jumpForce);
 			jump = false;
 		}
 
@@ -135,7 +136,5 @@ public class PlayerController : MonoBehaviour {
 			}
 
 		}
-
-	
 	}
 }
