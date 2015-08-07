@@ -1,10 +1,10 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class PlayerController : MonoBehaviour{
+using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class Character : MonoBehaviour{
     // Component references
     [SerializeField, HideInInspector]
     private CharacterController characterController;
 
-    [SerializeField, HideInInspector]
+    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), ReadOnly(EditableInEditor = true)]
     private bool _isPlayerOne = true;    public bool isPlayerOne
     {
         get

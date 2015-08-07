@@ -1,5 +1,6 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
 using UnityEditor;
+using System.Reflection;
 
 /// <summary>
 /// Property is grayed out and is only shown NOT editable.
@@ -27,5 +28,22 @@ public class ReadOnlyDrawer : PropertyDrawer
             EditorGUI.PropertyField(position, property, label, true);
             GUI.enabled = true;
         }
+    }
+
+    /// <summary>
+    /// From a field info determine if it is read only.
+    /// </summary>
+    /// <param name="fieldMember"></param>
+    /// <returns></returns>
+    public static bool IsReadOnly(FieldInfo fieldMember)
+    {
+        ReadOnlyAttribute ROAtt = (ReadOnlyAttribute)fieldMember.GetCustomAttributes(typeof(ReadOnlyAttribute), false).FirstOrDefault();
+        if (ROAtt == null)
+            return false;
+        else
+            if (Application.isPlaying)
+                return !ROAtt.EditableWhilePlaying;
+            else
+                return !ROAtt.EditableInEditor;
     }
 }
