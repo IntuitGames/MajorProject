@@ -9,6 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 475688}
   - 114: {fileID: 11463420}
+  - 114: {fileID: 11409528}
+  - 114: {fileID: 11492306}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: GameController
@@ -28,6 +30,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11409528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7fd28b46b7920d4d8aa7ff69f1d0036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mediumJumpThreshold: .100000001
+  highJumpThreshold: .25
 --- !u!114 &11463420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37,6 +52,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b19b8770aee750549a6075bf485386ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11492306
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8341a98acf233bd498e21a9944c096a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000

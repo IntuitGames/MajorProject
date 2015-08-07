@@ -3,7 +3,7 @@
     [SerializeField, HideInInspector]
     private CharacterController characterController;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private bool _isPlayerOne = true;    public bool isPlayerOne
     {
         get
@@ -22,7 +22,12 @@
 
     public Vector3 movement;
     public float moveSpeed = 6;
-    public float jumpSpeed = 25;
+    [Range(0, 50)]
+    public float lowJumpPower = 10;
+    [Range(0, 50)]
+    public float mediumJumpPower = 17.5f;
+    [Range(0, 50)]
+    public float hightJumpPower = 25;
     public float maxVelocity = 50;
 
     // How long has this character been airborne for?
@@ -96,10 +101,10 @@
             movement.z += moveSpeed * forward;
     }
 
-    private void Jump()
+    private void Jump(int jumpType) // 1 = low, 2 = med, 3 = high
     {
         if (!isAirborne)
-            movement.y += jumpSpeed;
+            movement.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : lowJumpPower;
     }
 
     private void Dash()

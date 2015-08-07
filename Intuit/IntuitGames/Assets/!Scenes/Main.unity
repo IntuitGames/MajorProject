@@ -121,7 +121,9 @@ MonoBehaviour:
   _isPlayerOne: 0
   movement: {x: 0, y: 0, z: 0}
   moveSpeed: 6
-  jumpSpeed: 15
+  lowJumpPower: 10
+  mediumJumpPower: 17.5
+  hightJumpPower: 25
   maxVelocity: 50
 --- !u!143 &54659339
 CharacterController:
@@ -290,7 +292,9 @@ MonoBehaviour:
   _isPlayerOne: 1
   movement: {x: 0, y: 0, z: 0}
   moveSpeed: 6
-  jumpSpeed: 15
+  lowJumpPower: 10
+  mediumJumpPower: 17.5
+  hightJumpPower: 25
   maxVelocity: 50
 --- !u!143 &100774026
 CharacterController:
