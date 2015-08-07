@@ -1,140 +1,140 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;[RequireComponent(typeof(CharacterController))]public class PlayerController : MonoBehaviour{
+    // Component references
+    [SerializeField, HideInInspector]
+    private CharacterController characterController;
 
-public class PlayerController : MonoBehaviour
-{
+    [SerializeField]
+    private bool _isPlayerOne = true;    public bool isPlayerOne
+    {
+        get
+        {
+            return _isPlayerOne;
+        }
+        set
+        {
+            if(value != isPlayerOne)
+            {
+                _isPlayerOne = value;
+                SetupInput();
+            }
+        }
+    }
 
-	//as we only have 2 players, I figured a bool would be best to determine what controls the character will respond to
-	public bool isPlayer1;
+    public Vector3 movement;
+    public Vector3 velocity;
+    public float moveSpeed = 6;
+    public float jumpSpeed = 25;
+    public float maxVelocity = 50;
 
-	public float speed;
-	public float dashForce;
-	public float rotationDamping;
-	public float jumpForce;
-	public float dashCooldown;
-	public float heavyForce;
+    // How long has this character been airborne for?
+    private float airTime = 0;
 
-	private string horizInput;
-	private string vertInput;
-	private string jumpInput;
-	private string dashInput;
-	private string heavyInput;
-	private string pauseInput;
+    private bool isAirborne
+    {
+        get
+        {
+            if (characterController.isGrounded)
+                return false;
+            else
+                return !Physics.Raycast(transform.position, -transform.up, (characterController.height / 2) + 0.1f);
+        }
+    }
+    void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+        SetupInput();
+    }
 
-	private bool grounded;
-	private bool jump;
-	private bool hasDashed;
-	private bool heavy;
-	private bool heavyForced;
+    void LateUpdate()
+    {
+        // Apply gravity if airborne
+        if (isAirborne)
+        {
+            airTime += Time.deltaTime;
+            movement.y += Physics.gravity.y * airTime;
+        }
+        else
+            airTime = 0;
 
-	private float defaultMass;
+        // Clamp movement
+        movement = new Vector3(Mathf.Clamp(movement.x, -maxVelocity, maxVelocity),
+            Mathf.Clamp(movement.y, -maxVelocity, maxVelocity),
+            Mathf.Clamp(movement.z, -maxVelocity, maxVelocity));
 
-	private float dashCooldownCounter;
+        // Apply movement
+        CollisionFlags colFlags = characterController.Move(movement * Time.deltaTime);
 
-	private Rigidbody rb;
-	private Vector3 movement = Vector3.zero;
-	private Vector3 vLookPos = Vector3.forward;
-	private GameObject parent;
+        // Reset movement vector
+        //movement = new Vector3(0, movement.y, 0);
+        movement = Vector3.SmoothDamp(movement, Vector3.zero, ref velocity, 0.1f);
+    }
 
-	// Use this for initialization
-	void Start () {
-		rb = GetComponent<Rigidbody>();
+    #region Input
 
-		dashCooldownCounter = dashCooldown;
+    private void SetupInput()
+    {
+        GameManager.inputManager.pause += this.Pause;
+        GameManager.inputManager.unpause += this.Pause;
 
-		defaultMass = rb.mass;
-		//set our Inputs depending on what player we are
-		if(isPlayer1) {
-			horizInput = "Horizontal_P1";
-			vertInput = "Vertical_P1";
-			jumpInput = "Jump_P1";
-			dashInput = "Dash_P1";
-			heavyInput = "Heavy_P1";
-			pauseInput = "Submit_P1";
-		}
-		else {
-			horizInput = "Horizontal_P2";
-			vertInput = "Vertical_P2";
-			jumpInput = "Jump_P2";
-			dashInput = "Dash_P2";
-			heavyInput = "Heavy_P2";
-			pauseInput = "Submit_P2";
-		}
+        if (isPlayerOne)
+        {
+            // Subscribe to player 1 events
+            GameManager.inputManager.movementP1 += this.Movement;
+            GameManager.inputManager.jumpP1 += this.Jump;
+            GameManager.inputManager.dashP1 += this.Dash;
+            GameManager.inputManager.heavyP1 += this.Heavy;
 
-	}
+            // Unsubscribe from player 2 events
+            GameManager.inputManager.movementP2 -= this.Movement;
+            GameManager.inputManager.jumpP2 -= this.Jump;
+            GameManager.inputManager.dashP2 -= this.Dash;
+            GameManager.inputManager.heavyP2 -= this.Heavy;
+        }
+        else
+        {
+            // Subscribe to player 2 events
+            GameManager.inputManager.movementP2 += this.Movement;
+            GameManager.inputManager.jumpP2 += this.Jump;
+            GameManager.inputManager.dashP2 += this.Dash;
+            GameManager.inputManager.heavyP2 += this.Heavy;
 
-	void Update () {
-		int layermask = 1 << 8;
-		grounded =  Physics.Raycast(transform.position, -transform.up, 1.1f, layermask);
+            // Unsubscribe from player 1 events
+            GameManager.inputManager.movementP1 -= this.Movement;
+            GameManager.inputManager.jumpP1 -= this.Jump;
+            GameManager.inputManager.dashP1 -= this.Dash;
+            GameManager.inputManager.heavyP1 -= this.Heavy;
+        }
+    }
 
-		if (Input.GetButtonDown(jumpInput) && grounded) {
-			jump = true;
-		}
+    private void Movement(float forward, float right)
+    {
+        //movement += new Vector3(moveSpeed * right, 0, moveSpeed * forward);
+        if(Mathf.Abs(movement.x) < moveSpeed)
+            movement.x += moveSpeed * right;
+        if (Mathf.Abs(movement.z) < moveSpeed)
+            movement.z += moveSpeed * forward;
+    }
 
-		if(hasDashed) {
-			if (dashCooldownCounter > 0f) {
-				dashCooldownCounter -= Time.deltaTime;
-			}
+    private void Jump()
+    {
+        if (!isAirborne)
+            movement.y += jumpSpeed;
+    }
 
-			else {
-				dashCooldownCounter = dashCooldown;
-				hasDashed = false;
-			}
-		}
+    private void Dash()
+    {
+        Debug.Log((isPlayerOne ? "Player 1 " : "Player 2 ") + "dash.");
+    }
 
-		if(Input.GetButtonDown(heavyInput)) {
-			heavy = !heavy;
-			if(heavy) { 
-				heavyForced = true;
-			}
-		}
-	}
+    private void Heavy()
+    {
+        Debug.Log((isPlayerOne ? "Player 1 " : "Player 2 ") + "heavy.");
+    }
 
-	void FixedUpdate () {
-		float moveHorizontal = Input.GetAxis (horizInput);
-		float moveVertical = Input.GetAxis (vertInput);
-		
-		movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		
-		rb.AddForce(movement*speed*Time.deltaTime);
+    private void Pause()
+    {
+        Debug.Log((isPlayerOne ? "Player 1 " : "Player 2 ") + "pause.");
+    }
 
-		if(movement != Vector3.zero) {
-			vLookPos = movement;		
-		}
-
-		//Make sure the character is always looking in the direction of the player's movement
-		transform.rotation = Quaternion.Slerp(transform.rotation, 
-		                                      Quaternion.LookRotation(vLookPos),
-		                                      Time.deltaTime * rotationDamping);	
-
-		if(Input.GetButton(dashInput) && !hasDashed) {
-			rb.AddForce(transform.forward * dashForce);
-			hasDashed = true;
-		}
-
-		if(jump) {
-			rb.AddForce(transform.up * jumpForce);
-			jump = false;
-		}
-
-		
-		if(heavyForced) {
-			rb.AddForce(-transform.up * heavyForce);
-			heavyForced = false;
-		}
-
-		if(heavy) {
-			if(rb.mass != defaultMass * 20f) {
-				rb.mass = defaultMass * 20f;
-				Debug.Log("heavy");
-			}
-		}
-
-		if(!heavy) {
-			if(rb.mass != defaultMass) {
-				rb.mass = defaultMass;
-			}
-
-		}
-	}
-}
+    #endregion
+}

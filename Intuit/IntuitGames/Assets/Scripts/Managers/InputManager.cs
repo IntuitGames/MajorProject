@@ -23,6 +23,8 @@ public class InputManager : Manager
     public event Action<float> forwardP2 = delegate { };
     public event Action<float> rightP1 = delegate { };
     public event Action<float> rightP2 = delegate { };
+    public event Action<float, float> movementP1 = delegate { };
+    public event Action<float, float> movementP2 = delegate { };
     public event Action jumpP1 = delegate { };
     public event Action jumpP2 = delegate { };
     public event Action dashP1 = delegate { };
@@ -57,6 +59,8 @@ public class InputManager : Manager
         forwardP2(Input.GetAxis(forwardStr + player2Str));
         rightP1(Input.GetAxis(rightStr + player1Str));
         rightP2(Input.GetAxis(rightStr + player2Str));
+        movementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
+        movementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
 
         // Raise action button event
         if (Input.GetButtonDown(jumpStr + player1Str))
