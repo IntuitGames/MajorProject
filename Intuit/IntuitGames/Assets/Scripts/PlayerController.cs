@@ -28,6 +28,8 @@
     public float mediumJumpPower = 17.5f;
     [Range(0, 50)]
     public float hightJumpPower = 25;
+    [Range(0, 25)]
+    public float gravity = 4;
     public float maxVelocity = 50;
 
     // How long has this character been airborne for?
@@ -128,7 +130,7 @@
         if (isAirborne)
         {
             airTime += Time.deltaTime;
-            movement.y += Physics.gravity.y * airTime;
+            movement.y += -gravity * airTime;
         }
         else
         {

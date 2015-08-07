@@ -80,7 +80,7 @@ public class InputManager : Manager
         if (Input.GetButtonDown(jumpStr + player1Str))
             player1JumpDown = true;
         if (Input.GetButtonDown(jumpStr + player2Str))
-            player1JumpDown = true;
+            player2JumpDown = true;
 
         // Perform jump when releasing the jump button
         if (Input.GetButtonUp(jumpStr + player1Str))
@@ -104,7 +104,7 @@ public class InputManager : Manager
             else if (player2JumpHold > 0)
                 jumpP2(1);
 
-            player1JumpDown = false;
+            player2JumpDown = false;
         }
 
         if (player1JumpDown)
