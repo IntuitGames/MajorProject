@@ -19,6 +19,8 @@ public class InputManager : Manager
     private const string unpauseStr = "Submit_";
 
     // Events
+    public event Action preUpdate = delegate { };
+    public event Action postUpdate = delegate { };
     public event Action<float> forwardP1 = delegate { };
     public event Action<float> forwardP2 = delegate { };
     public event Action<float> rightP1 = delegate { };
@@ -36,6 +38,8 @@ public class InputManager : Manager
 
     void Update()
     {
+        preUpdate();
+
         // Only check inputs for certain game modes
         switch (GameManager.modeManager.currentGameMode)
         {
@@ -50,6 +54,8 @@ public class InputManager : Manager
             default:
                 break;
         }
+
+        postUpdate();
     }
 
     private void HandleInGameEvents()

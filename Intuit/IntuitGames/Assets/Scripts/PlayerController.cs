@@ -21,7 +21,6 @@
     }
 
     public Vector3 movement;
-    public Vector3 velocity;
     public float moveSpeed = 6;
     public float jumpSpeed = 25;
     public float maxVelocity = 50;
@@ -41,32 +40,14 @@
     }
     void Awake()
     {
+        // Find component references
         characterController = GetComponent<CharacterController>();
+
+        // Subscribe to an update that is guaranteed to happen after inputs
+        GameManager.inputManager.postUpdate += PostInputUpdate;
+
+        // Setup up character input depending on whether this is character 1 or 2
         SetupInput();
-    }
-
-    void LateUpdate()
-    {
-        // Apply gravity if airborne
-        if (isAirborne)
-        {
-            airTime += Time.deltaTime;
-            movement.y += Physics.gravity.y * airTime;
-        }
-        else
-            airTime = 0;
-
-        // Clamp movement
-        movement = new Vector3(Mathf.Clamp(movement.x, -maxVelocity, maxVelocity),
-            Mathf.Clamp(movement.y, -maxVelocity, maxVelocity),
-            Mathf.Clamp(movement.z, -maxVelocity, maxVelocity));
-
-        // Apply movement
-        CollisionFlags colFlags = characterController.Move(movement * Time.deltaTime);
-
-        // Reset movement vector
-        //movement = new Vector3(0, movement.y, 0);
-        movement = Vector3.SmoothDamp(movement, Vector3.zero, ref velocity, 0.1f);
     }
 
     #region Input
@@ -134,6 +115,32 @@
     private void Pause()
     {
         Debug.Log((isPlayerOne ? "Player 1 " : "Player 2 ") + "pause.");
+    }
+
+    private void PostInputUpdate()
+    {
+        // Apply gravity if airborne
+        if (isAirborne)
+        {
+            airTime += Time.deltaTime;
+            movement.y += Physics.gravity.y * airTime;
+        }
+        else
+        {
+            movement.y = Mathf.Max(0, movement.y);
+            airTime = 0;
+        }
+
+        // Clamp movement velocity
+        movement = new Vector3(Mathf.Clamp(movement.x, -maxVelocity, maxVelocity),
+            Mathf.Clamp(movement.y, -maxVelocity, maxVelocity),
+            Mathf.Clamp(movement.z, -maxVelocity, maxVelocity));
+
+        // Apply movement
+        characterController.Move(movement * Time.deltaTime);
+
+        // Reset movement vector
+        movement = new Vector3(0, movement.y, 0);
     }
 
     #endregion
