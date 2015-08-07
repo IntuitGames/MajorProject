@@ -206,8 +206,8 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// </summary>
         /// <param name="Source"></param>
         /// <returns></returns>
-        public static Vector3 IgnoreY3(this Vector3 Source)
+        public static Vector3 IgnoreY3(this Vector3 Source, float defaultY = 0)
         {
-            return new Vector3(Source.x, 0, Source.z);
+            return new Vector3(Source.x, defaultY, Source.z);
         }
     }}

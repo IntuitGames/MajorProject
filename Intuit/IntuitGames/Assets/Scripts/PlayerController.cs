@@ -1,4 +1,5 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;[RequireComponent(typeof(CharacterController))]public class PlayerController : MonoBehaviour{
+﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class PlayerController : MonoBehaviour{
     // Component references
     [SerializeField, HideInInspector]
     private CharacterController characterController;
@@ -144,6 +145,7 @@
             Mathf.Clamp(movement.z, -maxVelocity, maxVelocity));
 
         // Apply movement
+        transform.LookAt((transform.position + movement).IgnoreY3(transform.position.y));
         characterController.Move(movement * Time.deltaTime);
 
         // Reset movement vector
