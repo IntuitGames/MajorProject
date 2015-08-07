@@ -16,12 +16,15 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             if(value != isPlayerOne)
             {
                 _isPlayerOne = value;
-                SetupInput();
+                if(Application.isPlaying) SetupInput();
             }
         }
     }
 
+    [ReadOnly]
     public Vector3 movement;
+    [Range(0, 25)]
+    public float gravity = 4;
     public float moveSpeed = 6;
     [Range(0, 50)]
     public float lowJumpPower = 10;
@@ -29,8 +32,6 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public float mediumJumpPower = 17.5f;
     [Range(0, 50)]
     public float hightJumpPower = 25;
-    [Range(0, 25)]
-    public float gravity = 4;
     public float maxVelocity = 50;
 
     // How long has this character been airborne for?
