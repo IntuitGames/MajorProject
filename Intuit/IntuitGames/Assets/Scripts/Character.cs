@@ -70,6 +70,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Range(0, 25), Conditional("bounceType", "Set Value")]
     public float bounceJumpPower = 15;
     public bool bounceWhileHeavy = true;
+    public bool bounceOffGround = true;
+    [Tooltip("How fast the player must be going in order to bounce from the ground.")]
+    public float bounceGroundThreshold = 10;
+    [Range(0, 25)]
+    public float bounceGroundPower = 5;
 
     // PRIVATES
     private float airTime = 0;
@@ -187,6 +192,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Handle bounce
         if (bounceType != "Off" && bounceWhileHeavy || bounceType != "Off" && !isHeavy)
         {
+            // Bounce off a bouncy object
             Bouncy bouncyObj = hit.gameObject.GetComponent<Bouncy>();
             if(bouncyObj && bouncyObj.isBouncy)
                 if (bounceType == "Velocity Based")
@@ -198,6 +204,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
                         targetVelocity = hit.normal * bounceJumpPower * bouncyObj.bounceMultiplier;
                 else
                     Debug.LogWarning("Invalid bounce type specified!");
+            // Bounce of any object tagged ground if traveling fast enough
+            else if(bounceOffGround && hit.gameObject.tag == "Ground" && Mathf.Abs(hitVelocity.y) > bounceGroundThreshold && hit.normal.y > 0)
+                targetVelocity = hit.normal * bounceGroundPower;
         }
     }
 }

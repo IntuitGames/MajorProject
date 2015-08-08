@@ -165,6 +165,10 @@ MonoBehaviour:
   bounceMomentumLoss: .5
   bouncePower: 15
   bounceJumpPower: 20
+  bounceWhileHeavy: 1
+  bounceOffGround: 1
+  bounceGroundThreshold: 30
+  bounceGroundPower: 5
 --- !u!143 &14371390
 CharacterController:
   m_ObjectHideFlags: 1
