@@ -76,7 +76,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Range(0, 25)]
     public float bounceGroundPower = 5;
 
-    // PRIVATES
+    // PRIVATES & STATICS
+    public static List<Character> characterList = new List<Character>();
+
     private float airTime = 0;
     private const float airborneRadiusCheck = 0.4f;
     private const float airborneOffset = 0.1f;
@@ -110,11 +112,15 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             return isAirborne && targetVelocity.y < 0;
         }
     }
-    void Start()
+    void Awake()
     {
+        // Set self in player manager
+        characterList.Add(this);
+
         // Find component references
         characterController = GetComponent<CharacterController>();
-
+    }    void Start()
+    {
         // Setup up character input depending on whether this is character 1 or 2
         GameManager.inputManager.SetupCharacterInput(this);
     }
@@ -162,15 +168,17 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         targetVelocity.z = direction.y * moveSpeed;
     }
 
-    public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high
+    public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high, 4 = ledge(high)
     {
         if (!isAirborne)
         {
-            if (!isHeavy)   // Standard jump
-                targetVelocity.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : lowJumpPower;
-            else            // Heavy jump
+            if (!isHeavy)           // Standard jump
+                targetVelocity.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : jumpType == 1 ? lowJumpPower : 0;
+            else                    // Heavy jump
                 targetVelocity.y += heavyJumpPower;
         }
+        else if (jumpType == 4)     // Ledge jump
+            targetVelocity.y += hightJumpPower;
     }
 
     public void Dash()

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System;
 
 /// <summary>
@@ -107,9 +109,7 @@ public class InputManager : Manager
         // Checks if they let go early
         if (Input.GetButtonUp(jumpStr + player1Str))
         {
-            if (player1JumpHold > highJumpThreshold)
-                jumpP1(3);
-            else if (player1JumpHold > mediumJumpThreshold)
+            if (player1JumpHold > mediumJumpThreshold)
                 jumpP1(2);
             else if (player1JumpHold > 0)
                 jumpP1(1);
@@ -119,9 +119,7 @@ public class InputManager : Manager
 
         if (Input.GetButtonUp(jumpStr + player2Str))
         {
-            if (player2JumpHold > highJumpThreshold)
-                jumpP2(3);
-            else if (player2JumpHold > mediumJumpThreshold)
+            if (player2JumpHold > mediumJumpThreshold)
                 jumpP2(2);
             else if (player2JumpHold > 0)
                 jumpP2(1);
@@ -134,6 +132,12 @@ public class InputManager : Manager
         {
             if (player1JumpHold <= highJumpThreshold)
                 player1JumpHold += Time.deltaTime;
+            else if(Character.characterList.First(x => x.isPlayerOne).isFalling) // Check if fell of ledge while jumping
+            {
+                jumpP1(4);
+                player1JumpDown = false;
+                player1JumpHold = 0;
+            }
             else
             {
                 jumpP1(3);
@@ -148,6 +152,12 @@ public class InputManager : Manager
         {
             if (player2JumpHold <= highJumpThreshold)
                 player2JumpHold += Time.deltaTime;
+            else if (Character.characterList.First(x => !x.isPlayerOne).isFalling) // Check if fell of ledge while jumping
+            {
+                jumpP2(4);
+                player2JumpDown = false;
+                player2JumpHold = 0;
+            }
             else
             {
                 jumpP2(3);

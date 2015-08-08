@@ -159,8 +159,8 @@ MonoBehaviour:
   isHeavy: 0
   heavyMoveSpeed: 2
   canUnheavyMidair: 0
-  heavyGravity: 6
-  heavyJumpPower: 22
+  heavyGravity: 8
+  heavyJumpPower: 25
   bounceType: Set Value
   bounceMomentumLoss: .5
   bouncePower: 15
