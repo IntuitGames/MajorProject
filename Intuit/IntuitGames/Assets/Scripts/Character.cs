@@ -78,6 +78,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     // PRIVATES
     private float airTime = 0;
+    private const float airborneRadiusCheck = 0.4f;
+    private const float airborneOffset = 0.1f;
 
     // STATES
     public bool isWalking
@@ -94,7 +96,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             if (characterController.isGrounded)
                 return false;
             else
-                return !Physics.Raycast(transform.position, -transform.up, (characterController.height / 2) + 0.1f);
+                return !Physics.Raycast(transform.position, -transform.up, (characterController.height / 2) + 0.1f) &&
+                    !Physics.Raycast(transform.position + new Vector3(airborneRadiusCheck, 0, 0), -transform.up, (characterController.height / 2) + airborneOffset) &&
+                    !Physics.Raycast(transform.position + new Vector3(-airborneRadiusCheck, 0, 0), -transform.up, (characterController.height / 2) + airborneOffset) &&
+                    !Physics.Raycast(transform.position + new Vector3(0, 0, airborneRadiusCheck), -transform.up, (characterController.height / 2) + airborneOffset) &&
+                    !Physics.Raycast(transform.position + new Vector3(0, 0, -airborneRadiusCheck), -transform.up, (characterController.height / 2) + airborneOffset);
         }
     }
     public bool isFalling
@@ -182,31 +188,34 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Pause()
     {
-
+        // Reloads the level for now
+        Application.LoadLevel(Application.loadedLevel);
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    public void Bounce(GameObject hit, Vector3 normal, Vector3 hitVelocity)
     {
-        Vector3 hitVelocity = characterController.velocity;
-
-        // Handle bounce
         if (bounceType != "Off" && bounceWhileHeavy || bounceType != "Off" && !isHeavy)
         {
             // Bounce off a bouncy object
             Bouncy bouncyObj = hit.gameObject.GetComponent<Bouncy>();
-            if(bouncyObj && bouncyObj.isBouncy)
+            if (bouncyObj && bouncyObj.isBouncy)
                 if (bounceType == "Velocity Based")
-                    targetVelocity = hit.normal * (hitVelocity.magnitude * bounceMomentumLoss) * bouncyObj.bounceMultiplier;
+                    targetVelocity = normal * (hitVelocity.magnitude * bounceMomentumLoss) * bouncyObj.bounceMultiplier;
                 else if (bounceType == "Set Value")
-                    if(!GameManager.inputManager.IsRequestingJump(isPlayerOne))
-                        targetVelocity = hit.normal * bouncePower * bouncyObj.bounceMultiplier;
+                    if (!GameManager.inputManager.IsRequestingJump(isPlayerOne))
+                        targetVelocity = normal * bouncePower * bouncyObj.bounceMultiplier;
                     else
-                        targetVelocity = hit.normal * bounceJumpPower * bouncyObj.bounceMultiplier;
+                        targetVelocity = normal * bounceJumpPower * bouncyObj.bounceMultiplier;
                 else
                     Debug.LogWarning("Invalid bounce type specified!");
             // Bounce of any object tagged ground if traveling fast enough
-            else if(bounceOffGround && hit.gameObject.tag == "Ground" && Mathf.Abs(hitVelocity.y) > bounceGroundThreshold && hit.normal.y > 0)
-                targetVelocity = hit.normal * bounceGroundPower;
+            else if (bounceOffGround && hit.gameObject.tag == "Ground" && Mathf.Abs(hitVelocity.y) > bounceGroundThreshold && normal.y > 0)
+                targetVelocity = normal * bounceGroundPower;
         }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Bounce(hit.gameObject, hit.normal, characterController.velocity);
     }
 }

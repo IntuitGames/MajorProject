@@ -15,7 +15,7 @@
             Destroy(this.gameObject);
 
         // Give this game object persistence across scenes
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);               // TEMPORARILY OFF (NOT SCENE PERSISTANT)
 
         // Ensure all manager references are set
         SetManagerReferences();
