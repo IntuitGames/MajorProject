@@ -12,9 +12,10 @@ GameObject:
   - 23: {fileID: 2307526}
   - 143: {fileID: 14371390}
   - 114: {fileID: 11457344}
+  - 114: {fileID: 11433944}
   m_Layer: 0
   m_Name: Player 2
-  m_TagString: Untagged
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +72,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8c6a572ef4111d94ca8b1f4f7557dcba, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -123,6 +124,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172130}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &11433944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 145332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f08b4353552204e85178a06e54bdad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceMultiplier: 1
 --- !u!114 &11457344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,9 +158,13 @@ MonoBehaviour:
   maxSpeed: 50
   isHeavy: 0
   heavyMoveSpeed: 2
-  CanUnheavyMidair: 0
+  canUnheavyMidair: 0
   heavyGravity: 6
   heavyJumpPower: 22
+  bounceType: Set Value
+  bounceMomentumLoss: .5
+  bouncePower: 15
+  bounceJumpPower: 20
 --- !u!143 &14371390
 CharacterController:
   m_ObjectHideFlags: 1

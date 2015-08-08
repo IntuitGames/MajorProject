@@ -103,8 +103,8 @@ GameObject:
   - 64: {fileID: 57398608}
   - 23: {fileID: 57398607}
   m_Layer: 8
-  m_Name: Plane (2)
-  m_TagString: Untagged
+  m_Name: Plane
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 7
+  m_RootOrder: 1
 --- !u!23 &57398607
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -180,8 +180,8 @@ GameObject:
   - 65: {fileID: 514176676}
   - 23: {fileID: 514176675}
   m_Layer: 0
-  m_Name: Cube (6)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,8 +253,8 @@ GameObject:
   - 65: {fileID: 569489537}
   - 23: {fileID: 569489536}
   m_Layer: 8
-  m_Name: Cube (3)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -313,7 +313,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 1
+  m_RootOrder: 7
 --- !u!1 &613854062
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,8 +326,8 @@ GameObject:
   - 65: {fileID: 613854065}
   - 23: {fileID: 613854064}
   m_Layer: 0
-  m_Name: Cube (5)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -571,8 +571,8 @@ GameObject:
   - 65: {fileID: 770361297}
   - 23: {fileID: 770361296}
   m_Layer: 0
-  m_Name: Cube (10)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -644,8 +644,8 @@ GameObject:
   - 65: {fileID: 833795901}
   - 23: {fileID: 833795900}
   m_Layer: 0
-  m_Name: Cube (11)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -717,8 +717,8 @@ GameObject:
   - 65: {fileID: 935060519}
   - 23: {fileID: 935060518}
   m_Layer: 8
-  m_Name: Cube (9)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -790,8 +790,8 @@ GameObject:
   - 64: {fileID: 1020319375}
   - 23: {fileID: 1020319374}
   m_Layer: 8
-  m_Name: Plane (1)
-  m_TagString: Untagged
+  m_Name: Plane
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -807,7 +807,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 6
+  m_RootOrder: 0
 --- !u!23 &1020319374
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -863,8 +863,8 @@ GameObject:
   - 64: {fileID: 1020614226}
   - 23: {fileID: 1020614225}
   m_Layer: 8
-  m_Name: Plane (6)
-  m_TagString: Untagged
+  m_Name: Plane
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -923,7 +923,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 8
+  m_RootOrder: 2
 --- !u!1001 &1041616445
 Prefab:
   m_ObjectHideFlags: 0
@@ -1008,6 +1008,142 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fe37411b7e3aee940be19989c9e4c09d, type: 2}
   m_IsPrefabParent: 0
+--- !u!21 &1225010604
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Material_TestTether (Instance) (Instance)
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BumpMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DetailNormalMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _ParallaxMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _OcclusionMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _EmissionMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DetailMask
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DetailAlbedoMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _MetallicGlossMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _SrcBlend
+        second: 1
+      data:
+        first:
+          name: _DstBlend
+        second: 0
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+      data:
+        first:
+          name: _Parallax
+        second: .0199999996
+      data:
+        first:
+          name: _ZWrite
+        second: 1
+      data:
+        first:
+          name: _Glossiness
+        second: .5
+      data:
+        first:
+          name: _BumpScale
+        second: 1
+      data:
+        first:
+          name: _OcclusionStrength
+        second: 1
+      data:
+        first:
+          name: _DetailNormalMapScale
+        second: 1
+      data:
+        first:
+          name: _UVSec
+        second: 0
+      data:
+        first:
+          name: _Mode
+        second: 0
+      data:
+        first:
+          name: _Metallic
+        second: 0
+    m_Colors:
+      data:
+        first:
+          name: _EmissionColor
+        second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _Color
+        second: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1269320894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1020,8 +1156,8 @@ GameObject:
   - 65: {fileID: 1269320897}
   - 23: {fileID: 1269320896}
   m_Layer: 8
-  m_Name: Cube (8)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1106,16 +1242,16 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1461655045}
-  - {fileID: 569489539}
-  - {fileID: 1484406337}
-  - {fileID: 1958167783}
-  - {fileID: 1485879591}
-  - {fileID: 1547331764}
   - {fileID: 1020319373}
   - {fileID: 57398606}
   - {fileID: 1020614228}
   - {fileID: 1782638115}
+  - {fileID: 1958167783}
+  - {fileID: 1485879591}
+  - {fileID: 1461655045}
+  - {fileID: 569489539}
+  - {fileID: 1484406337}
+  - {fileID: 1547331764}
   - {fileID: 613854063}
   - {fileID: 514176674}
   - {fileID: 1986788229}
@@ -1123,6 +1259,7 @@ Transform:
   - {fileID: 935060517}
   - {fileID: 770361299}
   - {fileID: 833795899}
+  - {fileID: 1712713977}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!1 &1461655041
@@ -1137,8 +1274,8 @@ GameObject:
   - 65: {fileID: 1461655043}
   - 23: {fileID: 1461655042}
   m_Layer: 8
-  m_Name: Cube (4)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1197,7 +1334,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 0
+  m_RootOrder: 6
 --- !u!1 &1484406333
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,8 +1347,8 @@ GameObject:
   - 65: {fileID: 1484406335}
   - 23: {fileID: 1484406334}
   m_Layer: 8
-  m_Name: Cube (2)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1270,7 +1407,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 2
+  m_RootOrder: 8
 --- !u!1 &1485879587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,7 +1421,7 @@ GameObject:
   - 23: {fileID: 1485879588}
   m_Layer: 8
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1343,7 +1480,7 @@ Transform:
   m_LocalScale: {x: 3.20000005, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!1 &1543614505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,6 +1513,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectA: {fileID: 100774029}
   objectB: {fileID: 54659342}
+  debugStrainColours: 1
+  normalColour: {r: 1, g: 1, b: 1, a: 1}
+  strainedColour: {r: 1, g: 0, b: 0, a: 1}
+  closeDistance: 3
+  farDistance: 15
+  distanceBetweenObjects: 3
 --- !u!23 &1543614507
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1387,7 +1530,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 1225010604}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -1417,7 +1560,7 @@ Transform:
   m_GameObject: {fileID: 1543614505}
   m_LocalRotation: {x: 0, y: -.707106829, z: 0, w: .707106829}
   m_LocalPosition: {x: 1.5, y: 1, z: 0}
-  m_LocalScale: {x: .200000063, y: .200000003, z: 3}
+  m_LocalScale: {x: .200000003, y: .200000003, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -1433,8 +1576,8 @@ GameObject:
   - 65: {fileID: 1547331762}
   - 23: {fileID: 1547331761}
   m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1493,7 +1636,93 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 5
+  m_RootOrder: 9
+--- !u!1 &1712713976
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1712713977}
+  - 33: {fileID: 1712713980}
+  - 65: {fileID: 1712713979}
+  - 23: {fileID: 1712713978}
+  - 114: {fileID: 1712713981}
+  m_Layer: 0
+  m_Name: Bounce Pad
+  m_TagString: Ground
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1712713977
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1712713976}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.5, y: 0, z: 17}
+  m_LocalScale: {x: 3, y: .600000024, z: 3}
+  m_Children: []
+  m_Father: {fileID: 1429829679}
+  m_RootOrder: 17
+--- !u!23 &1712713978
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1712713976}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 93be3e4dccda39949a40fae234a660fe, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &1712713979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1712713976}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1712713980
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1712713976}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1712713981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1712713976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f08b4353552204e85178a06e54bdad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceMultiplier: 1
 --- !u!1 &1731197385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,8 +1837,8 @@ GameObject:
   - 64: {fileID: 1782638117}
   - 23: {fileID: 1782638116}
   m_Layer: 8
-  m_Name: Plane (7)
-  m_TagString: Untagged
+  m_Name: Plane
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1625,7 +1854,7 @@ Transform:
   m_LocalScale: {x: 8, y: 1, z: 4}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 9
+  m_RootOrder: 3
 --- !u!23 &1782638116
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1682,7 +1911,7 @@ GameObject:
   - 23: {fileID: 1958167780}
   m_Layer: 8
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1741,7 +1970,7 @@ Transform:
   m_LocalScale: {x: 3, y: 1, z: 8}
   m_Children: []
   m_Father: {fileID: 1429829679}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &1986788225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,8 +1983,8 @@ GameObject:
   - 65: {fileID: 1986788227}
   - 23: {fileID: 1986788226}
   m_Layer: 8
-  m_Name: Cube (7)
-  m_TagString: Untagged
+  m_Name: Obstacle
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

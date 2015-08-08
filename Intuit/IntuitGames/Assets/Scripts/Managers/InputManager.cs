@@ -210,4 +210,13 @@ public class InputManager : Manager
             heavyP1 -= characterObj.Heavy;
         }
     }
+
+    // Is a player currently requesting a jump?
+    public bool IsRequestingJump(bool isPlayerOne)
+    {
+        if (isPlayerOne)
+            return player1JumpDown;
+        else
+            return player2JumpDown;
+    }
 }

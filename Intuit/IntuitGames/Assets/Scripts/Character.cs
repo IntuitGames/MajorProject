@@ -54,11 +54,22 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [ReadOnly, Header("Heavy")]
     public bool isHeavy = false;
     public float heavyMoveSpeed = 2;
-    public bool CanUnheavyMidair = false;
+    public bool canUnheavyMidair = false;
     [Range(0, 10)]
     public float heavyGravity = 6;
     [Range(0, 25)]
     public float heavyJumpPower = 20;
+
+    [Header("Bounce")]
+    [Popup(new string[3] { "Velocity Based", "Set Value", "Off" } )]
+    public string bounceType = "Velocity Based";
+    [Range(0, 1), Conditional("bounceType", "Velocity Based")]
+    public float bounceMomentumLoss = 0.5f;
+    [Range(0, 25), Conditional("bounceType", "Set Value")]
+    public float bouncePower = 10;
+    [Range(0, 25), Conditional("bounceType", "Set Value")]
+    public float bounceJumpPower = 15;
+    public bool bounceWhileHeavy = true;
 
     // PRIVATES
     private float airTime = 0;
@@ -158,7 +169,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Heavy(bool isHeldDown)
     {
-        if (!CanUnheavyMidair && isHeavy && !isHeldDown && isAirborne)
+        if (!canUnheavyMidair && isHeavy && !isHeldDown && isAirborne)
             return;
         else
             isHeavy = isHeldDown;
@@ -167,5 +178,26 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public void Pause()
     {
 
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Vector3 hitVelocity = characterController.velocity;
+
+        // Handle bounce
+        if (bounceType != "Off" && bounceWhileHeavy || bounceType != "Off" && !isHeavy)
+        {
+            Bouncy bouncyObj = hit.gameObject.GetComponent<Bouncy>();
+            if(bouncyObj && bouncyObj.isBouncy)
+                if (bounceType == "Velocity Based")
+                    targetVelocity = hit.normal * (hitVelocity.magnitude * bounceMomentumLoss) * bouncyObj.bounceMultiplier;
+                else if (bounceType == "Set Value")
+                    if(!GameManager.inputManager.IsRequestingJump(isPlayerOne))
+                        targetVelocity = hit.normal * bouncePower * bouncyObj.bounceMultiplier;
+                    else
+                        targetVelocity = hit.normal * bounceJumpPower * bouncyObj.bounceMultiplier;
+                else
+                    Debug.LogWarning("Invalid bounce type specified!");
+        }
     }
 }
