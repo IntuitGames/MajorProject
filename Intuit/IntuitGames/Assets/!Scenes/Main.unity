@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1543614509}
-  distance: 14
+  distance: 15
   smoothTime: .300000012
   overrideOffset: 0
   overridenOffsetDirection: {x: 0, y: .5, z: -1}
@@ -657,8 +657,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 833795898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: 4, z: 28}
-  m_LocalScale: {x: 8.10000038, y: 8.39999962, z: 3}
+  m_LocalPosition: {x: 9, y: 4, z: 19}
+  m_LocalScale: {x: 8.10000038, y: 1.51200008, z: 3}
   m_Children: []
   m_Father: {fileID: 1429829679}
   m_RootOrder: 16

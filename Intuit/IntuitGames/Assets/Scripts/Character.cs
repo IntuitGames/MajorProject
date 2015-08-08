@@ -123,9 +123,14 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Clamp movement velocity
         targetVelocity = Vector3.ClampMagnitude(targetVelocity, maxSpeed);
 
-        // Apply movement
+        // Rotate in movement direction
         transform.LookAt((transform.position + targetVelocity).IgnoreY3(transform.position.y));
-        characterController.Move(targetVelocity * Time.deltaTime);
+
+        // Apply movement
+        CollisionFlags colFlags = characterController.Move(targetVelocity * Time.deltaTime);
+
+        // Zero Y movement if collided with an object above
+        if ((colFlags & CollisionFlags.CollidedAbove) == CollisionFlags.CollidedAbove) targetVelocity.y = Mathf.Min(0, targetVelocity.y);
     }
 
     public void Movement(float forward, float right)
@@ -142,7 +147,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             if (!isHeavy)   // Standard jump
                 targetVelocity.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : lowJumpPower;
             else            // Heavy jump
-                targetVelocity.y += heavyJumpPower * (heavyGravity / baseGravity);
+                targetVelocity.y += heavyJumpPower;
         }
     }
 

@@ -142,12 +142,12 @@ MonoBehaviour:
   lowJumpPower: 5
   mediumJumpPower: 10
   hightJumpPower: 15
-  maxSpeed: 30
+  maxSpeed: 50
   isHeavy: 0
   heavyMoveSpeed: 2
   CanUnheavyMidair: 0
   heavyGravity: 6
-  heavyJumpPower: 18
+  heavyJumpPower: 22
 --- !u!143 &14371390
 CharacterController:
   m_ObjectHideFlags: 1
