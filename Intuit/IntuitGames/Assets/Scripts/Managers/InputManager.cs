@@ -66,6 +66,7 @@ public class InputManager : Manager
         postUpdate();
     }
 
+    // Is called every frame if game is in a in-game state
     private void HandleInGameEvents()
     {
         // Raise axis input events
@@ -76,13 +77,34 @@ public class InputManager : Manager
         movementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
         movementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
 
-        // Handle jump logic
+        // Raise action button event
+        HandleJumpEvents();
+        if (Input.GetButtonDown(dashStr + player1Str))
+            dashP1();
+        if (Input.GetButtonDown(dashStr + player2Str))
+            dashP2();
+        if (Input.GetButtonDown(heavyStr + player1Str))
+            heavyP1();
+        if (Input.GetButtonDown(heavyStr + player2Str))
+            heavyP2();
+
+        // Pause and unpause check
+        if (Input.GetButtonDown(pauseStr + player1Str))
+            pause();
+        if (Input.GetButtonDown(pauseStr + player2Str))
+            pause();
+    }
+
+    // Specifically handles the more complex jump event system
+    private void HandleJumpEvents()
+    {
+        // Check if the player has pressed the jump button down
         if (Input.GetButtonDown(jumpStr + player1Str))
             player1JumpDown = true;
         if (Input.GetButtonDown(jumpStr + player2Str))
             player2JumpDown = true;
 
-        // Perform jump when releasing the jump button
+        // Checks if they let go early
         if (Input.GetButtonUp(jumpStr + player1Str))
         {
             if (player1JumpHold > highJumpThreshold)
@@ -107,9 +129,10 @@ public class InputManager : Manager
             player2JumpDown = false;
         }
 
+        // Determines time and checks if they have held long enough to perform the high jump
         if (player1JumpDown)
         {
-            if(player1JumpHold <= highJumpThreshold)
+            if (player1JumpHold <= highJumpThreshold)
                 player1JumpHold += Time.deltaTime;
             else
             {
@@ -134,29 +157,56 @@ public class InputManager : Manager
         }
         else
             player2JumpHold = 0;
-
-        // Raise action button event
-        if (Input.GetButtonDown(dashStr + player1Str))
-            dashP1();
-        if (Input.GetButtonDown(dashStr + player2Str))
-            dashP2();
-        if (Input.GetButtonDown(heavyStr + player1Str))
-            heavyP1();
-        if (Input.GetButtonDown(heavyStr + player2Str))
-            heavyP2();
-
-        // Pause and unpause check
-        if (Input.GetButtonDown(pauseStr + player1Str))
-            pause();
-        if (Input.GetButtonDown(pauseStr + player2Str))
-            pause();
     }
 
+    // Is called every frame if the game is in a paused state
     private void HandlePauseMenuEvents()
     {
         if (Input.GetButtonDown(unpauseStr + player1Str))
             unpause();
         if (Input.GetButtonDown(unpauseStr + player2Str))
             unpause();
+    }
+
+    public void SetupCharacterInput(Character characterObj)
+    {
+        // Ensure these methods are only subscribed to once
+        preUpdate -= characterObj.PreInputUpdate;
+        postUpdate -= characterObj.PostInputUpdate;
+        pause -= characterObj.Pause;
+        unpause -= characterObj.Pause;
+        preUpdate += characterObj.PreInputUpdate;
+        postUpdate += characterObj.PostInputUpdate;
+        pause += characterObj.Pause;
+        unpause += characterObj.Pause;
+
+        if (characterObj.isPlayerOne)
+        {
+            // Subscribe to player 1 events
+            movementP1 += characterObj.Movement;
+            jumpP1 += characterObj.Jump;
+            dashP1 += characterObj.Dash;
+            heavyP1 += characterObj.Heavy;
+
+            // Unsubscribe from player 2 events
+            movementP2 -= characterObj.Movement;
+            jumpP2 -= characterObj.Jump;
+            dashP2 -= characterObj.Dash;
+            heavyP2 -= characterObj.Heavy;
+        }
+        else
+        {
+            // Subscribe to player 2 events
+            movementP2 += characterObj.Movement;
+            jumpP2 += characterObj.Jump;
+            dashP2 += characterObj.Dash;
+            heavyP2 += characterObj.Heavy;
+
+            // Unsubscribe from player 1 events
+            movementP1 -= characterObj.Movement;
+            jumpP1 -= characterObj.Jump;
+            dashP1 -= characterObj.Dash;
+            heavyP1 -= characterObj.Heavy;
+        }
     }
 }

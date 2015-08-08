@@ -18,10 +18,6 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
         // Script fields
         EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
         EditorGUILayout.ObjectField("Editor Script", MonoScript.FromScriptableObject(this), this.GetType(), false);
-        //EditorGUILayout.Separator();
-
-        // Is player 1 shown as popup instead of bool
-        //serializedObject.FindProperty("_isPlayerOne").boolValue = EditorGUILayout.Popup("Player", Target.isPlayerOne ? 0 : 1, new string[2] { "Player 1", "Player 2" }) == 0;
 
         // Iterate through properties and draw them like it normally would
         property.Reset();
@@ -32,6 +28,13 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.PropertyField(property); // Draw property
         }
         while (property.NextVisible((property.propertyType & nonEnterChildrenTypes) == nonEnterChildrenTypes)); // Move to the next property if possible
+
+        if (Application.isPlaying)
+        {
+            GUI.enabled = false;
+            EditorGUILayout.Toggle("Airborne", Target.isAirborne);
+            GUI.enabled = true;
+        }
 
         // Apply changes to the property
         serializedObject.ApplyModifiedProperties();
