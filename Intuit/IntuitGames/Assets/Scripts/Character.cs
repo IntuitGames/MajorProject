@@ -39,16 +39,16 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     }
 
     [ReadOnly, Header("Basic")]
-    public Vector3 movement;
+    public Vector3 targetVelocity;
+    public float baseMoveSpeed = 7;
     [Range(0, 10)]
     public float baseGravity = 3;
-    public float baseMoveSpeed = 7;
     [Range(0, 25)]
-    public float lowJumpPower = 10;
+    public float lowJumpPower = 5;
     [Range(0, 25)]
-    public float mediumJumpPower = 17.5f;
+    public float mediumJumpPower = 10;
     [Range(0, 25)]
-    public float hightJumpPower = 25;
+    public float hightJumpPower = 15;
     public float maxSpeed = 50;
 
     [ReadOnly, Header("Heavy")]
@@ -57,6 +57,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public bool CanUnheavyMidair = false;
     [Range(0, 10)]
     public float heavyGravity = 6;
+    [Range(0, 25)]
+    public float heavyJumpPower = 20;
 
     // PRIVATES
     private float airTime = 0;
@@ -66,7 +68,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     {
         get
         {
-            return new Vector2(movement.x, movement.z).magnitude > 0;
+            return new Vector2(targetVelocity.x, targetVelocity.z).magnitude > 0;
         }
     }
     public bool isAirborne
@@ -83,7 +85,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     {
         get
         {
-            return isAirborne && movement.y < 0;
+            return isAirborne && targetVelocity.y < 0;
         }
     }
     void Start()
@@ -104,11 +106,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         if (isAirborne)
         {
             airTime += Time.deltaTime;
-            movement.y += -gravity * airTime;
+            targetVelocity.y += -gravity * airTime;
         }
         else
         {
-            movement.y = Mathf.Max(0, movement.y);
+            targetVelocity.y = Mathf.Max(0, targetVelocity.y);
             airTime = 0;
         }
     }
@@ -119,24 +121,29 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         if (!this.enabled) return;
 
         // Clamp movement velocity
-        movement = Vector3.ClampMagnitude(movement, maxSpeed);
+        targetVelocity = Vector3.ClampMagnitude(targetVelocity, maxSpeed);
 
         // Apply movement
-        transform.LookAt((transform.position + movement).IgnoreY3(transform.position.y));
-        characterController.Move(movement * Time.deltaTime);
+        transform.LookAt((transform.position + targetVelocity).IgnoreY3(transform.position.y));
+        characterController.Move(targetVelocity * Time.deltaTime);
     }
 
     public void Movement(float forward, float right)
     {
         Vector2 direction = new Vector2(right, forward).normalized;
-        movement.x = direction.x * moveSpeed;
-        movement.z = direction.y * moveSpeed;
+        targetVelocity.x = direction.x * moveSpeed;
+        targetVelocity.z = direction.y * moveSpeed;
     }
 
     public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high
     {
         if (!isAirborne)
-            movement.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : lowJumpPower;
+        {
+            if (!isHeavy)   // Standard jump
+                targetVelocity.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : lowJumpPower;
+            else            // Heavy jump
+                targetVelocity.y += heavyJumpPower * (heavyGravity / baseGravity);
+        }
     }
 
     public void Dash()

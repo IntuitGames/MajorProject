@@ -136,17 +136,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
   _isPlayerOne: 1
-  movement: {x: 0, y: 0, z: 0}
-  baseGravity: 3
+  targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
+  baseGravity: 3
   lowJumpPower: 5
   mediumJumpPower: 10
   hightJumpPower: 15
-  maxSpeed: 50
+  maxSpeed: 30
   isHeavy: 0
   heavyMoveSpeed: 2
   CanUnheavyMidair: 0
   heavyGravity: 6
+  heavyJumpPower: 18
 --- !u!143 &14347228
 CharacterController:
   m_ObjectHideFlags: 1

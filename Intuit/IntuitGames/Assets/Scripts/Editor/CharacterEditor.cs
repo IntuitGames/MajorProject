@@ -37,6 +37,7 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.Separator();
             EditorGUILayout.LabelField("Debug", EditorStyles.boldLabel);
             GUI.enabled = false;
+            EditorGUILayout.Vector3Field("Real Velocity", Target.characterController.velocity);
             EditorGUILayout.Slider("Move Speed", Mathf.Round(Target.characterController.velocity.magnitude * 100) / 100, 0, Target.maxSpeed);
             EditorGUILayout.Toggle("Walking", Target.isWalking);
             EditorGUILayout.Toggle("Airborne", Target.isAirborne);
