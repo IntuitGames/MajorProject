@@ -137,12 +137,16 @@ MonoBehaviour:
   characterController: {fileID: 0}
   _isPlayerOne: 1
   movement: {x: 0, y: 0, z: 0}
-  gravity: 3
-  moveSpeed: 7
+  baseGravity: 3
+  baseMoveSpeed: 7
   lowJumpPower: 5
   mediumJumpPower: 10
   hightJumpPower: 15
-  maxVelocity: 25
+  maxSpeed: 50
+  isHeavy: 0
+  heavyMoveSpeed: 2
+  CanUnheavyMidair: 0
+  heavyGravity: 6
 --- !u!143 &14347228
 CharacterController:
   m_ObjectHideFlags: 1

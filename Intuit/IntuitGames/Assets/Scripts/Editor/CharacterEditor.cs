@@ -33,9 +33,14 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
 
         if (Application.isPlaying)
         {
-            GUI.enabled = false;
+            GUI.enabled = true;
             EditorGUILayout.Separator();
+            EditorGUILayout.LabelField("Debug", EditorStyles.boldLabel);
+            GUI.enabled = false;
+            EditorGUILayout.Slider("Move Speed", Mathf.Round(Target.characterController.velocity.magnitude * 100) / 100, 0, Target.maxSpeed);
+            EditorGUILayout.Toggle("Walking", Target.isWalking);
             EditorGUILayout.Toggle("Airborne", Target.isAirborne);
+            EditorGUILayout.Toggle("Falling", Target.isFalling);
             GUI.enabled = true;
         }
 

@@ -31,8 +31,8 @@ public class InputManager : Manager
     public event Action<int> jumpP2 = delegate { };
     public event Action dashP1 = delegate { };
     public event Action dashP2 = delegate { };
-    public event Action heavyP1 = delegate { };
-    public event Action heavyP2 = delegate { };
+    public event Action<bool> heavyP1 = delegate { };
+    public event Action<bool> heavyP2 = delegate { };
     public event Action pause = delegate { };
     public event Action unpause = delegate { };
 
@@ -79,14 +79,14 @@ public class InputManager : Manager
 
         // Raise action button event
         HandleJumpEvents();
+
         if (Input.GetButtonDown(dashStr + player1Str))
             dashP1();
         if (Input.GetButtonDown(dashStr + player2Str))
             dashP2();
-        if (Input.GetButtonDown(heavyStr + player1Str))
-            heavyP1();
-        if (Input.GetButtonDown(heavyStr + player2Str))
-            heavyP2();
+
+        heavyP1(Input.GetButton(heavyStr + player1Str));
+        heavyP2(Input.GetButton(heavyStr + player2Str));
 
         // Pause and unpause check
         if (Input.GetButtonDown(pauseStr + player1Str))
@@ -168,6 +168,7 @@ public class InputManager : Manager
             unpause();
     }
 
+    // Subscribes to all character specific events
     public void SetupCharacterInput(Character characterObj)
     {
         // Ensure these methods are only subscribed to once
