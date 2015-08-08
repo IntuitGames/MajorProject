@@ -5,7 +5,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     private CharacterController characterController;
 
     // STATS
-    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), ReadOnly(EditableInEditor = true)]
+    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player")]
     private bool _isPlayerOne = true;    public bool isPlayerOne
     {
         get
@@ -22,7 +22,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         }
     }
 
-    [ReadOnly]
+    [ReadOnly, Header("Basic")]
     public Vector3 movement;
     [Range(0, 25)]
     public float gravity = 4;
@@ -84,25 +84,18 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         if (!this.enabled) return;
 
         // Clamp movement velocity
-        movement = new Vector3(Mathf.Clamp(movement.x, -maxVelocity, maxVelocity),
-            Mathf.Clamp(movement.y, -maxVelocity, maxVelocity),
-            Mathf.Clamp(movement.z, -maxVelocity, maxVelocity));
+        movement = Vector3.ClampMagnitude(movement, maxVelocity);
 
         // Apply movement
         transform.LookAt((transform.position + movement).IgnoreY3(transform.position.y));
         characterController.Move(movement * Time.deltaTime);
-
-        // Reset movement vector
-        movement = new Vector3(0, movement.y, 0);
     }
 
     public void Movement(float forward, float right)
     {
-        //movement += new Vector3(moveSpeed * right, 0, moveSpeed * forward);
-        if(Mathf.Abs(movement.x) < moveSpeed)
-            movement.x += moveSpeed * right;
-        if (Mathf.Abs(movement.z) < moveSpeed)
-            movement.z += moveSpeed * forward;
+        Vector2 direction = new Vector2(right, forward).normalized;
+        movement.x = direction.x * moveSpeed;
+        movement.z = direction.y * moveSpeed;
     }
 
     public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high

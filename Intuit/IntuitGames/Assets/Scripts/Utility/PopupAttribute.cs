@@ -31,28 +31,23 @@ public class PopupDrawer : PropertyDrawer
         displayPrefix.text = displayName;
         string[] displayedOptions = (attribute as PopupAttribute).DisplayedOptions;
 
-        // For some reason the prefix position is a little off
-        Rect prefixPosition = position;
-        prefixPosition.x += property.prefabOverride ? 0 : 2;
-        prefixPosition.y += property.prefabOverride ? 0 : 1;
-
         // For read only attribute compatibility
         if (ReadOnlyDrawer.IsReadOnly(fieldInfo)) GUI.enabled = false;
 
+        EditorGUI.BeginProperty(position, label, property);
         switch(property.propertyType)
         {
             case SerializedPropertyType.Boolean:
-                EditorGUI.PrefixLabel(prefixPosition, displayPrefix, property.prefabOverride ? EditorStyles.boldLabel : GUIStyle.none);
-                property.boolValue = EditorGUI.Popup(position, " ", property.boolValue ? 0 : 1, displayedOptions) == 0;
+                property.boolValue = EditorGUI.Popup(position, displayPrefix.text, property.boolValue ? 0 : 1, displayedOptions) == 0;
                 break;
             case SerializedPropertyType.String:
-                EditorGUI.PrefixLabel(prefixPosition, displayPrefix, property.prefabOverride ? EditorStyles.boldLabel : GUIStyle.none);
                 int selectedIndex = displayedOptions.Contains(property.stringValue) ? displayedOptions.ToList().IndexOf(property.stringValue) : 0;
-                property.stringValue = displayedOptions[EditorGUI.Popup(position, " ", selectedIndex, displayedOptions)];
+                property.stringValue = displayedOptions[EditorGUI.Popup(position, displayPrefix.text, selectedIndex, displayedOptions)];
                 break;
             default:
                 break;
         }
+        EditorGUI.EndProperty();
 
         GUI.enabled = true;
     }

@@ -2,7 +2,7 @@
 using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEditor : Editor{
     private Character Target;
     private SerializedProperty property;
-    private const SerializedPropertyType nonEnterChildrenTypes = SerializedPropertyType.Vector2 | SerializedPropertyType.Vector3 | SerializedPropertyType.Vector4;
+    bool showChildren;
 
     public void OnEnable()
     {
@@ -16,6 +16,7 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
         if (!Target) return;
 
         // Script fields
+        EditorGUI.indentLevel = 0;
         EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
         EditorGUILayout.ObjectField("Editor Script", MonoScript.FromScriptableObject(this), this.GetType(), false);
 
@@ -25,13 +26,15 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
         do
         {
             if (property.name.StartsWith("m_")) continue; // Ignore Unity properties
-            EditorGUILayout.PropertyField(property); // Draw property
+            showChildren = EditorGUILayout.PropertyField(property); // Draw property
+            
         }
-        while (property.NextVisible((property.propertyType & nonEnterChildrenTypes) == nonEnterChildrenTypes)); // Move to the next property if possible
+        while (property.NextVisible(showChildren));
 
         if (Application.isPlaying)
         {
             GUI.enabled = false;
+            EditorGUILayout.Separator();
             EditorGUILayout.Toggle("Airborne", Target.isAirborne);
             GUI.enabled = true;
         }
