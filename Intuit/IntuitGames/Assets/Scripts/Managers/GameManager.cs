@@ -56,4 +56,7 @@
 
         if (!managerReference)
             Debug.LogWarningFormat("Unable to find or create a {0} manager reference.", typeof(T).Name);
+    }    // Update all the timers    void Update()
+    {
+        TimerPlus.UpdateAll();
     }}

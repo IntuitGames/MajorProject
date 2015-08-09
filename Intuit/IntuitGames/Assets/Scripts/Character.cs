@@ -51,6 +51,44 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public float hightJumpPower = 15;
     public float maxSpeed = 50;
 
+    [Header("Dash"), SerializeField]
+    private bool _canDash = true;
+    public float dashPower = 25;
+    public bool isDashing
+    {
+        get { return dashTimer.IsPlaying; }
+        set
+        {
+            if (value)
+            {
+                dashTimer.Restart();
+                canDash = false;
+            }
+            else
+                dashTimer.Stop();
+        }
+    }
+    [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
+    public float dashLength = 0.5f;
+    [Range(0, 25)]
+    public float dashHeight = 3;
+    private TimerPlus dashTimer;
+    public bool stopDashOnCollision = true;
+    [Range(0, 3)]
+    public float dashCooldown = 1;
+    private TimerPlus dashCooldownTimer;
+    public bool canDash
+    {
+        get { return _canDash && !dashCooldownTimer.IsPlaying; }
+        set
+        {
+            if (value)
+                dashCooldownTimer.Stop();
+            else
+                dashCooldownTimer.Restart();
+        }
+    }
+
     [ReadOnly, Header("Heavy")]
     public bool isHeavy = false;
     public float heavyMoveSpeed = 2;
@@ -115,10 +153,15 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     void Awake()
     {
         // Set self in player manager
+        if (characterList.Count >= 2) characterList.Clear();
         characterList.Add(this);
 
         // Find component references
         characterController = GetComponent<CharacterController>();
+
+        // Setup dash timers
+        dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
+        dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
     }    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
@@ -129,6 +172,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public void PreInputUpdate()
     {
         if (!this.enabled) return;
+
+        // Apply any changes to the dash length and cooldown
+        dashTimer.Length = dashLength;
+        dashCooldownTimer.Length = dashCooldown;
 
         // Apply gravity if airborne
         if (isAirborne)
@@ -164,8 +211,17 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public void Movement(float forward, float right)
     {
         Vector2 direction = new Vector2(right, forward).normalized;
-        targetVelocity.x = direction.x * moveSpeed;
-        targetVelocity.z = direction.y * moveSpeed;
+
+        if (!isDashing)
+        {
+            targetVelocity.x = direction.x * moveSpeed;
+            targetVelocity.z = direction.y * moveSpeed;
+        }
+        else
+        {
+            targetVelocity.x = transform.forward.x * dashPower;
+            targetVelocity.z = transform.forward.z * dashPower;
+        }
     }
 
     public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high, 4 = ledge(high)
@@ -183,7 +239,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Dash()
     {
-
+        if (canDash)
+        {
+            isDashing = true;
+            if (!isAirborne) targetVelocity.y += dashHeight;
+        }
     }
 
     public void Heavy(bool isHeldDown)
@@ -225,5 +285,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Bounce(hit.gameObject, hit.normal, characterController.velocity);
+
+        // Stop dashing if hit by something in front
+        if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
     }
 }

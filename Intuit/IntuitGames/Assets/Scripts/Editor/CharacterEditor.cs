@@ -42,6 +42,7 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.Toggle("Walking", Target.isWalking);
             EditorGUILayout.Toggle("Airborne", Target.isAirborne);
             EditorGUILayout.Toggle("Falling", Target.isFalling);
+            EditorGUILayout.Toggle("Dashing", Target.isDashing);
             GUI.enabled = true;
         }
 

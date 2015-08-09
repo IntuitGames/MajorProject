@@ -156,6 +156,12 @@ MonoBehaviour:
   mediumJumpPower: 10
   hightJumpPower: 15
   maxSpeed: 50
+  _canDash: 1
+  dashPower: 25
+  dashLength: .400000006
+  dashHeight: 3
+  stopDashOnCollision: 1
+  dashCooldown: 1
   isHeavy: 0
   heavyMoveSpeed: 2
   canUnheavyMidair: 0

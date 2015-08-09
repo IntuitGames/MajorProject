@@ -16,7 +16,7 @@ public class TimerPlus: IDisposable
     protected static List<TimerPlus> AllTimers = new List<TimerPlus>();
 
     // Instance fields
-    public readonly float Length;                   // How long will the timer take
+    public float Length;                            // How long will the timer take
     public float Value { get; private set; }        // Current time of this timer
     public bool IsPlaying = false;                  // Is the timer currently on and playing?
     public bool AutoReset = false;                  // Will the timer reset automatically once finished
