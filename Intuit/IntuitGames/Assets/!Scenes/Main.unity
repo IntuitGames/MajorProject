@@ -1720,6 +1720,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 102234, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 168412, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d523b58627c498d44a306448c1f3055f, type: 2}
   m_IsPrefabParent: 0
@@ -1907,6 +1915,14 @@ Prefab:
     - target: {fileID: 491208, guid: fe37411b7e3aee940be19989c9e4c09d, type: 2}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 172130, guid: fe37411b7e3aee940be19989c9e4c09d, type: 2}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 145332, guid: fe37411b7e3aee940be19989c9e4c09d, type: 2}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fe37411b7e3aee940be19989c9e4c09d, type: 2}
@@ -2487,7 +2503,7 @@ GameObject:
   - 33: {fileID: 1543614508}
   - 23: {fileID: 1543614507}
   - 114: {fileID: 1543614506}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Tether
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -119,7 +119,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     private float airTime = 0;
     private const float airborneRadiusCheck = 0.4f;
-    private const float airborneOffset = 0.1f;
+    private const float airborneOffset = 0.2f;
 
     // STATES
     public bool isWalking
@@ -132,17 +132,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public bool isAirborne
     {
         get
-        {
+        {			Debug.DrawRay(transform.position, -transform.up*((characterController.height / 2) + airborneOffset),Color.red );
             if (characterController.isGrounded)
                 return false;
-            else
-                return !Physics.Raycast(transform.position, -transform.up, (characterController.height / 2) + 0.1f) &&
-                    !Physics.Raycast(transform.position + new Vector3(airborneRadiusCheck, 0, 0), -transform.up, (characterController.height / 2) + airborneOffset) &&
-                    !Physics.Raycast(transform.position + new Vector3(-airborneRadiusCheck, 0, 0), -transform.up, (characterController.height / 2) + airborneOffset) &&
-                    !Physics.Raycast(transform.position + new Vector3(0, 0, airborneRadiusCheck), -transform.up, (characterController.height / 2) + airborneOffset) &&
-                    !Physics.Raycast(transform.position + new Vector3(0, 0, -airborneRadiusCheck), -transform.up, (characterController.height / 2) + airborneOffset);
+            else				return airbornRaycheck(transform.position, -transform.up, ((characterController.height / 2) + airborneOffset), airborneRadiusCheck);				
         }
-    }
+    }	bool airbornRaycheck(Vector3 origin, Vector3 dir, float maxDir, float radius)	{		return !Physics.Raycast (origin, dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (radius, 0, 0), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (-radius, 0, 0), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (0, 0, radius), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (0, 0, -radius), dir, maxDir);	}
     public bool isFalling
     {
         get
@@ -210,7 +205,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Movement(float forward, float right)
     {
-        Vector2 direction = new Vector2(right, forward).normalized;
+        Vector2 direction = new Vector2(right, forward);
 
         if (!isDashing)
         {
