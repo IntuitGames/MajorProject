@@ -29,8 +29,8 @@ public class InputManager : Manager
     public event Action<float> rightP2 = delegate { };
     public event Action<float, float> movementP1 = delegate { };
     public event Action<float, float> movementP2 = delegate { };
-    public event Action<int> jumpP1 = delegate { };
-    public event Action<int> jumpP2 = delegate { };
+    public event Action<float> jumpP1 = delegate { };
+    public event Action<float> jumpP2 = delegate { };
     public event Action dashP1 = delegate { };
     public event Action dashP2 = delegate { };
     public event Action<bool> heavyP1 = delegate { };
@@ -43,8 +43,6 @@ public class InputManager : Manager
     private bool player2JumpDown;                   // Player 2 is pressing down the jump button
     private float player1JumpHold;                  // How long has player 1 held down the jump button
     private float player2JumpHold;                  // How long has player 1 held down the jump button
-    public float mediumJumpThreshold = 0.2f;        // How long the jump button must be held down to do a medium jump
-    public float highJumpThreshold = 0.4f;          // How long the jump button must be held down to do a high jump
 
     void Update()
     {
@@ -100,73 +98,49 @@ public class InputManager : Manager
     // Specifically handles the more complex jump event system
     private void HandleJumpEvents()
     {
-        // Check if the player has pressed the jump button down
-        if (Input.GetButtonDown(jumpStr + player1Str))
+        // Player 1
+        if (Input.GetButtonDown(jumpStr + player1Str) && !Character.character1.isAirborne)
             player1JumpDown = true;
-        if (Input.GetButtonDown(jumpStr + player2Str))
+
+        if (player1JumpDown && Input.GetButton(jumpStr + player1Str))
+        {
+            player1JumpHold += Time.deltaTime;
+            jumpP1(player1JumpHold);
+            
+            // If heavy make sure its only a one-time boost
+            if(Character.character1.isHeavy)
+            {
+                player1JumpDown = false;
+                player1JumpHold = 0;
+            }
+        }
+        else
+        {
+            player1JumpDown = false;
+            player1JumpHold = 0;
+        }
+
+        // Player 2
+        if (Input.GetButtonDown(jumpStr + player2Str) && !Character.character2.isAirborne)
             player2JumpDown = true;
 
-        // Checks if they let go early
-        if (Input.GetButtonUp(jumpStr + player1Str))
+        if (player2JumpDown && Input.GetButton(jumpStr + player2Str))
         {
-            if (player1JumpHold > mediumJumpThreshold)
-                jumpP1(2);
-            else if (player1JumpHold > 0)
-                jumpP1(1);
+            player2JumpHold += Time.deltaTime;
+            jumpP2(player2JumpHold);
 
-            player1JumpDown = false;
+            // If heavy make sure its only a one-time boost
+            if (Character.character2.isHeavy)
+            {
+                player2JumpDown = false;
+                player2JumpHold = 0;
+            }
         }
-
-        if (Input.GetButtonUp(jumpStr + player2Str))
+        else
         {
-            if (player2JumpHold > mediumJumpThreshold)
-                jumpP2(2);
-            else if (player2JumpHold > 0)
-                jumpP2(1);
-
             player2JumpDown = false;
-        }
-
-        // Determines time and checks if they have held long enough to perform the high jump
-        if (player1JumpDown)
-        {
-            if (player1JumpHold <= highJumpThreshold)
-                player1JumpHold += Time.deltaTime;
-            else if(Character.character1.isFalling) // Check if fell of ledge while jumping
-            {
-                jumpP1(4);
-                player1JumpDown = false;
-                player1JumpHold = 0;
-            }
-            else
-            {
-                jumpP1(3);
-                player1JumpDown = false;
-                player1JumpHold = 0;
-            }
-        }
-        else
-            player1JumpHold = 0;
-
-        if (player2JumpDown)
-        {
-            if (player2JumpHold <= highJumpThreshold)
-                player2JumpHold += Time.deltaTime;
-            else if (Character.character2.isFalling) // Check if fell of ledge while jumping
-            {
-                jumpP2(4);
-                player2JumpDown = false;
-                player2JumpHold = 0;
-            }
-            else
-            {
-                jumpP2(3);
-                player2JumpDown = false;
-                player2JumpHold = 0;
-            }
-        }
-        else
             player2JumpHold = 0;
+        }
     }
 
     // Is called every frame if the game is in a paused state

@@ -19,12 +19,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public float baseMoveSpeed = 7;
     [Range(0, 10)]
     public float baseGravity = 3;
+    public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
     [Range(0, 25)]
-    public float lowJumpPower = 5;
-    [Range(0, 25)]
-    public float mediumJumpPower = 10;
-    [Range(0, 25)]
-    public float hightJumpPower = 15;
+    public float jumpPower = 10;
     public float maxSpeed = 50;
 
     [Header("Dash"), SerializeField]
@@ -242,17 +239,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         }
     }
 
-    public void Jump(int jumpType) // 1 = low, 2 = med, 3 = high, 4 = ledge(high)
+    public void Jump(float jumpTime)
     {
-        if (!isAirborne)
-        {
-            if (!isHeavy)           // Standard jump
-                targetVelocity.y += jumpType == 3 ? hightJumpPower : jumpType == 2 ? mediumJumpPower : jumpType == 1 ? lowJumpPower : 0;
-            else                    // Heavy jump
-                targetVelocity.y += heavyJumpPower;
-        }
-        else if (jumpType == 4)     // Ledge jump
-            targetVelocity.y += hightJumpPower;
+        if (!isHeavy) // Standard jump
+            targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 10);
+        else
+            targetVelocity.y = heavyJumpPower; // Heavy High Jump
     }
 
     public void Dash()

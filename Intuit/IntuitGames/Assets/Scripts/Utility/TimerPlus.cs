@@ -30,7 +30,14 @@ public class TimerPlus: IDisposable
     public float MaxLength;
     
     // Quick-access properties
-    private float GetNewLength { get { return IsRandomized ? UnityEngine.Random.Range(MinLength, MaxLength) : Length; } }
+    private float GetNewLength
+    {
+        get
+        {
+            Length = IsRandomized ? UnityEngine.Random.Range(MinLength, MaxLength) : Length;
+            return Length;
+        }
+    }
     public float Percentage { get { return Value / Length; } }
     public float TimeRemaining { get { return Value; } }
     public float TimeElapsed { get { return Length - Value; } }
@@ -367,7 +374,7 @@ public class TimerPlus: IDisposable
     }
 
     /// <summary>
-    /// Converts this timer to a non-randomized one. (Reset recommened after this)
+    /// Converts this timer to a non-randomized one. (Reset recommended after this)
     /// </summary>
     /// <param name="length"></param>
     public void UnRandomize(float length)

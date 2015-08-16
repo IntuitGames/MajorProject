@@ -151,10 +151,28 @@ MonoBehaviour:
   _isPlayerOne: 1
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
-  baseGravity: 3
-  lowJumpPower: 5
-  mediumJumpPower: 10
-  hightJumpPower: 15
+  baseGravity: 4
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: .00999999978
+      value: 1
+      inSlope: -2.26384616
+      outSlope: -2.26384616
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  jumpPower: 15
   maxSpeed: 50
   _canDash: 1
   dashPower: 15
