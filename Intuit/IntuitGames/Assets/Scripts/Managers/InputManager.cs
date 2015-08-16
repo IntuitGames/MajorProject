@@ -132,7 +132,7 @@ public class InputManager : Manager
         {
             if (player1JumpHold <= highJumpThreshold)
                 player1JumpHold += Time.deltaTime;
-            else if(Character.characterList.First(x => x.isPlayerOne).isFalling) // Check if fell of ledge while jumping
+            else if(Character.character1.isFalling) // Check if fell of ledge while jumping
             {
                 jumpP1(4);
                 player1JumpDown = false;
@@ -152,7 +152,7 @@ public class InputManager : Manager
         {
             if (player2JumpHold <= highJumpThreshold)
                 player2JumpHold += Time.deltaTime;
-            else if (Character.characterList.First(x => !x.isPlayerOne).isFalling) // Check if fell of ledge while jumping
+            else if (Character.character2.isFalling) // Check if fell of ledge while jumping
             {
                 jumpP2(4);
                 player2JumpDown = false;

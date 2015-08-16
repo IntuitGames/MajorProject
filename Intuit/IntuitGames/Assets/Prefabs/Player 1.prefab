@@ -157,7 +157,7 @@ MonoBehaviour:
   hightJumpPower: 15
   maxSpeed: 50
   _canDash: 1
-  dashPower: 25
+  dashPower: 15
   dashLength: .400000006
   dashHeight: 3
   stopDashOnCollision: 1
@@ -167,11 +167,11 @@ MonoBehaviour:
   canUnheavyMidair: 0
   heavyGravity: 8
   heavyJumpPower: 25
-  bounceType: Set Value
+  bounceType: Velocity Based
   bounceMomentumLoss: .5
   bouncePower: 15
   bounceJumpPower: 20
-  bounceWhileHeavy: 1
+  bounceWhileHeavy: 0
   bounceOffGround: 1
   bounceGroundThreshold: 30
   bounceGroundPower: 5

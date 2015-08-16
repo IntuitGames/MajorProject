@@ -10,6 +10,7 @@ using CustomExtensions;
 /// <summary>
 /// Time related utility class.
 /// </summary>
+[System.Serializable]
 public class TimerPlus: IDisposable
 {
     // Static reference to all timers (Timer's not in here do not function)
@@ -22,8 +23,14 @@ public class TimerPlus: IDisposable
     public bool AutoReset = false;                  // Will the timer reset automatically once finished
     public bool IsPersistent = false;               // Will the timer automatically dereference itself after completion
     // Note: If IsPersistent = true: manual disposal is required by calling Dispose()
+    public bool DisableOnLoad = true;               // Is this timer automatically Disposed() when a new scene loads
+    public bool TimeScaled = true;                  // Is this timer affected by time scale
+    public bool IsRandomized { get; private set; }  // Does this timer have a randomized length?
+    public float MinLength;
+    public float MaxLength;
     
     // Quick-access properties
+    private float GetNewLength { get { return IsRandomized ? UnityEngine.Random.Range(MinLength, MaxLength) : Length; } }
     public float Percentage { get { return Value / Length; } }
     public float TimeRemaining { get { return Value; } }
     public float TimeElapsed { get { return Length - Value; } }
@@ -34,53 +41,113 @@ public class TimerPlus: IDisposable
     #region Constructors
 
     // Defines how this timer will be used
-    public enum Presets { Standard, OneTimeUse, Repeater };
+    public enum Presets { Standard, OneTimeUse, Repeater, BackgroundStandard, BackgroundOneTimeUse, BackgroundRepeater };
 
     /// <summary>
-    /// Creates a simple one-time use timer.
+    /// Creates a non-randomized simple one-time use timer.
     /// </summary>
-    public TimerPlus(float length, params Action[] actions)
+    public TimerPlus(float length, Action action = null)
     {
         AllTimers.Add(this);
         Length = length;
+        IsRandomized = false;
         Value = Length;
 
         TimerPlusSetup(Presets.OneTimeUse);
-        
-        if (!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => Elapsed += x);
+
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
     }
 
     /// <summary>
-    /// Creates a simple specified preset timer.
+    /// Creates a non-randomized simple specified preset timer.
     /// </summary>
-    public TimerPlus(float length, Presets mode, params Action[] actions)
+    public TimerPlus(float length, Presets mode, Action action = null)
     {
         AllTimers.Add(this);
         Length = length;
+        IsRandomized = false;
         Value = Length;
 
         TimerPlusSetup(mode);
 
-        if (!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => Elapsed += x);
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
     }
 
     /// <summary>
-    /// Creates a timer with all customized settings.
+    /// Creates a non-randomized timer with all customized settings.
     /// </summary>
-    public TimerPlus(float length, bool startPlaying, bool autoReset, bool persist, params Action[] actions)
+    public TimerPlus(float length, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, Action action = null)
     {
         AllTimers.Add(this);
         Length = length;
+        IsRandomized = false;
         Value = Length;
 
         IsPlaying = startPlaying;
         AutoReset = autoReset;
         IsPersistent = persist;
+        DisableOnLoad = disableOnLoad;
+        TimeScaled = timeScaled;
 
-        if (!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => Elapsed += x);
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized simple one-time use timer.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, Action action = null)
+    {
+        AllTimers.Add(this);
+        MinLength = minLength;
+        MaxLength = maxLength;
+        IsRandomized = true;
+        Value = GetNewLength;
+
+        TimerPlusSetup(Presets.OneTimeUse);
+
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized simple specified preset timer.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, Presets mode, Action action = null)
+    {
+        AllTimers.Add(this);
+        MinLength = minLength;
+        MaxLength = maxLength;
+        IsRandomized = true;
+        Value = GetNewLength;
+
+        TimerPlusSetup(mode);
+
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized timer with all customized settings.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, Action action = null)
+    {
+        AllTimers.Add(this);
+        MinLength = minLength;
+        MaxLength = maxLength;
+        IsRandomized = true;
+        Value = GetNewLength;
+
+        IsPlaying = startPlaying;
+        AutoReset = autoReset;
+        IsPersistent = persist;
+        DisableOnLoad = disableOnLoad;
+        TimeScaled = timeScaled;
+
+        if (!action.IsNullOrEmpty())
+            Elapsed += action;
     }
 
     // Sets up timer defaults to presets
@@ -92,18 +159,48 @@ public class TimerPlus: IDisposable
                 IsPlaying = false;
                 AutoReset = false;
                 IsPersistent = true;
+                DisableOnLoad = true;
+                TimeScaled = true;
                 break;
 
             case Presets.OneTimeUse:
                 IsPlaying = true;
                 AutoReset = false;
                 IsPersistent = false;
+                DisableOnLoad = true;
+                TimeScaled = true;
                 break;
 
             case Presets.Repeater:
                 IsPlaying = true;
                 AutoReset = true;
                 IsPersistent = false;
+                DisableOnLoad = true;
+                TimeScaled = true;
+                break;
+
+            case Presets.BackgroundStandard:
+                IsPlaying = false;
+                AutoReset = false;
+                IsPersistent = true;
+                DisableOnLoad = false;
+                TimeScaled = false;
+                break;
+
+            case Presets.BackgroundOneTimeUse:
+                IsPlaying = true;
+                AutoReset = false;
+                IsPersistent = false;
+                DisableOnLoad = false;
+                TimeScaled = false;
+                break;
+
+            case Presets.BackgroundRepeater:
+                IsPlaying = true;
+                AutoReset = true;
+                IsPersistent = false;
+                DisableOnLoad = false;
+                TimeScaled = false;
                 break;
 
             default:
@@ -115,19 +212,52 @@ public class TimerPlus: IDisposable
 
     #region Static Constructors
 
-    public static TimerPlus Create(float length, params Action[] actions)
+    /// <summary>
+    /// Creates a non-randomized simple one-time use timer.
+    /// </summary>
+    public static TimerPlus Create(float length, Action action = null)
     {
-        return new TimerPlus(length, actions);
+        return new TimerPlus(length, action);
     }
 
-    public static TimerPlus Create(float length, Presets mode, params Action[] actions)
+    /// <summary>
+    /// Creates a non-randomized simple specified preset timer.
+    /// </summary>
+    public static TimerPlus Create(float length, Presets mode, Action action = null)
     {
-        return new TimerPlus(length, mode, actions);
+        return new TimerPlus(length, mode, action);
     }
 
-    public static TimerPlus Create(float length, bool startPlaying, bool autoReset, bool persist, params Action[] actions)
+    /// <summary>
+    /// Creates a non-randomized timer with all customized settings.
+    /// </summary>
+    public static TimerPlus Create(float length, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, Action action = null)
     {
-        return new TimerPlus(length, startPlaying, autoReset, persist, actions);
+        return new TimerPlus(length, startPlaying, autoReset, persist, disableOnLoad, timeScaled, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized simple one-time use timer.
+    /// </summary>
+    public static TimerPlus CreateRandom(float minLength, float maxLength, Action action = null)
+    {
+        return new TimerPlus(minLength, maxLength, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized simple specified preset timer.
+    /// </summary>
+    public static TimerPlus CreateRandom(float minLength, float maxLength, Presets mode, Action action = null)
+    {
+        return new TimerPlus(minLength, maxLength, mode, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized timer with all customized settings.
+    /// </summary>
+    public static TimerPlus CreateRandom(float minLength, float maxLength, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, Action action = null)
+    {
+        return new TimerPlus(minLength, maxLength, startPlaying, autoReset, persist, disableOnLoad, timeScaled, action);
     }
 
     #endregion
@@ -139,7 +269,15 @@ public class TimerPlus: IDisposable
     /// </summary>
     public static void UpdateAll()
     {
-        AllTimers.ForEach(x => x.Update(Time.deltaTime));
+        AllTimers.ForEach(x => { if (x.TimeScaled) x.Update(Time.deltaTime); else x.Update(Time.unscaledDeltaTime); });
+    }
+
+    /// <summary>
+    /// Dispose all timers that should be disabled on load.
+    /// </summary>
+    public static void DisposeAllOnLoad()
+    {
+        AllTimers.ForEach(x => { if (x.DisableOnLoad) x.Dispose(); });
     }
 
     /// <summary>
@@ -172,7 +310,7 @@ public class TimerPlus: IDisposable
     public void Reset()
     {
         IsPlaying = false;
-        Value = Length;
+        Value = GetNewLength;
     }
 
     /// <summary>
@@ -180,7 +318,7 @@ public class TimerPlus: IDisposable
     /// </summary>
     public void Restart()
     {
-        Value = Length;
+        Value = GetNewLength;
         IsPlaying = true;
     }
 
@@ -208,6 +346,36 @@ public class TimerPlus: IDisposable
         IsPlaying = false;
     }
 
+    /// <summary>
+    /// Sets to timer to zero.
+    /// </summary>
+    public void End()
+    {
+        Value = 0;
+    }
+
+    /// <summary>
+    /// Converts this timer into a randomized timer. (Reset recommended after this)
+    /// </summary>
+    /// <param name="minLength"></param>
+    /// <param name="maxLength"></param>
+    public void Randomize(float minLength, float maxLength)
+    {
+        MinLength = minLength;
+        MaxLength = maxLength;
+        IsRandomized = true;
+    }
+
+    /// <summary>
+    /// Converts this timer to a non-randomized one. (Reset recommened after this)
+    /// </summary>
+    /// <param name="length"></param>
+    public void UnRandomize(float length)
+    {
+        Length = length;
+        IsRandomized = false;
+    }
+
     #endregion
 
     #region Non-public
@@ -233,7 +401,7 @@ public class TimerPlus: IDisposable
 
         if(AutoReset)
         {
-            Value = Length - LeftOver;
+            Value = GetNewLength - LeftOver;
         }
         else
         {
@@ -295,6 +463,7 @@ public class TimerPlus: IDisposable
 /// <summary>
 /// Generic time related utility class.
 /// </summary>
+[System.Serializable]
 public class TimerPlus<T> : TimerPlus
 {
     // The object that gets passed into the generic action
@@ -305,56 +474,125 @@ public class TimerPlus<T> : TimerPlus
     #region Constructors
 
     /// <summary>
-    /// Creates a simple one-time use timer.
+    /// Creates a non-randomized timer simple one-time use timer.
     /// </summary>
-    public TimerPlus(float length, T parameter, params Action<T>[] actions) : base(length, null)
+    public TimerPlus(float length, T parameter, Action<T> action = null) : base(length, null)
     {
         ActionParam = parameter;
 
-        if(!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => ElapsedGeneric += x);
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
     }
 
     /// <summary>
-    /// Creates a simple specified preset timer.
+    /// Creates a non-randomized timer specified preset timer.
     /// </summary>
-    public TimerPlus(float length, Presets mode, T parameter, params Action<T>[] actions) : base(length, mode, null)
+    public TimerPlus(float length, Presets mode, T parameter, Action<T> action) : base(length, mode, null)
     {
         ActionParam = parameter;
 
-        if (!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => ElapsedGeneric += x);
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
     }
 
     /// <summary>
-    /// Creates a timer with all customized settings.
+    /// Creates a non-randomized timer with all customized settings.
     /// </summary>
-    public TimerPlus(float length, bool startPlaying, bool autoReset, bool persist, T parameter, params Action<T>[] actions)
-        : base(length, startPlaying, autoReset, persist, null)
+    public TimerPlus(float length, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, T parameter, Action<T> action)
+        : base(length, startPlaying, autoReset, persist, disableOnLoad, timeScaled, null)
     {
         ActionParam = parameter;
 
-        if (!actions.IsNullOrEmpty())
-            actions.ToList().ForEach(x => ElapsedGeneric += x);
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized timer simple one-time use timer.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, T parameter, Action<T> action = null)
+        : base(minLength, maxLength, null)
+    {
+        ActionParam = parameter;
+
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized timer specified preset timer.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, Presets mode, T parameter, Action<T> action)
+        : base(minLength, maxLength, mode, null)
+    {
+        ActionParam = parameter;
+
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
+    }
+
+    /// <summary>
+    /// Creates a randomized timer with all customized settings.
+    /// </summary>
+    public TimerPlus(float minLength, float maxLength, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, T parameter, Action<T> action)
+        : base(minLength, maxLength, startPlaying, autoReset, persist, disableOnLoad, timeScaled, null)
+    {
+        ActionParam = parameter;
+
+        if (!action.IsNullOrEmpty())
+            ElapsedGeneric += action;
     }
 
     #endregion
 
     #region Static Constructors
 
-    public static TimerPlus<T> Create(float length, T parameter, params Action<T>[] actions)
+    /// <summary>
+    /// Creates a non-randomized timer simple one-time use timer.
+    /// </summary>
+    public static TimerPlus<T> Create(float length, T parameter, Action<T> action = null)
     {
-        return new TimerPlus<T>(length, parameter, actions);
+        return new TimerPlus<T>(length, parameter, action);
     }
 
-    public static TimerPlus<T> Create(float length, Presets mode, T parameter, params Action<T>[] actions)
+    /// <summary>
+    /// Creates a non-randomized timer specified preset timer.
+    /// </summary>
+    public static TimerPlus<T> Create(float length, Presets mode, T parameter, Action<T> action = null)
     {
-        return new TimerPlus<T>(length, mode, parameter, actions);
+        return new TimerPlus<T>(length, mode, parameter, action);
     }
 
-    public static TimerPlus<T> Create(float length, bool startPlaying, bool autoReset, bool persist, T parameter, params Action<T>[] actions)
+    /// <summary>
+    /// Creates a non-randomized timer with all customized settings.
+    /// </summary>
+    public static TimerPlus<T> Create(float length, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, T parameter, Action<T> action = null)
     {
-        return new TimerPlus<T>(length, startPlaying, autoReset, persist, parameter, actions);
+        return new TimerPlus<T>(length, startPlaying, autoReset, persist, disableOnLoad, timeScaled, parameter, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized timer simple one-time use timer.
+    /// </summary>
+    public static TimerPlus<T> CreateRandom(float minLength, float maxLength, T parameter, Action<T> action = null)
+    {
+        return new TimerPlus<T>(minLength, maxLength, parameter, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized timer specified preset timer.
+    /// </summary>
+    public static TimerPlus<T> CreateRandom(float minLength, float maxLength, Presets mode, T parameter, Action<T> action = null)
+    {
+        return new TimerPlus<T>(minLength, maxLength, mode, parameter, action);
+    }
+
+    /// <summary>
+    /// Creates a randomized timer with all customized settings.
+    /// </summary>
+    public static TimerPlus<T> CreateRandom(float minLength, float maxLength, bool startPlaying, bool autoReset, bool persist, bool disableOnLoad, bool timeScaled, T parameter, Action<T> action = null)
+    {
+        return new TimerPlus<T>(minLength, maxLength, startPlaying, autoReset, persist, disableOnLoad, timeScaled, parameter, action);
     }
 
     #endregion

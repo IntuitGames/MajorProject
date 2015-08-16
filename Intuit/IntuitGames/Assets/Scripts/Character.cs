@@ -1,44 +1,20 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class Character : MonoBehaviour{
+using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class Character : MonoBehaviour
+{
+    #region VARIABLES
+
+    // STATICS
+    public static Character character1 { get; private set; }
+    public static Character character2 { get; private set; }
+
     // COMPONENTS
     [HideInInspector]
     public CharacterController characterController;
 
     // STATS
-    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player")]
-    private bool _isPlayerOne = true;    public bool isPlayerOne
-    {
-        get { return _isPlayerOne; }
-        set
-        {
-            if(value != isPlayerOne)
-            {
-                _isPlayerOne = value;
-                if (Application.isPlaying) GameManager.inputManager.SetupCharacterInput(this);
-            }
-        }
-    }
-
-    public float moveSpeed
-    {
-        get
-        {
-            float value = baseMoveSpeed;
-            if (isHeavy) value = heavyMoveSpeed;
-            return value;
-        }
-    }
-    public float gravity
-    {
-        get
-        {
-            float value = baseGravity;
-            if (isHeavy) value = heavyGravity;
-            return value;
-        }
-    }
-
-    [ReadOnly, Header("Basic")]
+    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), Header("Basic")]
+    private bool _isPlayerOne = true;
+    [ReadOnly]
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
     [Range(0, 10)]
@@ -101,11 +77,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Header("Bounce")]
     [Popup(new string[3] { "Velocity Based", "Set Value", "Off" } )]
     public string bounceType = "Velocity Based";
-    [Range(0, 1), Conditional("bounceType", "Velocity Based")]
+    [Range(0, 1)]
     public float bounceMomentumLoss = 0.5f;
-    [Range(0, 25), Conditional("bounceType", "Set Value")]
+    [Range(0, 25)]
     public float bouncePower = 10;
-    [Range(0, 25), Conditional("bounceType", "Set Value")]
+    [Range(0, 25)]
     public float bounceJumpPower = 15;
     public bool bounceWhileHeavy = true;
     public bool bounceOffGround = true;
@@ -114,12 +90,42 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Range(0, 25)]
     public float bounceGroundPower = 5;
 
-    // PRIVATES & STATICS
-    public static List<Character> characterList = new List<Character>();
-
+    // PRIVATES
     private float airTime = 0;
     private const float airborneRadiusCheck = 0.4f;
     private const float airborneOffset = 0.2f;
+
+    // PROPERTIES
+    public bool isPlayerOne
+    {
+        get { return _isPlayerOne; }
+        set
+        {
+            if (value != isPlayerOne)
+            {
+                _isPlayerOne = value;
+                if (Application.isPlaying) GameManager.inputManager.SetupCharacterInput(this);
+            }
+        }
+    }
+    public float moveSpeed
+    {
+        get
+        {
+            float value = baseMoveSpeed;
+            if (isHeavy) value = heavyMoveSpeed;
+            return value;
+        }
+    }
+    public float gravity
+    {
+        get
+        {
+            float value = baseGravity;
+            if (isHeavy) value = heavyGravity;
+            return value;
+        }
+    }
 
     // STATES
     public bool isWalking
@@ -135,9 +141,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         {			Debug.DrawRay(transform.position, -transform.up*((characterController.height / 2) + airborneOffset),Color.red );
             if (characterController.isGrounded)
                 return false;
-            else				return airbornRaycheck(transform.position, -transform.up, ((characterController.height / 2) + airborneOffset), airborneRadiusCheck);				
+            else
+                return AirborneRaycheck(transform.position, -transform.up, ((characterController.height / 2) + airborneOffset), airborneRadiusCheck);				
         }
-    }	bool airbornRaycheck(Vector3 origin, Vector3 dir, float maxDir, float radius)	{		return !Physics.Raycast (origin, dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (radius, 0, 0), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (-radius, 0, 0), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (0, 0, radius), dir, maxDir) &&			!Physics.Raycast (origin + new Vector3 (0, 0, -radius), dir, maxDir);	}
+    }
     public bool isFalling
     {
         get
@@ -145,11 +152,15 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             return isAirborne && targetVelocity.y < 0;
         }
     }
-    void Awake()
+
+    #endregion
+
+    #region MESSAGES
+
+    void Awake()
     {
-        // Set self in player manager
-        if (characterList.Count >= 2) characterList.Clear();
-        characterList.Add(this);
+        // Set self in static
+        if (!SetStaticCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
         characterController = GetComponent<CharacterController>();
@@ -162,6 +173,18 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Setup up character input depending on whether this is character 1 or 2
         GameManager.inputManager.SetupCharacterInput(this);
     }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Bounce(hit.gameObject, hit.normal, characterController.velocity);
+
+        // Stop dashing if hit by something in front
+        if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
+    }
+
+    #endregion
+
+    #region INPUT
 
     // Is called BEFORE input is checked every frame
     public void PreInputUpdate()
@@ -205,7 +228,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Movement(float forward, float right)
     {
-        Vector2 direction = new Vector2(right, forward);
+        Vector2 direction = Vector2.ClampMagnitude(new Vector2(right, forward), 1);
 
         if (!isDashing)
         {
@@ -252,7 +275,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public void Pause()
     {
         // Reloads the level for now
-        Application.LoadLevel(Application.loadedLevel);
+        TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
     }
 
     public void Bounce(GameObject hit, Vector3 normal, Vector3 hitVelocity)
@@ -277,11 +300,52 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         }
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Bounce(hit.gameObject, hit.normal, characterController.velocity);
+    #endregion
 
-        // Stop dashing if hit by something in front
-        if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
+    #region HELPERS
+
+    // Set static character references
+    private static bool SetStaticCharacter(Character character)
+    {
+        if (!character) return false;
+
+        if (character.isPlayerOne)
+        {
+            if (!character1)
+            {
+                character1 = character;
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("Character 1 has already been set!");
+                return false;
+            }
+        }
+        else
+        {
+            if (!character2)
+            {
+                character2 = character;
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("Character 1 has already been set!");
+                return false;
+            }
+        }
     }
+
+    // Use ray casts to determine if the character is airborne
+    private bool AirborneRaycheck(Vector3 origin, Vector3 dir, float maxDir, float radius)
+    {
+        return !Physics.Raycast(origin, dir, maxDir) &&
+            !Physics.Raycast(origin + new Vector3(radius, 0, 0), dir, maxDir) &&
+            !Physics.Raycast(origin + new Vector3(-radius, 0, 0), dir, maxDir) &&
+            !Physics.Raycast(origin + new Vector3(0, 0, radius), dir, maxDir) &&
+            !Physics.Raycast(origin + new Vector3(0, 0, -radius), dir, maxDir);
+    }
+
+    #endregion
 }

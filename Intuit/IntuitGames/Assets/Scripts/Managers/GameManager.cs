@@ -15,7 +15,7 @@
             Destroy(this.gameObject);
 
         // Give this game object persistence across scenes
-        //DontDestroyOnLoad(this.gameObject);               // TEMPORARILY OFF (NOT SCENE PERSISTANT)
+        //DontDestroyOnLoad(gameManagerInstance.gameObject);               // TEMPORARILY OFF (NOT SCENE PERSISTANT)
 
         // Ensure all manager references are set
         SetManagerReferences();
@@ -59,4 +59,7 @@
     }    // Update all the timers    void Update()
     {
         TimerPlus.UpdateAll();
+    }    // Disable timers that should only exist on one level    void OnLevelWasLoaded(int level)
+    {
+        TimerPlus.DisposeAllOnLoad();
     }}
