@@ -173,10 +173,20 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Bounce(hit.gameObject, hit.normal, characterController.velocity);
+        //Bounce(hit.gameObject, hit.normal, characterController.velocity); // Not reliable for some reason
 
         // Stop dashing if hit by something in front
         if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
+    }
+
+    void Update()
+    {
+        RaycastHit rayHitBelow;
+        if(!isAirborne && Physics.Raycast(transform.position, Vector3.down, out rayHitBelow, (characterController.height / 2) + 0.2f) && rayHitBelow.collider.GetComponent<Bouncy>())
+        {
+            Vector3 hitVelocity = Vector3.ClampMagnitude(characterController.velocity * (!GameManager.inputManager.IsRequestingJump(isPlayerOne) ? bouncePower : bounceJumpPower), 30);
+            Bounce(rayHitBelow.collider.gameObject, Vector3.up, hitVelocity);
+        }
     }
 
     #endregion

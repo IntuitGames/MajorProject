@@ -199,8 +199,8 @@ public class InputManager : Manager
     public bool IsRequestingJump(bool isPlayerOne)
     {
         if (isPlayerOne)
-            return player1JumpDown;
+            return Input.GetButton(jumpStr + player1Str);
         else
-            return player2JumpDown;
+            return Input.GetButton(jumpStr + player2Str);
     }
 }

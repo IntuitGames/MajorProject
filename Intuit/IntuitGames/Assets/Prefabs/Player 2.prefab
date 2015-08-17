@@ -156,11 +156,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: .00999999978
       value: 1
       inSlope: -2.26384616
       outSlope: -2.26384616
@@ -186,7 +181,7 @@ MonoBehaviour:
   heavyGravity: 8
   heavyJumpPower: 25
   bounceType: Velocity Based
-  bounceMomentumLoss: .5
+  bounceMomentumLoss: .75
   bouncePower: 15
   bounceJumpPower: 20
   bounceWhileHeavy: 0
