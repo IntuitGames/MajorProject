@@ -20,30 +20,16 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Range(0, 10)]
     public float baseGravity = 3;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, 25)]
+    [Range(0, 10)]
     public float jumpPower = 10;
     public float maxSpeed = 50;
 
     [Header("Dash"), SerializeField]
     private bool _canDash = true;
     public float dashPower = 25;
-    public bool isDashing
-    {
-        get { return dashTimer.IsPlaying; }
-        set
-        {
-            if (value)
-            {
-                dashTimer.Restart();
-                canDash = false;
-            }
-            else
-                dashTimer.Stop();
-        }
-    }
     [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
     public float dashLength = 0.5f;
-    [Range(0, 25)]
+    [Range(0, 10)]
     public float dashHeight = 3;
     private TimerPlus dashTimer;
     public bool stopDashOnCollision = true;
@@ -62,35 +48,47 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         }
     }
 
-    [ReadOnly, Header("Heavy")]
-    public bool isHeavy = false;
+    [Header("Heavy")]
+    public bool canHeavy = true;
     public float heavyMoveSpeed = 2;
     public bool canUnheavyMidair = false;
     [Range(0, 10)]
     public float heavyGravity = 6;
-    [Range(0, 25)]
+    [Range(0, 30)]
     public float heavyJumpPower = 20;
+    public bool canBounceWhileHeavy = false;
 
-    [Header("Bounce")]
-    [Popup(new string[3] { "Velocity Based", "Set Value", "Off" } )]
-    public string bounceType = "Velocity Based";
-    [Range(0, 1)]
-    public float bounceMomentumLoss = 0.5f;
-    [Range(0, 25)]
-    public float bouncePower = 10;
-    [Range(0, 25)]
-    public float bounceJumpPower = 15;
-    public bool bounceWhileHeavy = true;
-    public bool bounceOffGround = true;
-    [Tooltip("How fast the player must be going in order to bounce from the ground.")]
-    public float bounceGroundThreshold = 10;
-    [Range(0, 25)]
-    public float bounceGroundPower = 5;
+    [Header("Bounce"), SerializeField]
+    private bool _canBounce = true;
+    public AnimationCurve momentumRetension = AnimationCurve.EaseInOut(40, 1, 80, 0.75f);
+    public float minBounceThreshold = 40;
+    public float maxBounceThreshold = 80;
+    [Range(0, 50)]
+    public float minBouncePower = 15;
+    [Range(0, 50)]
+    public float maxBouncePower = 30;
+    [Range(0, 50)]
+    public float minJumpBouncePower = 20;
+    [Range(0, 50)]
+    public float maxJumpBouncePower = 35;
+    public bool canBounceOffGround = true;
+    public float minGroundBounceThreshold = 50;
+    public float maxGroundBounceThreshold = 100;
+    [Range(0, 50)]
+    public float minGroundBouncePower = 10;
+    [Range(0, 50)]
+    public float maxGroundBouncePower = 10;
+
+    public bool canBounce
+    {
+        get { return canBounceWhileHeavy ? _canBounce : _canBounce && !isHeavy; }
+    }
 
     // PRIVATES
-    private float airTime = 0;
-    private const float airborneRadiusCheck = 0.4f;
-    private const float airborneOffset = 0.2f;
+    private float airTime = 0;                          // How long this character has been airborne for
+    private TimerPlus airTimeResetTimer;                
+    private RaycastHit onObject;                        // What object is this character standing on
+    private const float airborneCenterRayOffset = 0.5f; // How much additional height offset will the ray checks account for
 
     // PROPERTIES
     public bool isPlayerOne
@@ -124,6 +122,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         }
     }
 
+    // QUICK-ACCESS
+    private Bouncy BounceObject
+    {
+        get { return onObject.collider != null ? onObject.collider.gameObject.GetComponent<Bouncy>() : null; }
+    }
+
     // STATES
     public bool isWalking
     {
@@ -132,14 +136,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             return new Vector2(targetVelocity.x, targetVelocity.z).magnitude > 0;
         }
     }
+    private bool wasAirborne;
     public bool isAirborne
     {
         get
-        {			Debug.DrawRay(transform.position, -transform.up*((characterController.height / 2) + airborneOffset),Color.red );
-            if (characterController.isGrounded)
-                return false;
-            else
-                return AirborneRaycheck(transform.position, -transform.up, ((characterController.height / 2) + airborneOffset), airborneRadiusCheck);				
+        {
+            return AirborneRaycheck(transform.position, -transform.up, characterController.height / 2, airborneCenterRayOffset, characterController.radius, out onObject);
         }
     }
     public bool isFalling
@@ -149,6 +151,25 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
             return isAirborne && targetVelocity.y < 0;
         }
     }
+    public bool isDashing
+    {
+        get { return dashTimer.IsPlaying; }
+        set
+        {
+            if (value)
+            {
+                dashTimer.Restart();
+                canDash = false;
+            }
+            else
+                dashTimer.Stop();
+        }
+    }
+    public bool isHeavy { get; set; }
+    public bool isBouncing { get; set; }
+
+    // EVENTS
+    public event System.Action<bool> Landed = delegate { };
 
     #endregion
 
@@ -165,6 +186,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
+        airTimeResetTimer = TimerPlus.Create(0.1f, TimerPlus.Presets.Standard, () => airTime = 0);
     }    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
@@ -173,20 +195,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Bounce(hit.gameObject, hit.normal, characterController.velocity); // Not reliable for some reason
-
         // Stop dashing if hit by something in front
         if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
-    }
-
-    void Update()
-    {
-        RaycastHit rayHitBelow;
-        if(!isAirborne && Physics.Raycast(transform.position, Vector3.down, out rayHitBelow, (characterController.height / 2) + 0.2f) && rayHitBelow.collider.GetComponent<Bouncy>())
-        {
-            Vector3 hitVelocity = Vector3.ClampMagnitude(characterController.velocity * (!GameManager.inputManager.IsRequestingJump(isPlayerOne) ? bouncePower : bounceJumpPower), 30);
-            Bounce(rayHitBelow.collider.gameObject, Vector3.up, hitVelocity);
-        }
     }
 
     #endregion
@@ -205,13 +215,18 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Apply gravity if airborne
         if (isAirborne)
         {
+            airTimeResetTimer.Reset();
             airTime += Time.deltaTime;
             targetVelocity.y += -gravity * airTime;
         }
         else
         {
+            if (!isBouncing)
+                airTimeResetTimer.Start();
+            else
+                airTime = 0;
+
             targetVelocity.y = Mathf.Max(0, targetVelocity.y);
-            airTime = 0;
         }
     }
 
@@ -251,10 +266,14 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Jump(float jumpTime)
     {
-        if (!isHeavy) // Standard jump
-            targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 10);
-        else
-            targetVelocity.y = heavyJumpPower; // Heavy High Jump
+        if (isBouncing) return;
+
+        if (jumpTime > jumpCurve.Duration()) return;
+
+        if (!isHeavy)
+            targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 6.4f / jumpCurve.Duration());
+        else if(!isAirborne)
+                targetVelocity.y = heavyJumpPower;
     }
 
     public void Dash()
@@ -268,10 +287,20 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
     public void Heavy(bool isHeldDown)
     {
+        if(!canHeavy)
+        {
+            isHeavy = false;
+            Bounce(0);
+            return;
+        }
+
         if (!canUnheavyMidair && isHeavy && !isHeldDown && isAirborne)
             return;
         else
+        {
+            if (!isHeldDown) Bounce(0);
             isHeavy = isHeldDown;
+        }
     }
 
     public void Pause()
@@ -280,31 +309,115 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
     }
 
-    public void Bounce(GameObject hit, Vector3 normal, Vector3 hitVelocity)
+    public void Bounce(float downVelocity)
     {
-        if (bounceType != "Off" && bounceWhileHeavy || bounceType != "Off" && !isHeavy)
+        if (!canBounce || downVelocity < 0)
         {
-            // Bounce off a bouncy object
-            Bouncy bouncyObj = hit.gameObject.GetComponent<Bouncy>();
-            if (bouncyObj && bouncyObj.isBouncy)
-                if (bounceType == "Velocity Based")
-                    targetVelocity = normal * (hitVelocity.magnitude * bounceMomentumLoss) * bouncyObj.bounceMultiplier;
-                else if (bounceType == "Set Value")
-                    if (!GameManager.inputManager.IsRequestingJump(isPlayerOne))
-                        targetVelocity = normal * bouncePower * bouncyObj.bounceMultiplier;
-                    else
-                        targetVelocity = normal * bounceJumpPower * bouncyObj.bounceMultiplier;
-                else
-                    Debug.LogWarning("Invalid bounce type specified!");
-            // Bounce of any object tagged ground if traveling fast enough
-            else if (bounceOffGround && hit.gameObject.tag == "Ground" && Mathf.Abs(hitVelocity.y) > bounceGroundThreshold && normal.y > 0)
-                targetVelocity = normal * bounceGroundPower;
+            isBouncing = false;
+            return;
+        }
+
+        if (isBouncing && downVelocity <= 0) return;
+
+        float bouncePower = 0;
+
+        // Bounce off a bouncy object with jump
+        if (BounceObject && BounceObject.isBouncy && GameManager.inputManager.IsRequestingJump(isPlayerOne))
+        {
+            if (downVelocity >= minBounceThreshold)
+                bouncePower = Mathf.Lerp(minJumpBouncePower, maxJumpBouncePower, downVelocity / maxBounceThreshold) * BounceObject.bounceMultiplier;
+            else
+                bouncePower = minJumpBouncePower;
+
+            BounceObject.OnBounce();
+            isBouncing = true;
+        }
+        // Bounce off a bouncy object without jump
+        else if (BounceObject && BounceObject.isBouncy)
+        {
+            if (downVelocity >= minBounceThreshold)
+                bouncePower = Mathf.Lerp(minBouncePower, maxBouncePower, downVelocity / maxBounceThreshold) * BounceObject.bounceMultiplier;
+            else
+                bouncePower = minBouncePower;
+
+            BounceObject.OnBounce();
+            isBouncing = true;
+        }
+        // Bounce off the ground
+        else if (canBounceOffGround && downVelocity > minGroundBounceThreshold && onObject.collider.gameObject.CompareTag("Ground"))
+        {
+            bouncePower = Mathf.Lerp(minGroundBouncePower, maxGroundBouncePower, downVelocity / maxGroundBounceThreshold);
+
+            isBouncing = true;
+        }
+        else
+            isBouncing = false;
+
+        // Apply bounce power
+        if (isBouncing)
+        {
+            bouncePower *= momentumRetension.Evaluate(downVelocity);
+            targetVelocity.y = bouncePower;
         }
     }
 
     #endregion
 
+    #region EVENTS
+
+    private void OnLanded(Vector3 landVelocity)
+    {
+        Landed(isPlayerOne);
+
+        Bounce(-landVelocity.y);
+    }
+
+    #endregion
+
     #region HELPERS
+
+    // Use ray casts to determine if the character is airborne
+    private bool AirborneRaycheck(Vector3 origin, Vector3 direction, float distance, float offset, float radius, out RaycastHit landObject)
+    {
+        bool newIsAirborne;
+
+        // Cast airborne rays 
+        float oneThirdDistance = distance + (offset / 3);
+        float twoThirdDistance = distance + ((offset / 3) * 2);
+        if (Physics.Raycast(origin, direction, out landObject, distance + offset) ||
+            Physics.Raycast(origin + new Vector3(radius, 0, 0), direction, out landObject, oneThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(-radius, 0, 0), direction, out landObject, oneThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(0, 0, radius), direction, out landObject, oneThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(0, 0, -radius), direction, out landObject, oneThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(-radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance) ||
+            Physics.Raycast(origin + new Vector3(-radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance))
+            newIsAirborne = false;
+        else
+            newIsAirborne = true;
+
+        // Determine if landed
+        if (wasAirborne && !newIsAirborne)
+            OnLanded(targetVelocity);
+
+        wasAirborne = newIsAirborne;
+
+        return newIsAirborne;
+    }
+
+    #endregion
+
+    #region STATICS
+
+    // Returns the other character
+    private static Character GetOtherCharacter(bool player1)
+    {
+        if (player1)
+            return character2;
+        else
+            return character1;
+    }
 
     // Set static character references
     private static bool SetStaticCharacter(Character character)
@@ -337,16 +450,6 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
                 return false;
             }
         }
-    }
-
-    // Use ray casts to determine if the character is airborne
-    private bool AirborneRaycheck(Vector3 origin, Vector3 dir, float maxDir, float radius)
-    {
-        return !Physics.Raycast(origin, dir, maxDir) &&
-            !Physics.Raycast(origin + new Vector3(radius, 0, 0), dir, maxDir) &&
-            !Physics.Raycast(origin + new Vector3(-radius, 0, 0), dir, maxDir) &&
-            !Physics.Raycast(origin + new Vector3(0, 0, radius), dir, maxDir) &&
-            !Physics.Raycast(origin + new Vector3(0, 0, -radius), dir, maxDir);
     }
 
     #endregion

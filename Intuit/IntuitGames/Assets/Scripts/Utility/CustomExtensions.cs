@@ -210,4 +210,33 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         {
             return new Vector3(Source.x, defaultY, Source.z);
         }
+
+        /// <summary>
+        /// Returns the length of the animation curve in seconds.
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <returns></returns>
+        public static float Duration(this AnimationCurve Source)
+        {
+            if (Source.IsNullOrEmpty() || Source.length <= 0)
+                throw new NullReferenceException();
+
+            return Source[Source.length - 1].time;
+        }
+
+        /// <summary>
+        /// Returns a component from an array of ray cast hit.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Source"></param>
+        /// <returns></returns>
+        public static T GetComponent<T>(this RaycastHit[] Source) where T: Component
+        {
+            foreach (var Hit in Source)
+            {
+                if (Hit.collider.GetComponent<T>())
+                    return Hit.collider.GetComponent<T>();
+            }
+            return default(T);
+        }
     }}

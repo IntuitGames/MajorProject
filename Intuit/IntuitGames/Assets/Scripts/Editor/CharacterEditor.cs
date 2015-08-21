@@ -43,6 +43,8 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.Toggle("Airborne", Target.isAirborne);
             EditorGUILayout.Toggle("Falling", Target.isFalling);
             EditorGUILayout.Toggle("Dashing", Target.isDashing);
+            EditorGUILayout.Toggle("Heavy", Target.isHeavy);
+            EditorGUILayout.Toggle("Bouncing", Target.isBouncing);
             GUI.enabled = true;
         }
 
