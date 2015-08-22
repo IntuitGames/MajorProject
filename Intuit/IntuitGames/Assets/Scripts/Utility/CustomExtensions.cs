@@ -239,4 +239,25 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             }
             return default(T);
         }
+
+        /// <summary>
+        /// Instantiates a new instance of a component.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Source"></param>
+        /// <param name="Original"></param>
+        /// <param name="Position"></param>
+        /// <param name="Rotation"></param>
+        /// <param name="Parent"></param>
+        /// <returns></returns>
+        public static T Instantiate<T>(this T Original, Transform Parent = null) where T: Component
+        {
+            if (Original.IsNullOrEmpty()) throw new NullReferenceException();
+
+            T NewComponent = (T)GameObject.Instantiate(Original);
+
+            if(Parent) NewComponent.transform.parent = Parent;
+
+            return NewComponent;
+        }
     }}

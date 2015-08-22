@@ -13,6 +13,7 @@ public class DebugTetherVisual : MonoBehaviour
     // Component references
     public Transform objectA;
     public Transform objectB;
+    public bool useLocal = false;
 
     public bool debugStrainColours = true;
     public Color normalColour = Color.white;
@@ -25,16 +26,6 @@ public class DebugTetherVisual : MonoBehaviour
     [ReadOnly]
     public float distanceBetweenObjects;
 
-    private void Awake()
-    {
-        // Check for reference validity
-        if(!objectA || !objectB)
-        {
-            Debug.LogWarning("Both objects must be specified.");
-            return;
-        }
-    }
-
     private void Update()
     {
         if (!objectA || !objectB)
@@ -46,7 +37,9 @@ public class DebugTetherVisual : MonoBehaviour
         transform.localScale = ScaleVec;
 
         // Determine the position of the tether (half-way between the characters)
-        Vector3 PositionVec = objectB.position + (objectA.position - objectB.position) * 0.5f;
+        Vector3 PositionVec;
+        if(!useLocal) PositionVec = objectB.position + (objectA.position - objectB.position) * 0.5f;
+        else PositionVec = objectB.localPosition + (objectA.localPosition - objectB.localPosition) * 0.5f;
         transform.localPosition = PositionVec;
 
         // Determine the rotation
