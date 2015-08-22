@@ -8,4 +8,9 @@ using UnityEditor;[CustomEditor(typeof(StaticTetherManager))]public class Sta
         {
             (target as StaticTetherManager).Rebuild();
         }
+
+        if(!Application.isPlaying)
+        {
+            EditorGUILayout.HelpBox("A rebuild is recommended when a change is made to the joint count, tether clone prefab or joint clone prefab", MessageType.Info, true);
+        }
     }}

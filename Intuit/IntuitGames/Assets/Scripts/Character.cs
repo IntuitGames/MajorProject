@@ -23,6 +23,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [Range(0, 10)]
     public float jumpPower = 10;
     public float maxSpeed = 50;
+    public LayerMask layerDetection;
 
     [Header("Dash"), SerializeField]
     private bool _canDash = true;
@@ -384,15 +385,15 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Cast airborne rays 
         float oneThirdDistance = distance + (offset / 3);
         float twoThirdDistance = distance + ((offset / 3) * 2);
-        if (Physics.Raycast(origin, direction, out landObject, distance + offset) ||
-            Physics.Raycast(origin + new Vector3(radius, 0, 0), direction, out landObject, oneThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(-radius, 0, 0), direction, out landObject, oneThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(0, 0, radius), direction, out landObject, oneThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(0, 0, -radius), direction, out landObject, oneThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(-radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance) ||
-            Physics.Raycast(origin + new Vector3(-radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance))
+        if (Physics.Raycast(origin, direction, out landObject, distance + offset, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(radius, 0, 0), direction, out landObject, oneThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(-radius, 0, 0), direction, out landObject, oneThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(0, 0, radius), direction, out landObject, oneThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(0, 0, -radius), direction, out landObject, oneThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(-radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
+            Physics.Raycast(origin + new Vector3(-radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance, layerDetection))
             newIsAirborne = false;
         else
             newIsAirborne = true;

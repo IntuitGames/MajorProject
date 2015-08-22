@@ -2,7 +2,13 @@
 using CustomExtensions;/// <summary>
 /// A tether manager that doesn't change based on distance.
 /// </summary>[ExecuteInEditMode]public class StaticTetherManager : MonoBehaviour{
-    [Range(1, 50)]
+    // CONSTANTS
+    private const int MAX_JOINT_COUNT = 50;
+    private const int TETHER_LAYER = 10;
+    private const int PLAYER_LAYER = 9;
+    private const int GROUND_LAYER = 8;
+
+    [Range(1, MAX_JOINT_COUNT)]
     public int jointCount = 1;
 
     public SpringJoint startObject;
@@ -13,9 +19,9 @@ using CustomExtensions;/// <summary>
     public SpringJoint jointClone;
 
     [ReadOnly]
-    public List<DebugTetherVisual> tethers = new List<DebugTetherVisual>(55);
+    public List<DebugTetherVisual> tethers = new List<DebugTetherVisual>(MAX_JOINT_COUNT + 1);
     [ReadOnly]
-    public List<SpringJoint> joints = new List<SpringJoint>(55);
+    public List<SpringJoint> joints = new List<SpringJoint>(MAX_JOINT_COUNT + 1);
 
     [ReadOnly]
     public float distanceBetweenObjects;
@@ -23,8 +29,16 @@ using CustomExtensions;/// <summary>
     public float distanceBetweenJoints;
 
     public bool linkStrainDistance = true;
-    public bool updateAnchor = true;	    void Update()
+    public bool updateAnchor = true;
+    public bool autoStabilize = true;
+    [Range(0, 1000)]
+    public float stabilizationStrength = 100;
+    public bool disableExternalForces = false;
+    public bool ignoreSelfCollision = true;
+    public bool ignorePlayerCollision = true;
+    public bool ignoreGroundCollision = false;	    void Update()
     {
+        // Update read-only data
         if (startObject && endObject)
             distanceBetweenObjects = Vector3.Distance(startObject.transform.position, endObject.position);
         else
@@ -35,12 +49,14 @@ using CustomExtensions;/// <summary>
             distanceBetweenJoints = distanceBetweenObjects / (jointCount + 1);
         }
 
+        // Update strain colors
         if (linkStrainDistance)
         {
             tethers.ForEach(x => x.closeDistance = distanceBetweenJoints * 2);
             tethers.ForEach(x => x.farDistance = distanceBetweenJoints * 4);
         }
 
+        // Update anchors
         if(updateAnchor)
         {
             joints.ForEach(x => x.autoConfigureConnectedAnchor = false);
@@ -52,6 +68,25 @@ using CustomExtensions;/// <summary>
         {
             joints.ForEach(x => x.autoConfigureConnectedAnchor = true);
             startObject.autoConfigureConnectedAnchor = true;
+        }
+
+        // Ignore collisions
+        Physics.IgnoreLayerCollision(TETHER_LAYER, TETHER_LAYER, ignoreSelfCollision);
+        Physics.IgnoreLayerCollision(PLAYER_LAYER, TETHER_LAYER, ignorePlayerCollision);
+        Physics.IgnoreLayerCollision(GROUND_LAYER, TETHER_LAYER, ignoreGroundCollision);
+    }    void FixedUpdate()
+    {
+        // Force joints towards their rest positions
+        if (Application.isPlaying && autoStabilize)
+        {
+            for (int i = 0; i < joints.Count; i++)
+            {
+                if (disableExternalForces)
+                    joints[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                joints[i].GetComponent<Rigidbody>().AddForce((JointRestPosition(i) - joints[i].transform.position) * Time.fixedDeltaTime *
+                    (disableExternalForces ? stabilizationStrength * 50 : stabilizationStrength));
+            }
         }
     }	public void Rebuild()	{
         if (Application.isPlaying || !startObject || !endObject || !tetherClone || !jointClone) return;        // Clear joints
@@ -71,7 +106,10 @@ using CustomExtensions;/// <summary>
         {
             DebugTetherVisual tetherToBeAdded = Unity.Instantiate<DebugTetherVisual>(tetherClone, transform);
             tethers.Add(tetherToBeAdded);
-        }        // Joint placement & connection
+        }
+
+        // Copy component values to the object spring joint
+        startObject.GetCopyof<SpringJoint>(jointClone);        // Joint placement & connection
         for (int i = 0; i < joints.Count; i++)
         {
             joints[i].name = (joints[i].name + (i + 1)).Replace("(Clone)", " ");
