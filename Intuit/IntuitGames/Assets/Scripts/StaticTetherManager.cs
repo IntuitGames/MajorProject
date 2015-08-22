@@ -2,12 +2,10 @@
 using CustomExtensions;/// <summary>
 /// A tether manager that doesn't change based on distance.
 /// </summary>[ExecuteInEditMode]public class StaticTetherManager : MonoBehaviour{
-    [Range(1, 25)]
+    [Range(1, 50)]
     public int jointCount = 1;
 
-    [ReadOnly(EditableInEditor = true)]
     public SpringJoint startObject;
-    [ReadOnly(EditableInEditor = true)]
     public Rigidbody endObject;
     [ReadOnly(EditableInEditor = true)]
     public DebugTetherVisual tetherClone;
@@ -15,14 +13,17 @@ using CustomExtensions;/// <summary>
     public SpringJoint jointClone;
 
     [ReadOnly]
-    public List<DebugTetherVisual> tethers = new List<DebugTetherVisual>(12);
+    public List<DebugTetherVisual> tethers = new List<DebugTetherVisual>(55);
     [ReadOnly]
-    public List<SpringJoint> joints = new List<SpringJoint>(12);
+    public List<SpringJoint> joints = new List<SpringJoint>(55);
 
     [ReadOnly]
     public float distanceBetweenObjects;
     [ReadOnly]
-    public float distanceBetweenJoints;	    void Update()
+    public float distanceBetweenJoints;
+
+    public bool linkStrainDistance = true;
+    public bool updateAnchor = true;	    void Update()
     {
         if (startObject && endObject)
             distanceBetweenObjects = Vector3.Distance(startObject.transform.position, endObject.position);
@@ -32,6 +33,25 @@ using CustomExtensions;/// <summary>
         if(distanceBetweenObjects > 0)
         {
             distanceBetweenJoints = distanceBetweenObjects / (jointCount + 1);
+        }
+
+        if (linkStrainDistance)
+        {
+            tethers.ForEach(x => x.closeDistance = distanceBetweenJoints * 2);
+            tethers.ForEach(x => x.farDistance = distanceBetweenJoints * 4);
+        }
+
+        if(updateAnchor)
+        {
+            joints.ForEach(x => x.autoConfigureConnectedAnchor = false);
+            startObject.autoConfigureConnectedAnchor = false;
+            joints.ForEach(x => x.connectedAnchor = new Vector3(0.5f, 0, 0));
+            startObject.connectedAnchor = new Vector3(0.5f, 0, 0);
+        }
+        else if(Application.isPlaying)
+        {
+            joints.ForEach(x => x.autoConfigureConnectedAnchor = true);
+            startObject.autoConfigureConnectedAnchor = true;
         }
     }	public void Rebuild()	{
         if (Application.isPlaying || !startObject || !endObject || !tetherClone || !jointClone) return;        // Clear joints
@@ -54,8 +74,8 @@ using CustomExtensions;/// <summary>
         }        // Joint placement & connection
         for (int i = 0; i < joints.Count; i++)
         {
-            joints[i].name = joints[i].name + " " + (i + 1);
-            Vector3 PositionVec = endObject.position + (startObject.transform.position - endObject.position) * JointPositionMultiplier(i);
+            joints[i].name = (joints[i].name + (i + 1)).Replace("(Clone)", " ");
+            Vector3 PositionVec = JointRestPosition(i);
             joints[i].transform.localPosition = PositionVec;
 
             if (i == 0)
@@ -67,12 +87,12 @@ using CustomExtensions;/// <summary>
                 joints[i].connectedBody = endObject;
         }        // Tether hookup        for(int i = 0; i < tethers.Count; i++)
         {
-            tethers[i].name = tethers[i].name + " " + (i + 1);
+            tethers[i].name = (tethers[i].name + (i + 1)).Replace("(Clone)", " ");
 
             if(i == 0)
             {
                 tethers[i].useLocal = false;
-                tethers[i].objectA = endObject.transform;
+                tethers[i].objectA = startObject.transform;
                 tethers[i].objectB = joints[i].transform;
             }
             else if(i < jointCount)
@@ -85,9 +105,12 @@ using CustomExtensions;/// <summary>
             {
                 tethers[i].useLocal = false;
                 tethers[i].objectA = joints[i - 1].transform;
-                tethers[i].objectB = startObject.transform;
+                tethers[i].objectB = endObject.transform;
             }
-        }	}    private float JointPositionMultiplier(int index)
+        }	}    private Vector3 JointRestPosition(int index)
     {
-        return (distanceBetweenJoints / distanceBetweenObjects) * (index + 1);
+        return endObject.position + (startObject.transform.position - endObject.position) * JointPositionMultiplier(index);
+    }    private float JointPositionMultiplier(int index)
+    {
+        return (distanceBetweenJoints / distanceBetweenObjects) * (jointCount - index);
     }}
