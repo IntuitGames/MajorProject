@@ -84,8 +84,9 @@ using CustomExtensions;/// <summary>
                 if (disableExternalForces)
                     joints[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                joints[i].GetComponent<Rigidbody>().AddForce((JointRestPosition(i) - joints[i].transform.position) * Time.fixedDeltaTime *
-                    (disableExternalForces ? stabilizationStrength * 50 : stabilizationStrength));
+                float stablizeStrength = disableExternalForces ? stabilizationStrength * 50 : stabilizationStrength;
+
+                joints[i].GetComponent<Rigidbody>().AddForce((JointRestPosition(i) - joints[i].transform.position) * Time.fixedDeltaTime * stablizeStrength);
             }
         }
     }	public void Rebuild()	{

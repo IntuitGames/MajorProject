@@ -160,7 +160,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <param name="Clip"></param>
         /// <param name="Detatch"></param>
         /// <returns>True if the clip was successfully played on the source.</returns>
-        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = false)
+        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = true)
         {
             // Null checking
             if (Source.IsNullOrEmpty() || Clip.IsNullOrEmpty() || Source == null || Clip == null)
@@ -169,6 +169,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             if (!Detach) // Play the clip on the source normally.
             {
                 Source.clip = Clip;
+                Source.time = 0;
                 Source.Play();
                 return true;
             }
@@ -187,7 +188,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 GameObject.Destroy(NewObject, Clip.length + 0.1f);
 
                 // Play the clip on the new audio source
-                return NewSource.PlayClip(Clip);
+                return NewSource.PlayClip(Clip, false);
             }
         }
 

@@ -1,7 +1,11 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;[RequireComponent(typeof(CharacterController))]public class Character : MonoBehaviour
+using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(AudioSource))]public class Character : MonoBehaviour
 {
     #region VARIABLES
+
+    // CONSTANTS
+    private const int POWER_MAX = 50;
+    private const int GRAV_MAX = 10;
 
     // STATICS
     public static Character character1 { get; private set; }
@@ -10,6 +14,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     // COMPONENTS
     [HideInInspector]
     public CharacterController characterController;
+    [HideInInspector]
+    public AudioSource audioSource;
 
     // STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), Header("Basic")]
@@ -17,10 +23,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     [ReadOnly]
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
-    [Range(0, 10)]
+    [Range(0, GRAV_MAX)]
     public float baseGravity = 3;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, 10)]
+    [Range(0, GRAV_MAX)]
     public float jumpPower = 10;
     public float maxSpeed = 50;
     public LayerMask layerDetection;
@@ -30,7 +36,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public float dashPower = 25;
     [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
     public float dashLength = 0.5f;
-    [Range(0, 10)]
+    [Range(0, GRAV_MAX)]
     public float dashHeight = 3;
     private TimerPlus dashTimer;
     public bool stopDashOnCollision = true;
@@ -53,9 +59,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public bool canHeavy = true;
     public float heavyMoveSpeed = 2;
     public bool canUnheavyMidair = false;
-    [Range(0, 10)]
+    [Range(0, GRAV_MAX)]
     public float heavyGravity = 6;
-    [Range(0, 30)]
+    [Range(0, POWER_MAX)]
     public float heavyJumpPower = 20;
     public bool canBounceWhileHeavy = false;
 
@@ -64,32 +70,41 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
     public AnimationCurve momentumRetension = AnimationCurve.EaseInOut(40, 1, 80, 0.75f);
     public float minBounceThreshold = 40;
     public float maxBounceThreshold = 80;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float minBouncePower = 15;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float maxBouncePower = 30;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float minJumpBouncePower = 20;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float maxJumpBouncePower = 35;
     public bool canBounceOffGround = true;
     public float minGroundBounceThreshold = 50;
     public float maxGroundBounceThreshold = 100;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float minGroundBouncePower = 10;
-    [Range(0, 50)]
+    [Range(0, POWER_MAX)]
     public float maxGroundBouncePower = 10;
-
     public bool canBounce
     {
         get { return canBounceWhileHeavy ? _canBounce : _canBounce && !isHeavy; }
     }
 
+    [Header("Audio")]
+    public List<AudioClip> walkSounds = new List<AudioClip>();
+    public List<AudioClip> jumpSounds = new List<AudioClip>();
+    public List<AudioClip> dashSounds = new List<AudioClip>();
+    public List<AudioClip> landSounds = new List<AudioClip>();
+    public List<AudioClip> bounceSounds = new List<AudioClip>();
+
     // PRIVATES
+#pragma warning disable 414
     private float airTime = 0;                          // How long this character has been airborne for
-    private TimerPlus airTimeResetTimer;                
+    private TimerPlus airTimeResetTimer;
+    private TimerPlus walkSoundTimer;
     private RaycastHit onObject;                        // What object is this character standing on
     private const float airborneCenterRayOffset = 0.5f; // How much additional height offset will the ray checks account for
+#pragma warning restore 414
 
     // PROPERTIES
     public bool isPlayerOne
@@ -183,11 +198,13 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
         // Find component references
         characterController = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
 
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
         airTimeResetTimer = TimerPlus.Create(0.1f, TimerPlus.Presets.Standard, () => airTime = 0);
+        walkSoundTimer = TimerPlus.Create(0.5f, TimerPlus.Presets.Repeater, () => { if (isWalking && !isAirborne) audioSource.PlayClip(walkSounds.Random()); });
     }    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
@@ -271,6 +288,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
 
         if (jumpTime > jumpCurve.Duration()) return;
 
+        if (jumpTime <= Time.deltaTime) audioSource.PlayClip(jumpSounds.Random());
+
         if (!isHeavy)
             targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 6.4f / jumpCurve.Duration());
         else if(!isAirborne)
@@ -282,6 +301,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         if (canDash)
         {
             isDashing = true;
+
+            audioSource.PlayClip(dashSounds.Random());
+
             if (!isAirborne) targetVelocity.y += dashHeight;
         }
     }
@@ -357,6 +379,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         // Apply bounce power
         if (isBouncing)
         {
+            audioSource.PlayClip(bounceSounds.Random());
             bouncePower *= momentumRetension.Evaluate(downVelocity);
             targetVelocity.y = bouncePower;
         }
@@ -371,6 +394,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController))]public 
         Landed(isPlayerOne);
 
         Bounce(-landVelocity.y);
+
+        if (landVelocity.y < -30) audioSource.PlayClip(landSounds.Random());
     }
 
     #endregion
