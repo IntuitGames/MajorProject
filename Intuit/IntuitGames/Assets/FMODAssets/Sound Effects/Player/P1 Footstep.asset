@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e06c992c0c162f94a880e74e722cb286, type: 3}
   m_Name: P1 Footstep
   m_EditorClassIdentifier: 
-  path: event:/Footsteps/P1 Footstep
+  path: event:/Sound Effects/Player/P1 Footstep
   id: '{e43e4af6-41bc-4d09-aaba-4e69b6dfba57}'
