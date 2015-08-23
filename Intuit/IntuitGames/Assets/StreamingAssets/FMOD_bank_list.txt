@@ -1,3 +1,4 @@
-Footsteps.bank
 Master Bank.bank
 Master Bank.strings.bank
+Music.bank
+Sound Effects.bank

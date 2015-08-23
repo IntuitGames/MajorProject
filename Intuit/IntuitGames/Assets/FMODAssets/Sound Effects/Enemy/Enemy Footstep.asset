@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e06c992c0c162f94a880e74e722cb286, type: 3}
-  m_Name: P2 Footstep
+  m_Name: Enemy Footstep
   m_EditorClassIdentifier: 
-  path: event:/Footsteps/P2 Footstep
-  id: '{9a5ace32-b06e-42e3-b7e8-da637746b1a2}'
+  path: event:/Sound Effects/Enemy/Enemy Footstep
+  id: '{f0af2b45-91fa-4b6d-ad61-5f1a78f1f206}'
