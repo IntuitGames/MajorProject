@@ -36,7 +36,8 @@ using CustomExtensions;/// <summary>
     public bool disableExternalForces = false;
     public bool ignoreSelfCollision = true;
     public bool ignorePlayerCollision = true;
-    public bool ignoreGroundCollision = false;	    void Update()
+    public bool ignoreGroundCollision = false;
+    public bool enableJointRenderers = true;    public Vector3 jointScale = new Vector3(0.75f, 0.75f, 0.75f);	    void Update()
     {
         // Update read-only data
         if (startObject && endObject)
@@ -74,6 +75,16 @@ using CustomExtensions;/// <summary>
         Physics.IgnoreLayerCollision(TETHER_LAYER, TETHER_LAYER, ignoreSelfCollision);
         Physics.IgnoreLayerCollision(PLAYER_LAYER, TETHER_LAYER, ignorePlayerCollision);
         Physics.IgnoreLayerCollision(GROUND_LAYER, TETHER_LAYER, ignoreGroundCollision);
+
+        // Joint renderers
+        if(enableJointRenderers && !joints[0].GetComponent<Renderer>().enabled)
+            joints.ForEach(x => x.GetComponent<Renderer>().enabled = true);
+        else if(!enableJointRenderers && joints[0].GetComponent<Renderer>().enabled)
+            joints.ForEach(x => x.GetComponent<Renderer>().enabled = false);
+
+        // Joint scale
+        if (joints[0].transform.localScale != jointScale)
+            joints.ForEach(x => x.transform.localScale = jointScale);
     }    void FixedUpdate()
     {
         // Force joints towards their rest positions
