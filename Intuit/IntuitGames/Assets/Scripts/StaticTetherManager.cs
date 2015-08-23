@@ -1,9 +1,10 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;/// <summary>
+using CustomExtensions;
+using System;/// <summary>
 /// A tether manager that doesn't change based on distance.
 /// </summary>[ExecuteInEditMode]public class StaticTetherManager : MonoBehaviour{
     // CONSTANTS
-    private const int MAX_JOINT_COUNT = 50;
+    private const int MAX_JOINT_COUNT = 100;
     private const int TETHER_LAYER = 10;
     private const int PLAYER_LAYER = 9;
     private const int GROUND_LAYER = 8;
@@ -27,17 +28,23 @@ using CustomExtensions;/// <summary>
     public float distanceBetweenObjects;
     [ReadOnly]
     public float distanceBetweenJoints;
+    [ReadOnly]
+    public float distanceAlongTether;
 
     public bool linkStrainDistance = true;
     public bool updateAnchor = true;
     public bool autoStabilize = true;
-    [Range(0, 1000)]
+    [Range(0, 5000)]
     public float stabilizationStrength = 100;
+    public bool smartRestPosition = true;
     public bool disableExternalForces = false;
+    public bool forceAlignment = true;
+    public bool normalizeAppliedForce = false;
+    public ForceMode forceMode = ForceMode.Force;
     public bool ignoreSelfCollision = true;
     public bool ignorePlayerCollision = true;
     public bool ignoreGroundCollision = false;
-    public bool enableJointRenderers = true;    public Vector3 jointScale = new Vector3(0.75f, 0.75f, 0.75f);	    void Update()
+    public bool enableJointRenderers = true;	    void Update()
     {
         // Update read-only data
         if (startObject && endObject)
@@ -48,6 +55,12 @@ using CustomExtensions;/// <summary>
         if(distanceBetweenObjects > 0)
         {
             distanceBetweenJoints = distanceBetweenObjects / (jointCount + 1);
+
+            distanceAlongTether = Vector3.Distance(startObject.transform.position, joints[0].transform.position) + Vector3.Distance(joints[jointCount - 1].transform.position, endObject.transform.position);
+            for (int i = 0; i < jointCount - 1; i++)
+            {
+                distanceAlongTether += Vector3.Distance(joints[i].transform.position, joints[i + 1].transform.position);
+            }
         }
 
         // Update strain colors
@@ -81,10 +94,6 @@ using CustomExtensions;/// <summary>
             joints.ForEach(x => x.GetComponent<Renderer>().enabled = true);
         else if(!enableJointRenderers && joints[0].GetComponent<Renderer>().enabled)
             joints.ForEach(x => x.GetComponent<Renderer>().enabled = false);
-
-        // Joint scale
-        if (joints[0].transform.localScale != jointScale)
-            joints.ForEach(x => x.transform.localScale = jointScale);
     }    void FixedUpdate()
     {
         // Force joints towards their rest positions
@@ -93,11 +102,22 @@ using CustomExtensions;/// <summary>
             for (int i = 0; i < joints.Count; i++)
             {
                 if (disableExternalForces)
+                {
                     joints[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    joints[i].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                }
+
+                if(forceAlignment)
+                    joints[i].transform.LookAt(tethers[i].transform.position);
 
                 float stablizeStrength = disableExternalForces ? stabilizationStrength * 50 : stabilizationStrength;
 
-                joints[i].GetComponent<Rigidbody>().AddForce((JointRestPosition(i) - joints[i].transform.position) * Time.fixedDeltaTime * stablizeStrength);
+                Func<int, Vector3> PositionFunc = (x) => JointSpawnPosition(x) - joints[x].transform.position;
+                if (smartRestPosition && normalizeAppliedForce) PositionFunc = (x) => JointRestPosition(x).normalized - joints[x].transform.position.normalized;
+                else if (normalizeAppliedForce) PositionFunc = (x) => JointSpawnPosition(x).normalized - joints[x].transform.position.normalized;
+                else if (smartRestPosition) PositionFunc = (x) => JointRestPosition(x) - joints[x].transform.position;
+
+                joints[i].GetComponent<Rigidbody>().AddForce(PositionFunc(i) * Time.fixedDeltaTime * stablizeStrength, forceMode);
             }
         }
     }	public void Rebuild()	{
@@ -125,7 +145,7 @@ using CustomExtensions;/// <summary>
         for (int i = 0; i < joints.Count; i++)
         {
             joints[i].name = (joints[i].name + (i + 1)).Replace("(Clone)", " ");
-            Vector3 PositionVec = JointRestPosition(i);
+            Vector3 PositionVec = JointSpawnPosition(i);
             joints[i].transform.localPosition = PositionVec;
 
             if (i == 0)
@@ -157,9 +177,12 @@ using CustomExtensions;/// <summary>
                 tethers[i].objectA = joints[i - 1].transform;
                 tethers[i].objectB = endObject.transform;
             }
-        }	}    private Vector3 JointRestPosition(int index)
+        }	}    private Vector3 JointSpawnPosition(int index)
     {
         return endObject.position + (startObject.transform.position - endObject.position) * JointPositionMultiplier(index);
+    }    private Vector3 JointRestPosition(int index)
+    {
+        return tethers[index + 1].transform.position + (tethers[index].transform.position - tethers[index + 1].transform.position) * 0.5f;
     }    private float JointPositionMultiplier(int index)
     {
         return (distanceBetweenJoints / distanceBetweenObjects) * (jointCount - index);

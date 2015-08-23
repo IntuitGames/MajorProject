@@ -43,7 +43,8 @@ public class DebugTetherVisual : MonoBehaviour
         transform.localPosition = PositionVec;
 
         // Determine the rotation
-        transform.localRotation = Quaternion.LookRotation(objectA.position - objectB.position);
+        if (objectA.position - objectB.position != Vector3.zero)
+            transform.localRotation = Quaternion.LookRotation(objectA.position - objectB.position);
 
         // Apply debug color if game is playing
         if (debugStrainColours && Application.isPlaying)
