@@ -409,7 +409,7 @@ public class FMOD_StudioSystem : MonoBehaviour
 		}
 	}
 	
-	static bool ERRCHECK(FMOD.RESULT result)
+	public static bool ERRCHECK(FMOD.RESULT result)
 	{
 		return FMOD.Studio.UnityUtil.ERRCHECK(result);
 	}

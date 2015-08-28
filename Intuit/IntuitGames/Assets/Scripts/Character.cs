@@ -1,4 +1,5 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+using FMOD.Studio;
 using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(AudioSource))]public class Character : MonoBehaviour
 {
     #region VARIABLES
@@ -17,7 +18,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     [HideInInspector]
     public AudioSource audioSource;
 
-    // STATS
+    // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), Header("Basic")]
     private bool _isPlayerOne = true;
     [ReadOnly]
@@ -31,6 +32,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public float maxSpeed = 50;
     public LayerMask layerDetection;
 
+    // DASH
     [Header("Dash"), SerializeField]
     private bool _canDash = true;
     public float dashPower = 25;
@@ -55,6 +57,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         }
     }
 
+    // HEAVY
     [Header("Heavy")]
     public bool canHeavy = true;
     public float heavyMoveSpeed = 2;
@@ -65,6 +68,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public float heavyJumpPower = 20;
     public bool canBounceWhileHeavy = false;
 
+    // BOUNCE
     [Header("Bounce"), SerializeField]
     private bool _canBounce = true;
     public AnimationCurve momentumRetension = AnimationCurve.EaseInOut(40, 1, 80, 0.75f);
@@ -90,12 +94,27 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         get { return canBounceWhileHeavy ? _canBounce : _canBounce && !isHeavy; }
     }
 
+    // AUDIO
     [Header("Audio")]
     public List<AudioClip> walkSounds = new List<AudioClip>();
     public List<AudioClip> jumpSounds = new List<AudioClip>();
     public List<AudioClip> dashSounds = new List<AudioClip>();
     public List<AudioClip> landSounds = new List<AudioClip>();
     public List<AudioClip> bounceSounds = new List<AudioClip>();
+
+    // F-MOD
+    public bool useFMOD = true;
+    private FMOD_StudioSystem FM_soundSystem;
+    private EventInstance FM_jump, FM_land, FM_footstep;
+    private ParameterInstance FM_playerFallSpeed, FM_playerMovespeed;
+    private float FM_playerFallSpeedValue
+    {
+        get { return targetVelocity.y < 0 ? Mathf.Lerp(0, 1, Mathf.Abs(targetVelocity.y) / (maxSpeed * 0.5f)) : 0; }
+    }
+    private float FM_playerMovespeedValue
+    {
+        get { return targetVelocity.IgnoreY2().magnitude; }
+    }
 
     // PRIVATES
 #pragma warning disable 414
@@ -204,17 +223,32 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
         airTimeResetTimer = TimerPlus.Create(0.1f, TimerPlus.Presets.Standard, () => airTime = 0);
-        walkSoundTimer = TimerPlus.Create(0.5f, TimerPlus.Presets.Repeater, () => { if (isWalking && !isAirborne) audioSource.PlayClip(walkSounds.Random()); });
+        walkSoundTimer = TimerPlus.Create(0.5f, TimerPlus.Presets.Repeater, () => PlaySound(FM_footstep, walkSounds.Random(), isWalking && !isAirborne));
     }    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
         GameManager.inputManager.SetupCharacterInput(this);
+
+        // Setup FMOD
+        SetupFMOD();
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // Stop dashing if hit by something in front
         if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
+    }
+
+    void OnDisabled()
+    {
+        FM_jump.stop(STOP_MODE.IMMEDIATE);
+        FM_jump.release();
+
+        FM_land.stop(STOP_MODE.IMMEDIATE);
+        FM_land.release();
+
+        FM_footstep.stop(STOP_MODE.IMMEDIATE);
+        FM_footstep.release();
     }
 
     #endregion
@@ -246,6 +280,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
             targetVelocity.y = Mathf.Max(0, targetVelocity.y);
         }
+
+        // Update FMOD parameters
+        if (FM_playerFallSpeed != null) FM_playerFallSpeed.setValue(FM_playerFallSpeedValue);
+        if (FM_playerMovespeed != null) FM_playerMovespeed.setValue(FM_playerMovespeedValue);
     }
 
     // Is called AFTER input is determined every frame
@@ -288,7 +326,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
         if (jumpTime > jumpCurve.Duration()) return;
 
-        if (jumpTime <= Time.deltaTime) audioSource.PlayClip(jumpSounds.Random());
+        PlaySound(FM_jump, jumpSounds.Random(), jumpTime <= Time.deltaTime);
 
         if (!isHeavy)
             targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 6.4f / jumpCurve.Duration());
@@ -302,7 +340,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         {
             isDashing = true;
 
-            audioSource.PlayClip(dashSounds.Random());
+            if(!useFMOD) audioSource.PlayClip(dashSounds.Random());
 
             if (!isAirborne) targetVelocity.y += dashHeight;
         }
@@ -379,7 +417,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         // Apply bounce power
         if (isBouncing)
         {
-            audioSource.PlayClip(bounceSounds.Random());
+            if (!useFMOD) audioSource.PlayClip(bounceSounds.Random());
             bouncePower *= momentumRetension.Evaluate(downVelocity);
             targetVelocity.y = bouncePower;
         }
@@ -395,7 +433,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
         Bounce(-landVelocity.y);
 
-        if (landVelocity.y < -30) audioSource.PlayClip(landSounds.Random());
+        PlaySound(FM_land, landSounds.Random(), landVelocity.y < -10);
     }
 
     #endregion
@@ -430,6 +468,41 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         wasAirborne = newIsAirborne;
 
         return newIsAirborne;
+    }
+
+    private void SetupFMOD()
+    {
+        FM_soundSystem = FMOD_StudioSystem.instance;
+
+        // Load in banks if necessary
+        if (!FM_soundSystem.System.isValid())
+        {
+            string fileName = Application.dataPath + @"/StreamingAssets/Master Bank.bank";
+            Bank bank, bankStrings;
+            FMOD_StudioSystem.ERRCHECK(FM_soundSystem.System.loadBankFile(fileName, LOAD_BANK_FLAGS.NORMAL, out bank));
+            FMOD_StudioSystem.ERRCHECK(FM_soundSystem.System.loadBankFile(fileName + ".strings", LOAD_BANK_FLAGS.NORMAL, out bankStrings));
+        }
+
+        // Find events
+        FM_jump = FM_soundSystem.GetEvent("event:/Sound Effects/Player/Jump");
+        FM_land = FM_soundSystem.GetEvent("event:/Sound Effects/Player/Land");
+        FM_footstep = FM_soundSystem.GetEvent(string.Format("event:/Sound Effects/Player/P{0} Footstep", isPlayerOne ? "1" : "2"));
+
+        // Set parameters
+        FM_land.getParameter("PlayerFallSpeed", out FM_playerFallSpeed);
+        FM_footstep.getParameter(string.Format("Player{0}MoveSpeed", isPlayerOne ? "1" : "2"), out FM_playerMovespeed);
+    }
+
+    private void PlaySound(EventInstance FM_event, AudioClip audioClip, bool condition = true)
+    {
+        if (!condition) return;
+
+        if (useFMOD)
+        {
+            if (FM_event != null)
+                FM_event.start();
+        }
+        else { audioSource.PlayClip(audioClip); }
     }
 
     #endregion
