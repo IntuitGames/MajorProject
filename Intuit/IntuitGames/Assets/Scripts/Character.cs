@@ -284,6 +284,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         // Update FMOD parameters
         if (FM_playerFallSpeed != null) FM_playerFallSpeed.setValue(FM_playerFallSpeedValue);
         if (FM_playerMovespeed != null) FM_playerMovespeed.setValue(FM_playerMovespeedValue);
+        
+        var FM_attributes = GetFMODAttribute(transform, characterController.velocity);
+
+        if (FM_land != null) FM_land.set3DAttributes(FM_attributes);
+        if (FM_jump != null) FM_jump.set3DAttributes(FM_attributes);
+        if (FM_footstep != null) FM_footstep.set3DAttributes(FM_attributes);
     }
 
     // Is called AFTER input is determined every frame
@@ -491,6 +497,25 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         // Set parameters
         FM_land.getParameter("PlayerFallSpeed", out FM_playerFallSpeed);
         FM_footstep.getParameter(string.Format("Player{0}MoveSpeed", isPlayerOne ? "1" : "2"), out FM_playerMovespeed);
+    }
+
+    private ATTRIBUTES_3D GetFMODAttribute(Transform transform, Vector3 velocity)
+    {
+        var FM_attribute = new ATTRIBUTES_3D();
+        FM_attribute.position = ConvertToFMVector(transform.position);
+        FM_attribute.velocity = ConvertToFMVector(velocity);
+        FM_attribute.forward = ConvertToFMVector(transform.forward);
+        FM_attribute.up = ConvertToFMVector(transform.up);
+        return FM_attribute;
+    }
+
+    private FMOD.VECTOR ConvertToFMVector(Vector3 vec)
+    {
+        var FM_vector = new FMOD.VECTOR();
+        FM_vector.x = vec.x;
+        FM_vector.y = vec.y;
+        FM_vector.z = vec.z;
+        return FM_vector;
     }
 
     private void PlaySound(EventInstance FM_event, AudioClip audioClip, bool condition = true)
