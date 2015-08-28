@@ -1017,13 +1017,15 @@ MonoBehaviour:
   maxGroundBounceThreshold: 150
   minGroundBouncePower: 10
   maxGroundBouncePower: 30
-  walkSounds: []
+  walkSounds:
+  - {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
   jumpSounds:
   - {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
   dashSounds: []
   landSounds:
   - {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
   bounceSounds: []
+  useFMOD: 1
 --- !u!114 &11487344
 MonoBehaviour:
   m_ObjectHideFlags: 1

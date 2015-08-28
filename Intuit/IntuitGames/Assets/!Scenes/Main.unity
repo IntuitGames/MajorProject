@@ -5792,10 +5792,6 @@ Prefab:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 801933969}
-    - target: {fileID: 8201082, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: m_Pitch
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d523b58627c498d44a306448c1f3055f, type: 2}
   m_IsPrefabParent: 0
@@ -6992,6 +6988,7 @@ GameObject:
   - 81: {fileID: 747594658}
   - 114: {fileID: 747594663}
   - 82: {fileID: 747594664}
+  - 114: {fileID: 747594665}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7150,6 +7147,18 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &747594665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 747594657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8336b22d6d3af4da2712827e9ad333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pluginPaths: []
 --- !u!1 &770361295
 GameObject:
   m_ObjectHideFlags: 0
@@ -19818,14 +19827,14 @@ Prefab:
       propertyPath: _isPlayerOne
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: dashPower
-      value: 30
-      objectReference: {fileID: 0}
     - target: {fileID: 13794552, guid: d523b58627c498d44a306448c1f3055f, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: ca82c0596e3a4d14b9791bdabdd1e266, type: 2}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: walkSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
     m_RemovedComponents:
     - {fileID: 14582044, guid: d523b58627c498d44a306448c1f3055f, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: d523b58627c498d44a306448c1f3055f, type: 2}
