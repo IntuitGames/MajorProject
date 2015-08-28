@@ -17,6 +17,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public CharacterController characterController;
     [HideInInspector]
     public AudioSource audioSource;
+    [HideInInspector]
+    public Animator animator;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), Header("Basic")]
@@ -115,12 +117,13 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     {
         get { return targetVelocity.IgnoreY2().magnitude; }
     }
+    [Range(0, 1)]
+    public float jumpVolume = 0.5f, landVolume = 1, footstepVolume = 1;
 
     // PRIVATES
 #pragma warning disable 414
     private float airTime = 0;                          // How long this character has been airborne for
     private TimerPlus airTimeResetTimer;
-    private TimerPlus walkSoundTimer;
     private RaycastHit onObject;                        // What object is this character standing on
     private const float airborneCenterRayOffset = 0.5f; // How much additional height offset will the ray checks account for
 #pragma warning restore 414
@@ -218,12 +221,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         // Find component references
         characterController = GetComponent<CharacterController>();
         audioSource = GetComponent<AudioSource>();
+        animator = GetComponentInChildren<Animator>();
 
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
         airTimeResetTimer = TimerPlus.Create(0.1f, TimerPlus.Presets.Standard, () => airTime = 0);
-        walkSoundTimer = TimerPlus.Create(0.5f, TimerPlus.Presets.Repeater, () => PlaySound(FM_footstep, walkSounds.Random(), isWalking && !isAirborne));
     }    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
@@ -290,6 +293,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         if (FM_land != null) FM_land.set3DAttributes(FM_attributes);
         if (FM_jump != null) FM_jump.set3DAttributes(FM_attributes);
         if (FM_footstep != null) FM_footstep.set3DAttributes(FM_attributes);
+
+        if (FM_land != null) FM_land.setVolume(landVolume);
+        if (FM_jump != null) FM_jump.setVolume(jumpVolume);
+        if (FM_footstep != null) FM_footstep.setVolume(footstepVolume);
     }
 
     // Is called AFTER input is determined every frame
@@ -308,6 +315,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
         // Zero Y movement if collided with an object above
         if ((colFlags & CollisionFlags.CollidedAbove) == CollisionFlags.CollidedAbove) targetVelocity.y = Mathf.Min(0, targetVelocity.y);
+
+        // Send animator info
+        animator.SetBool("IsAirborne", isAirborne);
+        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude);
     }
 
     public void Movement(float forward, float right)
@@ -440,6 +451,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         Bounce(-landVelocity.y);
 
         PlaySound(FM_land, landSounds.Random(), landVelocity.y < -10);
+    }
+
+    void OnFootStep(int footIndex) // 1 left, 2 right
+    {
+        PlaySound(FM_footstep, walkSounds.Random(), isWalking && !isAirborne);
     }
 
     #endregion
