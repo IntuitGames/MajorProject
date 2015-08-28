@@ -502,20 +502,11 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     private ATTRIBUTES_3D GetFMODAttribute(Transform transform, Vector3 velocity)
     {
         var FM_attribute = new ATTRIBUTES_3D();
-        FM_attribute.position = ConvertToFMVector(transform.position);
-        FM_attribute.velocity = ConvertToFMVector(velocity);
-        FM_attribute.forward = ConvertToFMVector(transform.forward);
-        FM_attribute.up = ConvertToFMVector(transform.up);
+        FM_attribute.position = transform.position;
+        FM_attribute.velocity = velocity;
+        FM_attribute.forward = transform.forward;
+        FM_attribute.up = transform.up;
         return FM_attribute;
-    }
-
-    private FMOD.VECTOR ConvertToFMVector(Vector3 vec)
-    {
-        var FM_vector = new FMOD.VECTOR();
-        FM_vector.x = vec.x;
-        FM_vector.y = vec.y;
-        FM_vector.z = vec.z;
-        return FM_vector;
     }
 
     private void PlaySound(EventInstance FM_event, AudioClip audioClip, bool condition = true)

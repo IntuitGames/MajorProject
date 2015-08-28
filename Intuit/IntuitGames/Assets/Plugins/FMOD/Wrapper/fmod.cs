@@ -193,6 +193,20 @@ namespace FMOD
         public float x;        /* X co-ordinate in 3D space. */
         public float y;        /* Y co-ordinate in 3D space. */
         public float z;        /* Z co-ordinate in 3D space. */
+
+        public static implicit operator VECTOR(UnityEngine.Vector3 vec)
+        {
+            VECTOR FM_vector = new VECTOR();
+            FM_vector.x = vec.x;
+            FM_vector.y = vec.y;
+            FM_vector.z = vec.z;
+            return FM_vector;
+        }
+
+        public static implicit operator UnityEngine.Vector3(VECTOR vec)
+        {
+            return new UnityEngine.Vector3(vec.x, vec.y, vec.z);
+        }
     }
 
     /*
