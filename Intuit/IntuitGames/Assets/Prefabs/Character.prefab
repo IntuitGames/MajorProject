@@ -1039,6 +1039,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
   bounceSounds: []
   useFMOD: 1
+  jumpVolume: 1
+  landVolume: 1
+  footstepVolume: .5
 --- !u!114 &11487344
 MonoBehaviour:
   m_ObjectHideFlags: 1

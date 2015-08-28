@@ -117,6 +117,8 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     {
         get { return targetVelocity.IgnoreY2().magnitude; }
     }
+    [Range(0, 1)]
+    public float jumpVolume = 0.5f, landVolume = 1, footstepVolume = 1;
 
     // PRIVATES
 #pragma warning disable 414
@@ -291,6 +293,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         if (FM_land != null) FM_land.set3DAttributes(FM_attributes);
         if (FM_jump != null) FM_jump.set3DAttributes(FM_attributes);
         if (FM_footstep != null) FM_footstep.set3DAttributes(FM_attributes);
+
+        if (FM_land != null) FM_land.setVolume(landVolume);
+        if (FM_jump != null) FM_jump.setVolume(jumpVolume);
+        if (FM_footstep != null) FM_footstep.setVolume(footstepVolume);
     }
 
     // Is called AFTER input is determined every frame
