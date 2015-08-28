@@ -215,7 +215,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     {
         // Stop dashing if hit by something in front
         if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
-    }
+    }	void Update() {		//if(onObject.collider)Debug.Log (onObject.collider.name);	}
 
     #endregion
 
@@ -395,7 +395,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
         Bounce(-landVelocity.y);
 
-        if (landVelocity.y < -30) audioSource.PlayClip(landSounds.Random());
+        if (landVelocity.y < -10) audioSource.PlayClip(landSounds.Random());
     }
 
     #endregion
