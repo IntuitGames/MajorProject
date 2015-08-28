@@ -353,6 +353,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 437056}
   - 95: {fileID: 9502226}
+  - 114: {fileID: 11446048}
   m_Layer: 9
   m_Name: Animated_Rig
   m_TagString: Untagged
@@ -933,7 +934,7 @@ Animator:
   m_GameObject: {fileID: 177458}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: a2bb6174f6d13474f9365d4ce3898e1a, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0dda60587af2995428ab7051bb63fbfc, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -941,6 +942,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11446048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690a6c0c530a9474dac9820ca24da9d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11447842
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -954,6 +966,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
   audioSource: {fileID: 0}
+  animator: {fileID: 0}
   _isPlayerOne: 1
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
