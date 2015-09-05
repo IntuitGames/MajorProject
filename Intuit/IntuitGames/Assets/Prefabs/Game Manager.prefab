@@ -41,8 +41,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7fd28b46b7920d4d8aa7ff69f1d0036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mediumJumpThreshold: .100000001
-  highJumpThreshold: .25
+  preAndPostUpdates: 1
+  movementUpdates: 1
+  jumpUpdates: 1
+  dashUpdates: 1
+  heavyUpdates: 0
+  pauseUpdates: 0
 --- !u!114 &11463420
 MonoBehaviour:
   m_ObjectHideFlags: 1

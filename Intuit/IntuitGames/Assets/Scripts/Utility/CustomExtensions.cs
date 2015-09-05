@@ -64,6 +64,35 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 return default(T);
             else
                 return Source[UnityEngine.Random.Range(0, Source.Count)];
+        }        /// <summary>
+        /// Same as .NET FirstOrDefault but allows specification of default value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Source"></param>
+        /// <param name="Predicate"></param>
+        /// <param name="DefaultValue"></param>
+        /// <returns></returns>        public static T FirstOrDefault<T>(this IEnumerable<T> Source, Func<T, bool> Predicate, T DefaultValue = default(T))
+        {
+            if (Source.IsNullOrEmpty()) return DefaultValue;
+
+            foreach (T Obj in Source)
+                if (Predicate(Obj))
+                    return Obj;
+
+            return DefaultValue;
+        }        /// <summary>
+        /// Returns itself if the predicate is false.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Source"></param>
+        /// <param name="Predicate"></param>
+        /// <param name="DefaultValue"></param>
+        /// <returns></returns>        public static T Default<T>(this T Source, Func<T, bool> Predicate, T DefaultValue)
+        {
+            if (Predicate(Source))
+                return DefaultValue;
+            else
+                return Source;
         }    }    /// <summary>
     /// Unity specific extension methods.
     /// </summary>    public static partial class Unity
@@ -75,7 +104,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <param name="Source"></param>
         /// <param name="IncludeChildren"></param>
         /// <returns></returns>
-        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeChildren = false) where T : class
+        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false) where T : class
         {
             if (Source.IsNullOrEmpty())
                 throw new ArgumentNullException();
@@ -87,9 +116,9 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             // List of components on itself, in children and parent (gets monobehaviours instead because this method specializes in finding custom interfaces)
             List<MonoBehaviour> Components = Source.GetComponents<MonoBehaviour>().ToList();
 
-            // Include children if specified
-            if (IncludeChildren)
-                Components = Components.Concat(Source.GetComponentsInChildren<MonoBehaviour>()).ToList();
+            // Include parents and children if specified
+            if (IncludeParents) Components = Components.Concat(Source.GetComponentsInParent<MonoBehaviour>()).ToList();
+            if (IncludeChildren) Components = Components.Concat(Source.GetComponentsInChildren<MonoBehaviour>()).ToList();
 
             // Attempt to return interface
             T InterfaceObj = Components.FirstOrDefault(x => x is T) as T;

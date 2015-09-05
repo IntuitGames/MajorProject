@@ -9,6 +9,8 @@ using System;
 /// </summary>
 public class InputManager : Manager
 {
+    #region VARIABLES
+
     // Input Axes Strings
     private const string player1Str = "P1";
     private const string player2Str = "P2";
@@ -20,194 +22,329 @@ public class InputManager : Manager
     private const string pauseStr = "Submit_";
     private const string unpauseStr = "Submit_";
 
+    // Input Booleans
+    [System.NonSerialized] public bool p1JumpDown, p2JumpDown, p1JumpHold, p2JumpHold, p1JumpUp, p2JumpUp;
+    [System.NonSerialized] public bool p1DashDown, p2DashDown, p1DashHold, p2DashHold, p1DashUp, p2DashUp;
+    [System.NonSerialized] public bool p1HeavyDown, p2HeavyDown, p1HeavyHold, p2HeavyHold, p1HeavyUp, p2HeavyUp;
+    [System.NonSerialized] public bool p1PauseDown, p2PauseDown, p1PauseHold, p2PauseHold, p1PauseUp, p2PauseUp;
+    [System.NonSerialized] public bool p1UnpauseDown, p2UnpauseDown, p1UnpauseHold, p2UnpauseHold, p1UnpauseUp, p2UnpauseUp;
+
     // Events
-    public event Action PreUpdate = delegate { };
-    public event Action PostUpdate = delegate { };
-    public event Action<float> ForwardP1 = delegate { };
-    public event Action<float> ForwardP2 = delegate { };
-    public event Action<float> RightP1 = delegate { };
-    public event Action<float> RightP2 = delegate { };
+    public event Action<float> PreUpdate = delegate { };
+    public event Action<float> PostUpdate = delegate { };
     public event Action<float, float> MovementP1 = delegate { };
     public event Action<float, float> MovementP2 = delegate { };
-    public event Action<float> JumpP1 = delegate { };
-    public event Action<float> JumpP2 = delegate { };
-    public event Action DashP1 = delegate { };
-    public event Action DashP2 = delegate { };
+    public event Action<bool> JumpP1 = delegate { };
+    public event Action<bool> JumpP2 = delegate { };
+    public event Action<bool> JumpToggleP1 = delegate { };
+    public event Action<bool> JumpToggleP2 = delegate { };
+    public event Action<bool> DashP1 = delegate { };
+    public event Action<bool> DashP2 = delegate { };
+    public event Action<bool> DashToggleP1 = delegate { };
+    public event Action<bool> DashToggleP2 = delegate { };
     public event Action<bool> HeavyP1 = delegate { };
     public event Action<bool> HeavyP2 = delegate { };
-    public event Action Pause = delegate { };
-    public event Action Unpause = delegate { };
+    public event Action<bool> HeavyToggleP1 = delegate { };
+    public event Action<bool> HeavyToggleP2 = delegate { };
+    public event Action<bool> Pause = delegate { };
+    public event Action<bool> Unpause = delegate { };
+    public event Action<bool> PauseToggle = delegate { };
+    public event Action<bool> UnpauseToggle = delegate { };
 
-    // Timings
-    private bool player1JumpDown;                   // Player 1 is pressing down the jump button
-    private bool player2JumpDown;                   // Player 2 is pressing down the jump button
-    private float player1JumpHold;                  // How long has player 1 held down the jump button
-    private float player2JumpHold;                  // How long has player 1 held down the jump button
+    // Settings
+    public enum UpdateTypes { Update, FixedUpdate, LateUpdate };
+    public UpdateTypes preAndPostUpdates = UpdateTypes.FixedUpdate;
+    public UpdateTypes movementUpdates = UpdateTypes.FixedUpdate;
+    public UpdateTypes jumpUpdates = UpdateTypes.FixedUpdate;
+    public UpdateTypes dashUpdates = UpdateTypes.FixedUpdate;
+    public UpdateTypes heavyUpdates = UpdateTypes.Update;
+    public UpdateTypes pauseUpdates = UpdateTypes.Update;
+
+    // Quick-access Properties
+    public float jumpDelta { get { return GetDelta(jumpUpdates); } }
+    public float dashDelta { get { return GetDelta(dashUpdates); } }
+    public float heavyDelta { get { return GetDelta(heavyUpdates); } }
+    public float pauseDelta { get { return GetDelta(pauseUpdates); } }
+
+    #endregion
+
+    #region MESSAGES
 
     void Update()
     {
-        PreUpdate();
+        CheckForInput();
+
+        HandleInput(UpdateTypes.Update, Time.deltaTime);
+    }
+
+    void FixedUpdate()
+    {
+        HandleInput(UpdateTypes.FixedUpdate, Time.fixedDeltaTime);
+    }
+
+    void LateUpdate()
+    {
+        HandleInput(UpdateTypes.LateUpdate, Time.deltaTime);
+    }
+
+    #endregion
+
+    private void CheckForInput()
+    {
+        if (Input.GetButtonDown(jumpStr + player1Str)) p1JumpDown = true;
+        if (Input.GetButtonDown(jumpStr + player2Str)) p2JumpDown = true;
+        p1JumpHold = Input.GetButton(jumpStr + player1Str);
+        p2JumpHold = Input.GetButton(jumpStr + player2Str);
+        if (Input.GetButtonUp(jumpStr + player1Str)) p1JumpUp = true;
+        if (Input.GetButtonUp(jumpStr + player2Str)) p2JumpUp = true;
+
+        if (Input.GetButtonDown(dashStr + player1Str)) p1DashDown = true;
+        if (Input.GetButtonDown(dashStr + player2Str)) p2DashDown = true;
+        p1DashHold = Input.GetButton(dashStr + player1Str);
+        p2DashHold = Input.GetButton(dashStr + player2Str);
+        if (Input.GetButtonUp(dashStr + player1Str)) p1DashUp = true;
+        if (Input.GetButtonUp(dashStr + player2Str)) p2DashUp = true;
+
+        if (Input.GetButtonDown(heavyStr + player1Str)) p1HeavyDown = true;
+        if (Input.GetButtonDown(heavyStr + player2Str)) p2HeavyDown = true;
+        p1HeavyHold = Input.GetButton(heavyStr + player1Str);
+        p2HeavyHold = Input.GetButton(heavyStr + player2Str);
+        if (Input.GetButtonUp(heavyStr + player1Str)) p1HeavyUp = true;
+        if (Input.GetButtonUp(heavyStr + player2Str)) p2HeavyUp = true;
+
+        if (Input.GetButtonDown(pauseStr + player1Str)) p1PauseDown = true;
+        if (Input.GetButtonDown(pauseStr + player2Str)) p2PauseDown = true;
+        p1PauseHold = Input.GetButton(pauseStr + player1Str);
+        p2PauseHold = Input.GetButton(pauseStr + player2Str);
+        if (Input.GetButtonUp(pauseStr + player1Str)) p1PauseUp = true;
+        if (Input.GetButtonUp(pauseStr + player2Str)) p2PauseUp = true;
+
+        if (Input.GetButtonDown(unpauseStr + player1Str)) p1UnpauseDown = true;
+        if (Input.GetButtonDown(unpauseStr + player2Str)) p2UnpauseDown = true;
+        p1UnpauseHold = Input.GetButton(unpauseStr + player1Str);
+        p2UnpauseHold = Input.GetButton(unpauseStr + player2Str);
+        if (Input.GetButtonUp(unpauseStr + player1Str)) p1UnpauseUp = true;
+        if (Input.GetButtonUp(unpauseStr + player2Str)) p2UnpauseUp = true;
+    }
+
+    private void HandleInput(UpdateTypes type, float delta)
+    {
+        if (type == preAndPostUpdates) PreUpdate(delta);
 
         // Only check inputs for certain game modes
-        switch (GameManager.modeManager.currentGameMode)
+        switch (GameManager.ModeManager.currentGameMode)
         {
             case ModeManager.GameMode.InGame:
-                HandleInGameEvents();
+                HandleInGameEvents(type);
                 break;
 
             case ModeManager.GameMode.PauseMenu:
-                HandlePauseMenuEvents();
+                if (type == pauseUpdates) HandlePauseMenuEvents();
                 break;
 
             default:
                 break;
         }
 
-        PostUpdate();
+        if (type == preAndPostUpdates) PostUpdate(delta);
     }
+
+    #region IN-GAME
 
     // Is called every frame if game is in a in-game state
-    private void HandleInGameEvents()
+    private void HandleInGameEvents(UpdateTypes type)
     {
         // Raise axis input events
-        ForwardP1(Input.GetAxis(forwardStr + player1Str));
-        ForwardP2(Input.GetAxis(forwardStr + player2Str));
-        RightP1(Input.GetAxis(rightStr + player1Str));
-        RightP2(Input.GetAxis(rightStr + player2Str));
-        MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
-        MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
+        if (type == movementUpdates) HandleMovementEvents();
 
         // Raise action button event
-        HandleJumpEvents();
-
-        if (Input.GetButtonDown(dashStr + player1Str))
-            DashP1();
-        if (Input.GetButtonDown(dashStr + player2Str))
-            DashP2();
-
-        HeavyP1(Input.GetButton(heavyStr + player1Str));
-        HeavyP2(Input.GetButton(heavyStr + player2Str));
+        if (type == jumpUpdates) HandleJumpEvents();
+        if (type == dashUpdates) HandleDashEvents();
+        if (type == heavyUpdates) HandleHeavyEvents();
 
         // Pause and unpause check
-        if (Input.GetButtonDown(pauseStr + player1Str))
-            Pause();
-        if (Input.GetButtonDown(pauseStr + player2Str))
-            Pause();
+        if (type == pauseUpdates) HandlePauseEvents();
     }
 
-    // Specifically handles the more complex jump event system
+    private void HandleMovementEvents()
+    {
+        MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
+        MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
+    }
+
     private void HandleJumpEvents()
     {
-        // Player 1
-        if (!Character.character1.isBouncing)
+        if (p1JumpDown)
         {
-            if (Input.GetButtonDown(jumpStr + player1Str) && !Character.character1.isAirborne)
-                player1JumpDown = true;
-
-            if (player1JumpDown && Input.GetButton(jumpStr + player1Str))
-            {
-                player1JumpHold += Time.deltaTime;
-                JumpP1(player1JumpHold);
-
-                // If heavy make sure its only a one-time boost
-                if (Character.character1.isHeavy)
-                    ResetJumpDown(true);
-            }
-            else
-                ResetJumpDown(true);
+            JumpToggleP1(true);
+            p1JumpDown = false;
+        }
+        if (p2JumpDown)
+        {
+            JumpToggleP2(true);
+            p2JumpDown = false;
         }
 
-        // Player 2
-        if (!Character.character2.isBouncing)
+        JumpP1(p1JumpHold);
+        JumpP2(p2JumpHold);
+
+        if (p1JumpUp)
         {
-            if (Input.GetButtonDown(jumpStr + player2Str) && !Character.character2.isAirborne)
-                player2JumpDown = true;
-
-            if (player2JumpDown && Input.GetButton(jumpStr + player2Str))
-            {
-                player2JumpHold += Time.deltaTime;
-                JumpP2(player2JumpHold);
-
-                // If heavy make sure its only a one-time boost
-                if (Character.character2.isHeavy)
-                    ResetJumpDown(false);
-            }
-            else
-                ResetJumpDown(false);
+            JumpToggleP1(false);
+            p1JumpUp = false;
+        }
+        if (p2JumpUp)
+        {
+            JumpToggleP2(false);
+            p2JumpUp = false;
         }
     }
+
+    private void HandleDashEvents()
+    {
+        if (p1DashDown)
+        {
+            DashToggleP1(true);
+            p1DashDown = false;
+        }
+        if (p2DashDown)
+        {
+            DashToggleP2(true);
+            p2DashDown = false;
+        }
+
+        DashP1(p1DashHold);
+        DashP2(p2DashHold);
+
+        if (p1DashUp)
+        {
+            DashToggleP1(false);
+            p1DashUp = false;
+        }
+        if (p2DashUp)
+        {
+            DashToggleP2(false);
+            p2DashUp = false;
+        }
+    }
+
+    private void HandleHeavyEvents()
+    {
+        if (p1HeavyDown)
+        {
+            HeavyToggleP1(true);
+            p1HeavyDown = false;
+        }
+        if (p2HeavyDown)
+        {
+            HeavyToggleP2(true);
+            p2HeavyDown = false;
+        }
+
+        HeavyP1(p1HeavyHold);
+        HeavyP2(p2HeavyHold);
+
+        if (p1HeavyUp)
+        {
+            HeavyToggleP1(false);
+            p1HeavyUp = false;
+        }
+        if (p2HeavyUp)
+        {
+            HeavyToggleP2(false);
+            p2HeavyUp = false;
+        }
+    }
+
+    private void HandlePauseEvents()
+    {
+        if (p1PauseDown || p2PauseDown)
+        {
+            PauseToggle(true);
+            p1PauseDown = false;
+            p2PauseDown = false;
+        }
+
+        Pause(p1PauseHold || p2PauseHold);
+
+        if(p1PauseUp || p2PauseUp)
+        {
+            PauseToggle(false);
+            p1PauseUp = false;
+            p2PauseUp = false;
+        }
+    }
+
+    #endregion
+
+    #region PAUSE MENU
 
     // Is called every frame if the game is in a paused state
     private void HandlePauseMenuEvents()
     {
-        if (Input.GetButtonDown(unpauseStr + player1Str))
-            Unpause();
-        if (Input.GetButtonDown(unpauseStr + player2Str))
-            Unpause();
+        if (p1UnpauseDown || p2UnpauseDown)
+        {
+            UnpauseToggle(true);
+            p1UnpauseDown = false;
+            p2UnpauseDown = false;
+        }
+
+        Unpause(p1UnpauseHold || p2UnpauseHold);
+
+        if (p1UnpauseUp || p2UnpauseUp)
+        {
+            UnpauseToggle(false);
+            p1UnpauseUp = false;
+            p2UnpauseUp = false;
+        }
     }
+
+    #endregion
+
+    #region HELPERS
 
     // Subscribes to all character specific events
     public void SetupCharacterInput(Character characterObj)
     {
-        characterObj.Landed += ResetJumpDown;
-
         // Ensure these methods are only subscribed to once
         PreUpdate += characterObj.PreInputUpdate;
         PostUpdate += characterObj.PostInputUpdate;
-        Pause += characterObj.Pause;
-        Unpause += characterObj.Pause;
+        PauseToggle += characterObj.Pause;
+        UnpauseToggle += characterObj.Pause;
 
         if (characterObj.isPlayerOne)
         {
             // Subscribe to player 1 events
             MovementP1 += characterObj.Movement;
             JumpP1 += characterObj.Jump;
-            DashP1 += characterObj.Dash;
+            JumpToggleP1 += characterObj.JumpToggle;
+            DashToggleP1 += characterObj.Dash;
             HeavyP1 += characterObj.Heavy;
-
-            // Unsubscribe from player 2 events
-            MovementP2 -= characterObj.Movement;
-            JumpP2 -= characterObj.Jump;
-            DashP2 -= characterObj.Dash;
-            HeavyP2 -= characterObj.Heavy;
         }
         else
         {
             // Subscribe to player 2 events
             MovementP2 += characterObj.Movement;
             JumpP2 += characterObj.Jump;
-            DashP2 += characterObj.Dash;
+            JumpToggleP2 += characterObj.JumpToggle;
+            DashToggleP2 += characterObj.Dash;
             HeavyP2 += characterObj.Heavy;
-
-            // Unsubscribe from player 1 events
-            MovementP1 -= characterObj.Movement;
-            JumpP1 -= characterObj.Jump;
-            DashP1 -= characterObj.Dash;
-            HeavyP1 -= characterObj.Heavy;
         }
     }
 
-    // Resets the jump hold time
-    public void ResetJumpDown(bool player1)
+    private float GetDelta(UpdateTypes type)
     {
-        if (player1)
-        {
-            player1JumpDown = false;
-            player1JumpHold = 0;
-        }
-        else
-        {
-            player2JumpDown = false;
-            player2JumpHold = 0;
-        }
+        return type == UpdateTypes.FixedUpdate ? Time.fixedDeltaTime : Time.deltaTime;
     }
 
     // Is a player currently requesting a jump?
     public bool IsRequestingJump(bool player1)
     {
         if (player1)
-            return Input.GetButton(jumpStr + player1Str);
+            return p1JumpHold;
         else
-            return Input.GetButton(jumpStr + player2Str);
+            return p2JumpHold;
     }
+
+    #endregion
 }

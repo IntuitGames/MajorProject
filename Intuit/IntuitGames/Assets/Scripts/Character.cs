@@ -1,12 +1,18 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+﻿using UnityEngine;
 using FMOD.Studio;
-using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(AudioSource))]public class Character : MonoBehaviour
+using CustomExtensions;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider))]
+public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
 
     // CONSTANTS
-    private const int POWER_MAX = 50;
-    private const int GRAV_MAX = 10;
+    private const int FORCE_MAX = 1000;
+    private const int POWER_MAX = 10;
 
     // STATICS
     public static Character character1 { get; private set; }
@@ -14,25 +20,28 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
 
     // COMPONENTS
     [HideInInspector]
-    public CharacterController characterController;
+    public Rigidbody rigidBody;
     [HideInInspector]
     public AudioSource audioSource;
+    [HideInInspector]
+    public CapsuleCollider capsuleCollider;
     [HideInInspector]
     public Animator animator;
 
     // BASIC STATS
-    [SerializeField, Popup(new string[2] { "Player 1", "Player 2"}, OverrideName = "Player"), Header("Basic")]
+    [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
     private bool _isPlayerOne = true;
     [ReadOnly]
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
-    [Range(0, GRAV_MAX)]
-    public float baseGravity = 3;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, GRAV_MAX)]
+    [Range(0, FORCE_MAX)]
     public float jumpPower = 10;
+    [Range(0, POWER_MAX)]
+    public float rotationSpeed = 10;
     public float maxSpeed = 50;
-    public LayerMask layerDetection;
+    public LayerMask groundedLayers;
+    public PhysicMaterial normalMaterial;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -40,7 +49,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public float dashPower = 25;
     [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
     public float dashLength = 0.5f;
-    [Range(0, GRAV_MAX)]
+    [Range(0, POWER_MAX)]
     public float dashHeight = 3;
     private TimerPlus dashTimer;
     public bool stopDashOnCollision = true;
@@ -64,37 +73,30 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public bool canHeavy = true;
     public float heavyMoveSpeed = 2;
     public bool canUnheavyMidair = false;
-    [Range(0, GRAV_MAX)]
-    public float heavyGravity = 6;
-    [Range(0, POWER_MAX)]
+    [Range(0, POWER_MAX * 5)]
     public float heavyJumpPower = 20;
+    [Range(0, FORCE_MAX)]
+    public float heavyDownwardForce = 100;
+    [Range(0, 90)]
+    public float heavySlopeAngle = 0.2f;
+    public PhysicMaterial heavyMaterial;
     public bool canBounceWhileHeavy = false;
 
     // BOUNCE
-    [Header("Bounce"), SerializeField]
-    private bool _canBounce = true;
-    public AnimationCurve momentumRetension = AnimationCurve.EaseInOut(40, 1, 80, 0.75f);
-    public float minBounceThreshold = 40;
-    public float maxBounceThreshold = 80;
+    [Header("Bounce")]
+    public bool canBounce = true;
+    [Range(0, 1)]
+    public float momentumRetention = 0.8f;
     [Range(0, POWER_MAX)]
-    public float minBouncePower = 15;
+    public float bouncePower = 1;
     [Range(0, POWER_MAX)]
-    public float maxBouncePower = 30;
+    public float jumpBouncePower = 1.5f;
+    public bool canGroundBounce = true;
+    public float groundBounceThreshold = 10;
     [Range(0, POWER_MAX)]
-    public float minJumpBouncePower = 20;
-    [Range(0, POWER_MAX)]
-    public float maxJumpBouncePower = 35;
-    public bool canBounceOffGround = true;
-    public float minGroundBounceThreshold = 50;
-    public float maxGroundBounceThreshold = 100;
-    [Range(0, POWER_MAX)]
-    public float minGroundBouncePower = 10;
-    [Range(0, POWER_MAX)]
-    public float maxGroundBouncePower = 10;
-    public bool canBounce
-    {
-        get { return canBounceWhileHeavy ? _canBounce : _canBounce && !isHeavy; }
-    }
+    public float groundBouncePower = 0.5f;
+    public float minGroundBounceMagnitude = 5;
+    public float maxGroundBounceMagnitude = 10;
 
     // AUDIO
     [Header("Audio")]
@@ -105,6 +107,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public List<AudioClip> bounceSounds = new List<AudioClip>();
 
     // F-MOD
+    [Header("FMOD")]
     public bool useFMOD = true;
     private FMOD_StudioSystem FM_soundSystem;
     private EventInstance FM_jump, FM_land, FM_footstep;
@@ -121,12 +124,10 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public float jumpVolume = 0.5f, landVolume = 1, footstepVolume = 1;
 
     // PRIVATES
-#pragma warning disable 414
-    private float airTime = 0;                          // How long this character has been airborne for
-    private TimerPlus airTimeResetTimer;
-    private RaycastHit onObject;                        // What object is this character standing on
-    private const float airborneCenterRayOffset = 0.5f; // How much additional height offset will the ray checks account for
-#pragma warning restore 414
+    private RaycastHit onObject;                        // Which object is currently under this character.
+    private const float airborneRayOffset = 0.05f;      // How much additional height offset will the ray checks account for.
+    private float jumpTime;                             // How long the jump button has been held in for.
+    private bool jumpFlag;
 
     // PROPERTIES
     public bool isPlayerOne
@@ -134,11 +135,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         get { return _isPlayerOne; }
         set
         {
-            if (value != isPlayerOne)
-            {
-                _isPlayerOne = value;
-                if (Application.isPlaying) GameManager.inputManager.SetupCharacterInput(this);
-            }
+            _isPlayerOne = value;
         }
     }
     public float moveSpeed
@@ -150,20 +147,9 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
             return value;
         }
     }
-    public float gravity
+    public float slopeAngle
     {
-        get
-        {
-            float value = baseGravity;
-            if (isHeavy) value = heavyGravity;
-            return value;
-        }
-    }
-
-    // QUICK-ACCESS
-    private Bouncy BounceObject
-    {
-        get { return onObject.collider != null ? onObject.collider.gameObject.GetComponent<Bouncy>() : null; }
+        get { return Vector3.Angle(Vector3.up, onObject.normal); }
     }
 
     // STATES
@@ -174,19 +160,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
             return new Vector2(targetVelocity.x, targetVelocity.z).magnitude > 0;
         }
     }
-    private bool wasAirborne;
-    public bool isAirborne
-    {
-        get
-        {
-            return AirborneRaycheck(transform.position, -transform.up, characterController.height / 2, airborneCenterRayOffset, characterController.radius, out onObject);
-        }
-    }
+    public bool isGrounded { get; set; }
     public bool isFalling
     {
         get
         {
-            return isAirborne && targetVelocity.y < 0;
+            return !isGrounded && targetVelocity.y < 0;
         }
     }
     public bool isDashing
@@ -206,9 +185,6 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     public bool isHeavy { get; set; }
     public bool isBouncing { get; set; }
 
-    // EVENTS
-    public event System.Action<bool> Landed = delegate { };
-
     #endregion
 
     #region MESSAGES
@@ -219,31 +195,28 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         if (!SetStaticCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
-        characterController = GetComponent<CharacterController>();
+        rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
 
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
-        airTimeResetTimer = TimerPlus.Create(0.1f, TimerPlus.Presets.Standard, () => airTime = 0);
-    }    void Start()
+    }
+
+    void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
-        GameManager.inputManager.SetupCharacterInput(this);
+        GameManager.InputManager.SetupCharacterInput(this);
 
         // Setup FMOD
         SetupFMOD();
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        // Stop dashing if hit by something in front
-        if (hit.normal.z < 0 && stopDashOnCollision) isDashing = false;
-    }
-
     void OnDisabled()
     {
+        // Dispose FMOD instances
         FM_jump.stop(STOP_MODE.IMMEDIATE);
         FM_jump.release();
 
@@ -254,41 +227,42 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         FM_footstep.release();
     }
 
+    void OnCollisionEnter(Collision col)
+    {
+        PlaySound(FM_land, landSounds.Random(), col.relativeVelocity.magnitude > 1);
+
+        // Bounce off ground
+        if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
+    }
+
     #endregion
 
     #region INPUT
 
     // Is called BEFORE input is checked every frame
-    public void PreInputUpdate()
+    public void PreInputUpdate(float delta)
     {
         if (!this.enabled) return;
+
+        // Check for airborne changes
+        isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
 
         // Apply any changes to the dash length and cooldown
         dashTimer.Length = dashLength;
         dashCooldownTimer.Length = dashCooldown;
 
-        // Apply gravity if airborne
-        if (isAirborne)
-        {
-            airTimeResetTimer.Reset();
-            airTime += Time.deltaTime;
-            targetVelocity.y += -gravity * airTime;
-        }
-        else
-        {
-            if (!isBouncing)
-                airTimeResetTimer.Start();
-            else
-                airTime = 0;
+        // Check for bounce
+        if (!isBouncing && onObject.collider && onObject.collider.GetComponent<Bouncy>()) Bounce(Vector3.one, onObject.collider.gameObject);
 
-            targetVelocity.y = Mathf.Max(0, targetVelocity.y);
-        }
+        // Apply heavy downward force and physics materials
+        capsuleCollider.material = isHeavy ? heavyMaterial : normalMaterial;
+        if (isHeavy) rigidBody.AddForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
 
         // Update FMOD parameters
         if (FM_playerFallSpeed != null) FM_playerFallSpeed.setValue(FM_playerFallSpeedValue);
         if (FM_playerMovespeed != null) FM_playerMovespeed.setValue(FM_playerMovespeedValue);
-        
-        var FM_attributes = GetFMODAttribute(transform, characterController.velocity);
+
+        var FM_attributes = GetFMODAttribute(transform, rigidBody.velocity);
 
         if (FM_land != null) FM_land.set3DAttributes(FM_attributes);
         if (FM_jump != null) FM_jump.set3DAttributes(FM_attributes);
@@ -300,7 +274,7 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     }
 
     // Is called AFTER input is determined every frame
-    public void PostInputUpdate()
+    public void PostInputUpdate(float delta)
     {
         if (!this.enabled) return;
 
@@ -308,16 +282,14 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         targetVelocity = Vector3.ClampMagnitude(targetVelocity, maxSpeed);
 
         // Rotate in movement direction
-        transform.LookAt((transform.position + targetVelocity).IgnoreY3(transform.position.y));
+        if(targetVelocity != Vector3.zero)
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * rotationSpeed);
 
         // Apply movement
-        CollisionFlags colFlags = characterController.Move(targetVelocity * Time.deltaTime);
-
-        // Zero Y movement if collided with an object above
-        if ((colFlags & CollisionFlags.CollidedAbove) == CollisionFlags.CollidedAbove) targetVelocity.y = Mathf.Min(0, targetVelocity.y);
+        rigidBody.MovePosition(transform.position + targetVelocity * delta);
 
         // Send animator info
-        animator.SetBool("IsAirborne", isAirborne);
+        animator.SetBool("IsAirborne", !isGrounded);
         animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude);
     }
 
@@ -337,125 +309,127 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
         }
     }
 
-    public void Jump(float jumpTime)
+    public void Jump(bool isPressed)
     {
-        if (isBouncing) return;
+        jumpTime += GameManager.InputManager.jumpDelta;
 
-        if (jumpTime > jumpCurve.Duration()) return;
+        if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration()) ResetJumpFlag();
 
-        PlaySound(FM_jump, jumpSounds.Random(), jumpTime <= Time.deltaTime);
+        if (!jumpFlag) return;
+
+        PlaySound(FM_jump, jumpSounds.Random(), jumpTime <= GameManager.InputManager.jumpDelta);
 
         if (!isHeavy)
-            targetVelocity.y += jumpCurve.Evaluate(jumpTime) * (jumpPower / 6.4f / jumpCurve.Duration());
-        else if(!isAirborne)
-                targetVelocity.y = heavyJumpPower;
+        {
+            rigidBody.AddForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpPower / jumpCurve.Duration()) * 7.5f * GameManager.InputManager.jumpDelta, ForceMode.Force);
+        }
+        else if (isGrounded)
+        {
+            rigidBody.AddForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
+            ResetJumpFlag();
+        }
     }
 
-    public void Dash()
+    public void JumpToggle(bool isPressed)
     {
-        if (canDash)
+        if(isPressed && isGrounded) jumpFlag = true;
+    }
+
+    public void Dash(bool isPressed)
+    {
+        if (isPressed && canDash)
         {
             isDashing = true;
 
-            if(!useFMOD) audioSource.PlayClip(dashSounds.Random());
+            if (!useFMOD) audioSource.PlayClip(dashSounds.Random());
 
-            if (!isAirborne) targetVelocity.y += dashHeight;
+            if (isGrounded) targetVelocity.y += dashHeight;
         }
     }
 
-    public void Heavy(bool isHeldDown)
+    public void Heavy(bool isPressed)
     {
-        if(!canHeavy)
+        if (!canHeavy)
         {
             isHeavy = false;
-            Bounce(0);
             return;
         }
 
-        if (!canUnheavyMidair && isHeavy && !isHeldDown && isAirborne)
+        if (!canUnheavyMidair && isHeavy && !isPressed && !isGrounded)
             return;
         else
         {
-            if (!isHeldDown) Bounce(0);
-            isHeavy = isHeldDown;
+            isHeavy = isPressed;
         }
     }
 
-    public void Pause()
+    public void Pause(bool isPressed)
     {
         // Reloads the level for now
-        TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
-    }
-
-    public void Bounce(float downVelocity)
-    {
-        if (!canBounce || downVelocity < 0)
-        {
-            isBouncing = false;
-            return;
-        }
-
-        if (isBouncing && downVelocity <= 0) return;
-
-        float bouncePower = 0;
-
-        // Bounce off a bouncy object with jump
-        if (BounceObject && BounceObject.isBouncy && GameManager.inputManager.IsRequestingJump(isPlayerOne))
-        {
-            if (downVelocity >= minBounceThreshold)
-                bouncePower = Mathf.Lerp(minJumpBouncePower, maxJumpBouncePower, downVelocity / maxBounceThreshold) * BounceObject.bounceMultiplier;
-            else
-                bouncePower = minJumpBouncePower;
-
-            BounceObject.OnBounce();
-            isBouncing = true;
-        }
-        // Bounce off a bouncy object without jump
-        else if (BounceObject && BounceObject.isBouncy)
-        {
-            if (downVelocity >= minBounceThreshold)
-                bouncePower = Mathf.Lerp(minBouncePower, maxBouncePower, downVelocity / maxBounceThreshold) * BounceObject.bounceMultiplier;
-            else
-                bouncePower = minBouncePower;
-
-            BounceObject.OnBounce();
-            isBouncing = true;
-        }
-        // Bounce off the ground
-        else if (canBounceOffGround && downVelocity > minGroundBounceThreshold && onObject.collider.gameObject.CompareTag("Ground"))
-        {
-            bouncePower = Mathf.Lerp(minGroundBouncePower, maxGroundBouncePower, downVelocity / maxGroundBounceThreshold);
-
-            isBouncing = true;
-        }
-        else
-            isBouncing = false;
-
-        // Apply bounce power
-        if (isBouncing)
-        {
-            if (!useFMOD) audioSource.PlayClip(bounceSounds.Random());
-            bouncePower *= momentumRetension.Evaluate(downVelocity);
-            targetVelocity.y = bouncePower;
-        }
+        if(isPlayerOne && isPressed) TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
     }
 
     #endregion
 
-    #region EVENTS
+    #region ACTIONS & EVENTS
 
-    private void OnLanded(Vector3 landVelocity)
+    private void PerformBounce(Vector3 direction, float magnitude)
     {
-        Landed(isPlayerOne);
-
-        Bounce(-landVelocity.y);
-
-        PlaySound(FM_land, landSounds.Random(), landVelocity.y < -10);
+        if (!canBounce || magnitude <= 0 || !canBounceWhileHeavy && isHeavy)
+        {
+            isBouncing = false;
+        }
+        else
+        {
+            isBouncing = true;
+            rigidBody.AddForce(direction * magnitude, ForceMode.Impulse);
+        }
     }
 
-    void OnFootStep(int footIndex) // 1 left, 2 right
+    public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        PlaySound(FM_footstep, walkSounds.Random(), isWalking && !isAirborne);
+        PlaySound(FM_footstep, walkSounds.Random(), isWalking && isGrounded);
+    }
+
+    #endregion
+
+    #region INTERFACE METHODS
+
+    public void Bounce(Vector3 relativeVelocity, GameObject bounceObject)
+    {
+        Bouncy bouncyObj = bounceObject.GetComponent<Bouncy>();
+
+        // Bounce direction is currently always up due to some issues with side-collisions not acting properly.
+        Vector3 bounceDirection = Vector3.up;
+
+        float baseBouncePower, bounceMultiplier, minBouncePower, maxBouncePower;
+
+        // Bouncing on a bouncy object
+        if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold && bouncyObj.isBouncy)
+        {
+            // Do not bounce if other character is bouncing on this character
+            if (bouncyObj.gameObject == GetOtherCharacter(isPlayerOne).gameObject && GetOtherCharacter(isPlayerOne).transform.position.y > transform.position.y) return;
+            baseBouncePower = bouncePower;
+            bounceMultiplier = bouncyObj.bounceMultiplier * (relativeVelocity.magnitude * momentumRetention);
+            minBouncePower = bouncyObj.minBounceMagnitude * (GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBouncePower : 1);
+            maxBouncePower = bouncyObj.maxBounceMagnitude;
+            PerformBounce(bounceDirection, Mathf.Clamp(baseBouncePower * bounceMultiplier, minBouncePower, maxBouncePower));
+        }
+        // Bouncing on the ground
+        else if (canGroundBounce && relativeVelocity.magnitude > groundBounceThreshold)
+        {
+            baseBouncePower = groundBouncePower;
+            bounceMultiplier = (relativeVelocity.magnitude * momentumRetention);
+            minBouncePower = minGroundBounceMagnitude; maxBouncePower = maxGroundBounceMagnitude;
+            PerformBounce(bounceDirection, Mathf.Clamp(groundBouncePower * (relativeVelocity.magnitude * momentumRetention), minGroundBounceMagnitude, maxGroundBounceMagnitude));
+        }
+        else
+            isBouncing = false;
+    }
+
+    GameObject IUnityInterface.gameObject
+    {
+        get { return this.gameObject; }
     }
 
     #endregion
@@ -463,33 +437,42 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     #region HELPERS
 
     // Use ray casts to determine if the character is airborne
-    private bool AirborneRaycheck(Vector3 origin, Vector3 direction, float distance, float offset, float radius, out RaycastHit landObject)
+    private bool GroundedRayCheck(Vector3 origin, Vector3 direction, float offset, out RaycastHit groundObject)
     {
-        bool newIsAirborne;
+        float scaledHeight = transform.localScale.y * (capsuleCollider.height / 2);
+        float scaledRadius = transform.localScale.y * (capsuleCollider.radius / 2);
 
-        // Cast airborne rays 
-        float oneThirdDistance = distance + (offset / 3);
-        float twoThirdDistance = distance + ((offset / 3) * 2);
-        if (Physics.Raycast(origin, direction, out landObject, distance + offset, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(radius, 0, 0), direction, out landObject, oneThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(-radius, 0, 0), direction, out landObject, oneThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(0, 0, radius), direction, out landObject, oneThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(0, 0, -radius), direction, out landObject, oneThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(-radius / 2, 0, radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance, layerDetection) ||
-            Physics.Raycast(origin + new Vector3(-radius / 2, 0, -radius / 2), direction, out landObject, twoThirdDistance, layerDetection))
-            newIsAirborne = false;
-        else
-            newIsAirborne = true;
+        Vector3[] origins = new Vector3[5]
+            {
+                origin,
+                origin + new Vector3(scaledRadius, 0, 0),
+                origin + new Vector3(-scaledRadius, 0, 0),
+                origin + new Vector3(0, 0, scaledRadius),
+                origin + new Vector3(0, 0, -scaledRadius)
+            };
+        float[] lengths = new float[5]
+            {
+                scaledHeight + offset,
+                (scaledHeight + offset) * 0.9f,
+                (scaledHeight + offset) * 0.9f,
+                (scaledHeight + offset) * 0.9f,
+                (scaledHeight + offset) * 0.9f,
+            };
+        return MultiRayCheck(origins, direction, lengths, out groundObject, true);
+    }
 
-        // Determine if landed
-        if (wasAirborne && !newIsAirborne)
-            OnLanded(targetVelocity);
-
-        wasAirborne = newIsAirborne;
-
-        return newIsAirborne;
+    private bool MultiRayCheck(Vector3[] origins, Vector3 direction, float[] lengths, out RaycastHit groundObject, bool draw = false)
+    {
+        groundObject = default(RaycastHit);
+        int index = -1;
+        do
+        {
+            index++;
+            if (Mathf.Min(origins.Length, lengths.Length) <= index) return false;
+            if (draw) Debug.DrawRay(origins[index], direction * lengths[index], Color.red, 0);
+        }
+        while (!Physics.Raycast(origins[index], direction, out groundObject, lengths[index], groundedLayers));
+        return true;
     }
 
     private void SetupFMOD()
@@ -535,6 +518,12 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
                 FM_event.start();
         }
         else { audioSource.PlayClip(audioClip); }
+    }
+
+    private void ResetJumpFlag()
+    {
+        jumpFlag = false;
+        jumpTime = 0;
     }
 
     #endregion
@@ -584,4 +573,4 @@ using CustomExtensions;[RequireComponent(typeof(CharacterController), typeof(A
     }
 
     #endregion
-}
+}

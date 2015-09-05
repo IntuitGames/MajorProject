@@ -5,8 +5,8 @@
     private static GameManager gameManagerInstance = null;
 
     // References to other managers                         ---(STEP 1/2: ADD NEW MANAGERS HERE)---
-    public static InputManager inputManager;
-    public static ModeManager modeManager;    void Awake()
+    public static InputManager InputManager;
+    public static ModeManager ModeManager;    void Awake()
     {
         // Singleton check
         if (!gameManagerInstance)
@@ -24,8 +24,8 @@
     private void SetManagerReferences()
     {
         // Find manager references                          ---(STEP 2/2: ADD NEW MANAGERS HERE)---
-        SetManager(ref inputManager);
-        SetManager(ref modeManager);
+        SetManager(ref InputManager);
+        SetManager(ref ModeManager);
     }    private void SetManager<T>(ref T managerReference) where T: Manager
     {
         // First check to see if this manager should be overridden by another in the scene
