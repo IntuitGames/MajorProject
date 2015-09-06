@@ -112,6 +112,7 @@ using System;/// <summary>
 
                 float stablizeStrength = disableExternalForces ? stabilizationStrength * 50 : stabilizationStrength;
 
+                // This should be outside of the loop or ideally cached
                 Func<int, Vector3> PositionFunc = (x) => JointSpawnPosition(x) - joints[x].transform.position;
                 if (smartRestPosition && normalizeAppliedForce) PositionFunc = (x) => JointRestPosition(x).normalized - joints[x].transform.position.normalized;
                 else if (normalizeAppliedForce) PositionFunc = (x) => JointSpawnPosition(x).normalized - joints[x].transform.position.normalized;

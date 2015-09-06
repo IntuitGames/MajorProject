@@ -1060,7 +1060,7 @@ GameObject:
   - 4: {fileID: 499380}
   - 114: {fileID: 11405826}
   m_Layer: 0
-  m_Name: Multi Joint Tether
+  m_Name: Static Tether System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

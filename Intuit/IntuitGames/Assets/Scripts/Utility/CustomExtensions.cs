@@ -104,14 +104,21 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <param name="Source"></param>
         /// <param name="IncludeChildren"></param>
         /// <returns></returns>
-        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false) where T : class
+        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false, bool Infallible = false) where T : class
         {
+            // Null checking
             if (Source.IsNullOrEmpty())
-                throw new ArgumentNullException();
+                if (Infallible)
+                    return default(T);
+                else
+                    throw new ArgumentNullException();
 
             // T must be an interface
             if (!typeof(T).IsInterface)
-                throw new ArgumentException("T Must be an interface.");
+                if (Infallible)
+                    return default(T);
+                else
+                    throw new ArgumentException("T Must be an interface.");
 
             // List of components on itself, in children and parent (gets monobehaviours instead because this method specializes in finding custom interfaces)
             List<MonoBehaviour> Components = Source.GetComponents<MonoBehaviour>().ToList();

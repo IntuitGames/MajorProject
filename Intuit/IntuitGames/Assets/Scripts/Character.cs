@@ -199,16 +199,16 @@ public class Character : MonoBehaviour, IBounce
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
-
-        // Setup dash timers
-        dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
-        dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
     }
 
     void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
         GameManager.InputManager.SetupCharacterInput(this);
+
+        // Setup dash timers
+        dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
+        dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
 
         // Setup FMOD
         SetupFMOD();
@@ -233,6 +233,9 @@ public class Character : MonoBehaviour, IBounce
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
+
+        // Stop dash on collision 
+        if (stopDashOnCollision && col.contacts[0].normal.z != 0) isDashing = false;
     }
 
     #endregion
@@ -393,7 +396,7 @@ public class Character : MonoBehaviour, IBounce
 
     #endregion
 
-    #region INTERFACE METHODS
+    #region INTERFACE MEMBERS
 
     public void Bounce(Vector3 relativeVelocity, GameObject bounceObject)
     {
