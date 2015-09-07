@@ -37,7 +37,7 @@ public class Character : MonoBehaviour, IBounce
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
     [Range(0, FORCE_MAX)]
     public float jumpPower = 10;
-    [Range(0, POWER_MAX)]
+    [Range(0, POWER_MAX * 5)]
     public float rotationSpeed = 10;
     public float maxSpeed = 50;
     public LayerMask groundedLayers;

@@ -5,11 +5,37 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     [HideInInspector]
     public Rigidbody rigidBody;
 
-    [SerializeField]
-    private CustomJoint next;
-    [SerializeField]
-    private CustomJoint previous;
+    public CustomJoint next;
+    public CustomJoint previous;
+
+    [ReadOnly]
+    public int index;
+#pragma warning disable 414
     [SerializeField, ReadOnly]
-    private int index;    void Awake()    {        rigidBody = GetComponent<Rigidbody>();
+    private float _distanceToNext;
+    [SerializeField, ReadOnly]
+    private float _distanceToPrevious;
+#pragma warning restore 414
+
+    public float distanceToNext
+    {
+        get { return next ? Vector3.Distance(this.transform.position, next.transform.position) : 0; }
+    }
+    public float distanceToPrevious
+    {
+        get { return previous ? Vector3.Distance(this.transform.position, previous.transform.position) : 0; }
+    }    public Vector3 nextMidPoint
+    {
+        get { return next ? next.transform.position + (transform.position - next.transform.position) * 0.5f : Vector3.zero; }
+    }    public Vector3 previousMidPoint
+    {
+        get { return previous ? previous.transform.position + (transform.position - previous.transform.position) * 0.5f : Vector3.zero; }
+    }    void Awake()    {        rigidBody = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        _distanceToNext = distanceToNext;
+        _distanceToPrevious = distanceToPrevious;
     }
 }

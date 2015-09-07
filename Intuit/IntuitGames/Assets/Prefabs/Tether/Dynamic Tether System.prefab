@@ -42,10 +42,9 @@ MonoBehaviour:
   jointPrefab: {fileID: 11495194, guid: ef5d245585b63d141b8d3987d55682f0, type: 2}
   startJoint: {fileID: 0}
   endJoint: {fileID: 0}
-  activeJoints: []
-  inactiveJoints: []
   activity: 2
   jointPoolSize: 100
+  dynamicPoolSize: 1
   minJointDistance: .100000001
   restJointDistance: .300000012
   maxJointDistance: .5
