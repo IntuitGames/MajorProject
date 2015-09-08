@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using CustomExtensions;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
-/// A Our custom joint object for use in the tether.
+/// Our custom joint object for use in the tether.
 /// </summary>[RequireComponent(typeof(Rigidbody))]public class CustomJoint : MonoBehaviour{
     [HideInInspector]
     public Rigidbody rigidBody;
@@ -10,12 +10,6 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
 
     [ReadOnly]
     public int index;
-#pragma warning disable 414
-    [SerializeField, ReadOnly]
-    private float _distanceToNext;
-    [SerializeField, ReadOnly]
-    private float _distanceToPrevious;
-#pragma warning restore 414
 
     public float distanceToNext
     {
@@ -27,15 +21,23 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     }    public Vector3 nextMidPoint
     {
         get { return next ? next.transform.position + (transform.position - next.transform.position) * 0.5f : Vector3.zero; }
+    }    public Vector3 thisMidPoint
+    {
+        get { return next && previous ? previous.transform.position + (next.transform.position - previous.transform.position) * 0.5f : Vector3.zero; }
     }    public Vector3 previousMidPoint
     {
         get { return previous ? previous.transform.position + (transform.position - previous.transform.position) * 0.5f : Vector3.zero; }
     }    void Awake()    {        rigidBody = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        _distanceToNext = distanceToNext;
-        _distanceToPrevious = distanceToPrevious;
+        if (!next || !previous) return;
+
+        float localDistance = Vector3.Distance(transform.position, thisMidPoint);
+        float localMulti = DynamicTetherManager.instance.localForceCurve.Evaluate(localDistance) * DynamicTetherManager.instance.localForceMultiplier;
+        Vector3 localVector = (thisMidPoint - transform.position).normalized * localMulti;
+
+        rigidBody.AddForce(localVector * Time.fixedDeltaTime, ForceMode.Force);
     }
 }

@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 472518}
-  - 114: {fileID: 11437018}
+  - 114: {fileID: 11438416}
   m_Layer: 0
   m_Name: Dynamic Tether System
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11437018
+--- !u!114 &11438416
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -42,15 +42,32 @@ MonoBehaviour:
   jointPrefab: {fileID: 11495194, guid: ef5d245585b63d141b8d3987d55682f0, type: 2}
   startJoint: {fileID: 0}
   endJoint: {fileID: 0}
-  activity: 2
-  jointPoolSize: 100
+  activity: 1
+  jointPoolSize: 500
   dynamicPoolSize: 1
-  minJointDistance: .100000001
-  restJointDistance: .300000012
-  maxJointDistance: .5
+  minJointDistance: .0500000007
+  restJointDistance: .400000006
+  maxJointDistance: .75
+  globalForceMultiplier: 1
+  localForceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: .100000001
+      value: 0
+      inSlope: 0
+      outSlope: 2.5
+      tangentMode: 0
+    - time: .5
+      value: 1
+      inSlope: 2.5
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  localForceMultiplier: 5000
   jointCount: 0
   tetherLength: 0
-  directLength: 0
+  directLength: 10
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
