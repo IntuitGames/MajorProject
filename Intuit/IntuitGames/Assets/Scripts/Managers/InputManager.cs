@@ -21,6 +21,7 @@ public class InputManager : Manager
     private const string heavyStr = "Heavy_";
     private const string pauseStr = "Submit_";
     private const string unpauseStr = "Submit_";
+    private const string sprintStr = "Sprint_";
 
     // Input Booleans
     [System.NonSerialized] public bool p1JumpDown, p2JumpDown, p1JumpHold, p2JumpHold, p1JumpUp, p2JumpUp;
@@ -28,6 +29,7 @@ public class InputManager : Manager
     [System.NonSerialized] public bool p1HeavyDown, p2HeavyDown, p1HeavyHold, p2HeavyHold, p1HeavyUp, p2HeavyUp;
     [System.NonSerialized] public bool p1PauseDown, p2PauseDown, p1PauseHold, p2PauseHold, p1PauseUp, p2PauseUp;
     [System.NonSerialized] public bool p1UnpauseDown, p2UnpauseDown, p1UnpauseHold, p2UnpauseHold, p1UnpauseUp, p2UnpauseUp;
+    [System.NonSerialized] public bool p1SprintDown, p2SprintDown, p1SprintHold, p2SprintHold, p1SprintUp, p2SprintUp;
 
     // Events
     public event Action<float> PreUpdate = delegate { };
@@ -50,6 +52,10 @@ public class InputManager : Manager
     public event Action<bool> Unpause = delegate { };
     public event Action<bool> PauseToggle = delegate { };
     public event Action<bool> UnpauseToggle = delegate { };
+    public event Action<bool> SprintP1 = delegate { };
+    public event Action<bool> SprintP2 = delegate { };
+    public event Action<bool> SprintToggleP1 = delegate { };
+    public event Action<bool> SprintToggleP2 = delegate { };
 
     // Settings
     public enum UpdateTypes { Update, FixedUpdate, LateUpdate };
@@ -59,12 +65,14 @@ public class InputManager : Manager
     public UpdateTypes dashUpdates = UpdateTypes.FixedUpdate;
     public UpdateTypes heavyUpdates = UpdateTypes.Update;
     public UpdateTypes pauseUpdates = UpdateTypes.Update;
+    public UpdateTypes sprintUpdates = UpdateTypes.Update;
 
     // Quick-access Properties
     public float jumpDelta { get { return GetDelta(jumpUpdates); } }
     public float dashDelta { get { return GetDelta(dashUpdates); } }
     public float heavyDelta { get { return GetDelta(heavyUpdates); } }
     public float pauseDelta { get { return GetDelta(pauseUpdates); } }
+    public float sprintDelta { get { return GetDelta(sprintUpdates); } }
 
     #endregion
 
@@ -125,6 +133,13 @@ public class InputManager : Manager
         p2UnpauseHold = Input.GetButton(unpauseStr + player2Str);
         if (Input.GetButtonUp(unpauseStr + player1Str)) p1UnpauseUp = true;
         if (Input.GetButtonUp(unpauseStr + player2Str)) p2UnpauseUp = true;
+
+        if (Input.GetButtonDown(sprintStr + player1Str)) p1SprintDown = true;
+        if (Input.GetButtonDown(sprintStr + player2Str)) p2SprintDown = true;
+        p1SprintHold = Input.GetButton(sprintStr + player1Str);
+        p2SprintHold = Input.GetButton(sprintStr + player2Str);
+        if (Input.GetButtonUp(sprintStr + player1Str)) p1SprintUp = true;
+        if (Input.GetButtonUp(sprintStr + player2Str)) p2SprintUp = true;
     }
 
     private void HandleInput(UpdateTypes type, float delta)
@@ -161,6 +176,7 @@ public class InputManager : Manager
         if (type == jumpUpdates) HandleJumpEvents();
         if (type == dashUpdates) HandleDashEvents();
         if (type == heavyUpdates) HandleHeavyEvents();
+        if (type == sprintUpdates) HandleSprintEvents();
 
         // Pause and unpause check
         if (type == pauseUpdates) HandlePauseEvents();
@@ -275,6 +291,34 @@ public class InputManager : Manager
         }
     }
 
+    private void HandleSprintEvents()
+    {
+        if (p1SprintDown)
+        {
+            SprintToggleP1(true);
+            p1SprintDown = false;
+        }
+        if (p2SprintDown)
+        {
+            SprintToggleP2(true);
+            p2SprintDown = false;
+        }
+
+        SprintP1(p1SprintHold);
+        SprintP2(p2SprintHold);
+
+        if (p1SprintUp)
+        {
+            SprintToggleP1(false);
+            p1SprintUp = false;
+        }
+        if (p2SprintUp)
+        {
+            SprintToggleP2(false);
+            p2SprintUp = false;
+        }
+    }
+
     #endregion
 
     #region PAUSE MENU
@@ -320,6 +364,7 @@ public class InputManager : Manager
             JumpToggleP1 += characterObj.JumpToggle;
             DashToggleP1 += characterObj.Dash;
             HeavyP1 += characterObj.Heavy;
+            SprintP1 += characterObj.Sprint;
         }
         else
         {
@@ -329,6 +374,7 @@ public class InputManager : Manager
             JumpToggleP2 += characterObj.JumpToggle;
             DashToggleP2 += characterObj.Dash;
             HeavyP2 += characterObj.Heavy;
+            SprintP2 += characterObj.Sprint;
         }
     }
 

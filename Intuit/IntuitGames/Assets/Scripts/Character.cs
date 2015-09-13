@@ -34,6 +34,7 @@ public class Character : MonoBehaviour, IBounce
     [ReadOnly]
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
+    public float sprintMoveSpeed = 11;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
     [Range(0, FORCE_MAX)]
     public float jumpPower = 10;
@@ -144,6 +145,8 @@ public class Character : MonoBehaviour, IBounce
         {
             float value = baseMoveSpeed;
             if (isHeavy) value = heavyMoveSpeed;
+            if (isSprinting) value = sprintMoveSpeed;
+            if (isHeavy && isSprinting) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
             return value;
         }
     }
@@ -184,6 +187,7 @@ public class Character : MonoBehaviour, IBounce
     }
     public bool isHeavy { get; set; }
     public bool isBouncing { get; set; }
+    public bool isSprinting { get; set; }
 
     #endregion
 
@@ -370,6 +374,11 @@ public class Character : MonoBehaviour, IBounce
     {
         // Reloads the level for now
         if(isPlayerOne && isPressed) TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
+    }
+
+    public void Sprint(bool isPressed)
+    {
+        isSprinting = isPressed;
     }
 
     #endregion
