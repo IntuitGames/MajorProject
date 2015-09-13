@@ -728,7 +728,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 5
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 80
@@ -903,6 +903,9 @@ MonoBehaviour:
   jumpPower: 250
   rotationSpeed: 50
   maxSpeed: 1000
+  normalGravity: -9.80000019
+  maxGravity: -50
+  gravityGrowthRate: 40
   groundedLayers:
     serializedVersion: 2
     m_Bits: 769
@@ -922,12 +925,12 @@ MonoBehaviour:
   heavyMaterial: {fileID: 13400000, guid: 921357e1343afc34f9347fea0ffe7866, type: 2}
   canBounceWhileHeavy: 0
   canBounce: 1
-  momentumRetention: .850000024
+  momentumRetention: .5
   bouncePower: 1
   jumpBouncePower: 1.29999995
   canGroundBounce: 1
-  groundBounceThreshold: 15
-  groundBouncePower: .5
+  groundBounceThreshold: 23
+  groundBouncePower: .200000003
   minGroundBounceMagnitude: 7.5
   maxGroundBounceMagnitude: 15
   walkSounds:

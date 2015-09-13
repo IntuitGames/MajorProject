@@ -11,8 +11,9 @@ public class Character : MonoBehaviour, IBounce
     #region VARIABLES
 
     // CONSTANTS
-    private const int FORCE_MAX = 1000;
-    private const int POWER_MAX = 10;
+    private const int HIGH = 1000;
+    private const int MEDIUM = 100;
+    private const int LOW = 10;
 
     // STATICS
     public static Character character1 { get; private set; }
@@ -36,11 +37,17 @@ public class Character : MonoBehaviour, IBounce
     public float baseMoveSpeed = 7;
     public float sprintMoveSpeed = 11;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, FORCE_MAX)]
+    [Range(0, HIGH)]
     public float jumpPower = 10;
-    [Range(0, POWER_MAX * 5)]
+    [Range(0, MEDIUM)]
     public float rotationSpeed = 10;
     public float maxSpeed = 50;
+    [Range(-MEDIUM, 0)]
+    public float normalGravity = -9.8f;
+    [Range(-MEDIUM, 0)]
+    public float maxGravity = -50;
+    [Range(0, MEDIUM)]
+    public float gravityGrowthRate = 3;
     public LayerMask groundedLayers;
     public PhysicMaterial normalMaterial;
 
@@ -50,11 +57,11 @@ public class Character : MonoBehaviour, IBounce
     public float dashPower = 25;
     [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
     public float dashLength = 0.5f;
-    [Range(0, POWER_MAX)]
+    [Range(0, LOW)]
     public float dashHeight = 3;
     private TimerPlus dashTimer;
     public bool stopDashOnCollision = true;
-    [Range(0, 3)]
+    [Range(0, LOW)]
     public float dashCooldown = 1;
     private TimerPlus dashCooldownTimer;
     public bool canDash
@@ -74,9 +81,9 @@ public class Character : MonoBehaviour, IBounce
     public bool canHeavy = true;
     public float heavyMoveSpeed = 2;
     public bool canUnheavyMidair = false;
-    [Range(0, POWER_MAX * 5)]
+    [Range(0, MEDIUM)]
     public float heavyJumpPower = 20;
-    [Range(0, FORCE_MAX)]
+    [Range(0, HIGH)]
     public float heavyDownwardForce = 100;
     [Range(0, 90)]
     public float heavySlopeAngle = 0.2f;
@@ -88,13 +95,13 @@ public class Character : MonoBehaviour, IBounce
     public bool canBounce = true;
     [Range(0, 1)]
     public float momentumRetention = 0.8f;
-    [Range(0, POWER_MAX)]
+    [Range(0, LOW)]
     public float bouncePower = 1;
-    [Range(0, POWER_MAX)]
+    [Range(0, LOW)]
     public float jumpBouncePower = 1.5f;
     public bool canGroundBounce = true;
     public float groundBounceThreshold = 10;
-    [Range(0, POWER_MAX)]
+    [Range(0, LOW)]
     public float groundBouncePower = 0.5f;
     public float minGroundBounceMagnitude = 5;
     public float maxGroundBounceMagnitude = 10;
@@ -125,10 +132,11 @@ public class Character : MonoBehaviour, IBounce
     public float jumpVolume = 0.5f, landVolume = 1, footstepVolume = 1;
 
     // PRIVATES
+    private float gravity;                              // Current gravity on this character.
     private RaycastHit onObject;                        // Which object is currently under this character.
     private const float airborneRayOffset = 0.05f;      // How much additional height offset will the ray checks account for.
     private float jumpTime;                             // How long the jump button has been held in for.
-    private bool jumpFlag;
+    private bool jumpFlag;                              // Is the character ready to jump again?
 
     // PROPERTIES
     public bool isPlayerOne
@@ -254,6 +262,10 @@ public class Character : MonoBehaviour, IBounce
         // Check for airborne changes
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
 
+        // Add to gravity
+        if (!isGrounded) gravity = Mathf.Clamp(gravity - gravityGrowthRate * Time.deltaTime, maxGravity, 0);
+        else gravity = normalGravity;
+
         // Apply any changes to the dash length and cooldown
         dashTimer.Length = dashLength;
         dashCooldownTimer.Length = dashCooldown;
@@ -294,6 +306,9 @@ public class Character : MonoBehaviour, IBounce
 
         // Apply movement
         rigidBody.MovePosition(transform.position + targetVelocity * delta);
+
+        // Apply gravity
+        rigidBody.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
