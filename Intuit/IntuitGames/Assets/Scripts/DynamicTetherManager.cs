@@ -10,8 +10,8 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
 
     // CONSTANTS
     private const int EXPECTED_MAX_JOINTS = 100;
-    private const float MIN_JOINT_DISTANCE = 0.05f;
-    private const float MAX_JOINT_DISTANCE = 0.75f;
+    private const float MIN_JOINT_DISTANCE = 0.01f;
+    private const float MAX_JOINT_DISTANCE = 2;
     private const string ACTIVE_JOINT_NAME = "Joint {0}";
     private const string INACTIVE_JOINT_NAME = "Joint";
 
@@ -30,6 +30,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
 
     [Header("Properties")]
     public TetherSystemActivityStates activity = TetherSystemActivityStates.EditorAndRuntime;
+    public int jointMaxCap = EXPECTED_MAX_JOINTS * 2;
     [ReadOnly(EditableInEditor = true)]
     public int jointPoolSize = EXPECTED_MAX_JOINTS;
     public bool dynamicPoolSize = true;
@@ -39,9 +40,13 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     public float restJointDistance = (MAX_JOINT_DISTANCE + MIN_JOINT_DISTANCE) / 2;
     [Range(MIN_JOINT_DISTANCE, MAX_JOINT_DISTANCE)]
     public float maxJointDistance = MAX_JOINT_DISTANCE;
-    public float globalForceMultiplier = 500;
-    public AnimationCurve localForceCurve = AnimationCurve.Linear(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
-    public float localForceMultiplier = 500;
+    [Range(1, 10)]
+    public int jointUpdatesPerFrame = 5;
+    public float localAppliedForce = 100;
+    public AnimationCurve localForceCurve = AnimationCurve.EaseInOut(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
+    public float restPositionForce = 500;
+    public AnimationCurve restForceCurve = AnimationCurve.EaseInOut(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
+    public bool allignRotation = true;
 
     [Header("Info")]
     [ReadOnly]
@@ -50,6 +55,12 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     public float tetherLength;
     [ReadOnly]
     public float directLength;
+    [ReadOnly]
+    public float targetJointDistance;
+    [ReadOnly]
+    public float averageJointDistance;
+    [ReadOnly]
+    public float averageJointVelocity;
 
     // PROPERTIES
     public bool isActive
@@ -73,6 +84,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
 
     // PRIVATES
     private bool isInitialized;
+    private int jointUpdates;
 
     #endregion
 
@@ -153,7 +165,15 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         if (Application.isPlaying) jointPoolSize = activeJoints.Count + inactiveJoints.Count;
         jointCount = activeJoints.Count;
         if (startJoint && endJoint) tetherLength = startJoint.distanceToNext + activeJoints.Sum<CustomJoint>(x => x.distanceToNext);
+        else tetherLength = 0;
         if (startJoint && endJoint) directLength = Vector3.Distance(startJoint.transform.position, endJoint.transform.position);
+        else directLength = 0;
+        if (startJoint && endJoint) targetJointDistance = directLength / jointCount;
+        else targetJointDistance = 0;
+        if (startJoint && endJoint) averageJointDistance = (tetherLength - startJoint.distanceToNext) / jointCount;
+        else averageJointDistance = 0;
+        if (startJoint && endJoint) averageJointVelocity = activeJoints.Sum(x => x.rigidBody.velocity.magnitude);
+        else averageJointDistance = 0;
     }    // Updates the joint indexes    private void UpdateIndex()
     {
         startJoint.index = 0;
@@ -190,16 +210,39 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
             DeactivateJoint(startJoint.next);
         }
 
-        for(int i = 0; i < activeJoints.Count; i++)
+        activeJoints.OrderBy(x => x.distanceToNext);
+
+        jointUpdates = 0;
+        for (int i = 0; i < activeJoints.Count; i++)
         {
+            if (jointUpdates >= jointUpdatesPerFrame) break;
+
             if(activeJoints[i].distanceToNext > maxJointDistance)
             {
                 ActivateJoint(activeJoints[i]);
+                jointUpdates++;
             }
-            else if(activeJoints[i].distanceToPrevious < minJointDistance)
+        }
+
+        jointUpdates = 0;
+        for (int i = activeJoints.Count - 1; i >= 0; i--)
+        {
+            if (jointUpdates >= jointUpdatesPerFrame) break;
+
+            if (activeJoints[i].distanceToPrevious < minJointDistance)
             {
                 DeactivateJoint(activeJoints[i]);
+                jointUpdates++;
             }
+        }
+
+        if(endJoint.distanceToPrevious > maxJointDistance)
+        {
+            ActivateJoint(endJoint.previous);
+        }
+        else if(endJoint.distanceToPrevious < minJointDistance)
+        {
+            DeactivateJoint(endJoint.previous);
         }
     }
 
@@ -210,6 +253,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         if (!newJoint) return;
         newJoint.transform.position = joint.nextMidPoint;
         newJoint.gameObject.SetActive(true);
+        newJoint.gameObject.hideFlags = HideFlags.None;
         activeJoints.Insert(joint.index, newJoint);
         UpdateIndex();
         UpdateReferences();
@@ -222,6 +266,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         joint.index = -1;
         joint.next = null;
         joint.previous = null;
+        joint.gameObject.hideFlags = HideFlags.HideInHierarchy;
         inactiveJoints.Enqueue(joint);
         if (contained) UpdateIndex();
         if (contained) UpdateReferences();
@@ -233,6 +278,8 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         else return activeJoints.FirstOrDefault(x => x.index == index, null);
     }    // Gets the next inactive joint but may create a new one if required    private CustomJoint GetInactiveJoint(bool createNew)
     {
+        if (jointPoolSize >= jointMaxCap) return null;
+
         if(inactiveJoints.Count > 0)
             return inactiveJoints.Dequeue();
         else if(createNew)
@@ -244,10 +291,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         }
         else
             return null;
-    }    public Vector3 GetJointRestPoint(int index)
+    }    public Vector3 GetRestPosition(int index)
     {
-        if (jointCount > 0)
-            return endJoint.transform.position + (startJoint.transform.position - endJoint.transform.position) * (index / jointCount);
-        else
-            return activeJoints.FirstOrDefault(x => x.index == index, startJoint).transform.position;
+        return Vector3.Lerp(startJoint.transform.position, endJoint.transform.position, (float)index / jointCount);
     }}

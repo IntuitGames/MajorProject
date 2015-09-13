@@ -43,31 +43,52 @@ MonoBehaviour:
   startJoint: {fileID: 0}
   endJoint: {fileID: 0}
   activity: 1
-  jointPoolSize: 500
+  jointMaxCap: 500
+  jointPoolSize: 250
   dynamicPoolSize: 1
-  minJointDistance: .0500000007
-  restJointDistance: .400000006
-  maxJointDistance: .75
-  globalForceMultiplier: 1
+  minJointDistance: .200000003
+  restJointDistance: .5
+  maxJointDistance: .800000012
+  jointUpdatesPerFrame: 5
+  localAppliedForce: 200
   localForceCurve:
     serializedVersion: 2
     m_Curve:
-    - time: .100000001
+    - time: .00999999978
       value: 0
       inSlope: 0
-      outSlope: 2.5
+      outSlope: 0
       tangentMode: 0
-    - time: .5
-      value: 1
-      inSlope: 2.5
+    - time: 1.60000002
+      value: 2
+      inSlope: 1.25786161
+      outSlope: Infinity
+      tangentMode: 5
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  restPositionForce: 100
+  restForceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: .00999999978
+      value: 0
+      inSlope: 0
+      outSlope: 1.001001
+      tangentMode: 17
+    - time: 10
+      value: 10
+      inSlope: 0
       outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  localForceMultiplier: 5000
+  allignRotation: 1
   jointCount: 0
   tetherLength: 0
   directLength: 10
+  targetJointDistance: Infinity
+  averageJointDistance: NaN
+  averageJointVelocity: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
