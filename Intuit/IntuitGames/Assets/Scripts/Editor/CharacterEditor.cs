@@ -25,11 +25,13 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
         property.Next(true);
         do
         {
+            EditorGUI.indentLevel = property.depth;
             if (property.name.StartsWith("m_")) continue; // Ignore Unity properties
             showChildren = EditorGUILayout.PropertyField(property); // Draw property
             
         }
         while (property.NextVisible(showChildren));
+        EditorGUI.indentLevel = 0;
 
         if (Application.isPlaying)
         {
