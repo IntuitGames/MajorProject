@@ -13018,6 +13018,10 @@ Prefab:
       propertyPath: endJoint
       value: 
       objectReference: {fileID: 149084669}
+    - target: {fileID: 11438416, guid: d614c01c26819a04aada807c2d416383, type: 2}
+      propertyPath: activity
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d614c01c26819a04aada807c2d416383, type: 2}
   m_IsPrefabParent: 0

@@ -46,7 +46,9 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     public AnimationCurve localForceCurve = AnimationCurve.EaseInOut(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
     public float restPositionForce = 500;
     public AnimationCurve restForceCurve = AnimationCurve.EaseInOut(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
-    public bool allignRotation = true;
+    public float characterForce = 50;
+    public AnimationCurve characterForceCurve = AnimationCurve.EaseInOut(MIN_JOINT_DISTANCE, 0, MAX_JOINT_DISTANCE, 1);
+    public bool alignRotation = true;
 
     [Header("Info")]
     [ReadOnly]
@@ -120,6 +122,14 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
     }    void FixedUpdate()
     {
         if (!isActive || !Application.isPlaying) return;
+
+        float tetherLengthMulti = characterForceCurve.Evaluate(tetherLength);
+
+        Vector3 startJointForce = (startJoint.nextMidPoint - startJoint.transform.position).normalized * characterForce * tetherLengthMulti;
+        Vector3 endJointForce = (endJoint.previousMidPoint - endJoint.transform.position).normalized * characterForce * tetherLengthMulti;
+
+        startJoint.rigidBody.AddForce(startJointForce * Time.fixedDeltaTime);
+        endJoint.rigidBody.AddForce(endJointForce * Time.fixedDeltaTime);
     }
 
     #endregion
@@ -138,18 +148,18 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         activeJoints.Clear();
         inactiveJoints.Clear();
 
-        UpdateIndex();
+        UpdateIndex(0);
 
-        UpdateReferences();
+        UpdateReferences(0);
 
         isInitialized = false;
     }    // Creates the initial joint pool and sets indexes and references up    private void Initialize()
     {
         SpawnPool(jointPoolSize);
 
-        UpdateIndex();
+        UpdateIndex(0);
 
-        UpdateReferences();
+        UpdateReferences(0);
 
         isInitialized = true;
     }    // Instantiates a specified amount of joints    private void SpawnPool(int size)
@@ -172,26 +182,27 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         else targetJointDistance = 0;
         if (startJoint && endJoint) averageJointDistance = (tetherLength - startJoint.distanceToNext) / jointCount;
         else averageJointDistance = 0;
-        if (startJoint && endJoint) averageJointVelocity = activeJoints.Sum(x => x.rigidBody.velocity.magnitude);
+        if (startJoint && endJoint) averageJointVelocity = activeJoints.Sum(x => x.rigidBody.velocity.magnitude) / jointCount;
         else averageJointDistance = 0;
-    }    // Updates the joint indexes    private void UpdateIndex()
+    }    // Updates the joint indexes    private void UpdateIndex(int initialIndex)
     {
         startJoint.index = 0;
 
-        for(int i = 0; i < activeJoints.Count; i++)
+        for (int i = Mathf.Max(initialIndex - 1, 0); i < activeJoints.Count; i++)
         {
             activeJoints[i].index = i + 1;
             activeJoints[i].name = string.Format(ACTIVE_JOINT_NAME, activeJoints[i].index);
         }
 
         endJoint.index = activeJoints.Count + 1;
-    }    // Updates the next and previous references on each of the joints    private void UpdateReferences()
+    }    // Updates the next and previous references on each of the joints
+    private void UpdateReferences(int initialIndex)
     {
         startJoint.next = GetJoint(1);
         startJoint.previous = null;
         startJoint.next.previous = startJoint;
 
-        for (int i = 0; i < activeJoints.Count; i++)
+        for (int i = Mathf.Max(initialIndex - 1, 0); i < activeJoints.Count; i++)
         {
             activeJoints[i].next = GetJoint(i + 2);
             activeJoints[i].next.previous = activeJoints[i];
@@ -255,10 +266,11 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         newJoint.gameObject.SetActive(true);
         newJoint.gameObject.hideFlags = HideFlags.None;
         activeJoints.Insert(joint.index, newJoint);
-        UpdateIndex();
-        UpdateReferences();
+        UpdateIndex(joint.index);
+        UpdateReferences(joint.index);
     }    // Takes an active joint and puts it in the joint pool    private void DeactivateJoint(CustomJoint joint)
     {
+        int index = joint.index;
         bool contained = activeJoints.Contains(joint);
         if(contained) activeJoints.Remove(joint);
         joint.gameObject.SetActive(false);
@@ -268,8 +280,8 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         joint.previous = null;
         joint.gameObject.hideFlags = HideFlags.HideInHierarchy;
         inactiveJoints.Enqueue(joint);
-        if (contained) UpdateIndex();
-        if (contained) UpdateReferences();
+        if (contained) UpdateIndex(index);
+        if (contained) UpdateReferences(index);
     }    // Gets the joint with an index    private CustomJoint GetJoint(int index)
     {
         if (index == startJoint.index) return startJoint;
@@ -278,11 +290,9 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         else return activeJoints.FirstOrDefault(x => x.index == index, null);
     }    // Gets the next inactive joint but may create a new one if required    private CustomJoint GetInactiveJoint(bool createNew)
     {
-        if (jointPoolSize >= jointMaxCap) return null;
-
         if(inactiveJoints.Count > 0)
             return inactiveJoints.Dequeue();
-        else if(createNew)
+        else if(createNew && jointPoolSize <= jointMaxCap)
         {
             CustomJoint newJoint = jointPrefab.Instantiate<CustomJoint>(transform);
             newJoint.name = newJoint.name.Replace("(Clone)", " (NEW)");
@@ -293,5 +303,5 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
             return null;
     }    public Vector3 GetRestPosition(int index)
     {
-        return Vector3.Lerp(startJoint.transform.position, endJoint.transform.position, (float)index / jointCount);
+        return Vector3.Lerp(startJoint.transform.position, endJoint.transform.position, (float)index / (jointCount + 1f));
     }}

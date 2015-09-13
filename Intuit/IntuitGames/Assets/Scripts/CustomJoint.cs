@@ -42,13 +42,14 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
 
         rigidBody.AddForce(localForce * Time.fixedDeltaTime);
         rigidBody.AddForce(restForce * Time.fixedDeltaTime);
+
+        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, 100);
     }
 
     void Update()
     {
-        if (DynamicTetherManager.instance.allignRotation && next && previous)
+        if (DynamicTetherManager.instance.alignRotation && next && previous && transform.position - next.transform.position != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(transform.position - next.transform.position);
-                //transform.LookAt(next.transform.position);
     }
 
     public static Vector3 AverageNext(CustomJoint joint)
