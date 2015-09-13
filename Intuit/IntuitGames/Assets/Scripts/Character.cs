@@ -312,7 +312,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
-        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude);
+        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (moveSpeed / baseMoveSpeed));
     }
 
     public void Movement(float forward, float right)
