@@ -115,7 +115,7 @@ public class Character : MonoBehaviour, IBounce
     }
     private float FM_playerMovespeedValue
     {
-        get { return targetVelocity.IgnoreY2().magnitude; }
+        get { return Mathf.Lerp(0, 1, moveSpeed / sprintMoveSpeed); }
     }
 
     // PRIVATES
