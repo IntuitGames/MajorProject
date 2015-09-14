@@ -933,18 +933,34 @@ MonoBehaviour:
   groundBouncePower: .200000003
   minGroundBounceMagnitude: 7.5
   maxGroundBounceMagnitude: 15
-  walkSounds:
-  - {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
-  jumpSounds:
-  - {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
-  dashSounds: []
-  landSounds:
-  - {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
-  bounceSounds: []
-  useFMOD: 1
-  jumpVolume: 1
-  landVolume: 1
-  footstepVolume: .5
+  audioData:
+    enabled: 1
+    volume: 1
+    audioSource: {fileID: 8201082}
+    walk:
+      player: 2
+      type: 0
+      group: 2
+      volume: 1
+      pitch: 0
+      unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
+      FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
+    land:
+      player: 2
+      type: 0
+      group: 2
+      volume: 1
+      pitch: 0
+      unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
+      FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
+    jump:
+      player: 1
+      type: 0
+      group: 2
+      volume: .5
+      pitch: 0
+      unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
+      FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
 --- !u!114 &11487344
 MonoBehaviour:
   m_ObjectHideFlags: 1

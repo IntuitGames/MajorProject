@@ -108,18 +108,7 @@ public class Character : MonoBehaviour, IBounce
 
     // AUDIO
     [Header("Audio")]
-    public List<AudioClip> walkSounds = new List<AudioClip>();
-    public List<AudioClip> jumpSounds = new List<AudioClip>();
-    public List<AudioClip> dashSounds = new List<AudioClip>();
-    public List<AudioClip> landSounds = new List<AudioClip>();
-    public List<AudioClip> bounceSounds = new List<AudioClip>();
-
-    // F-MOD
-    [Header("FMOD")]
-    public bool useFMOD = true;
-    private FMOD_StudioSystem FM_soundSystem;
-    private EventInstance FM_jump, FM_land, FM_footstep;
-    private ParameterInstance FM_playerFallSpeed, FM_playerMovespeed;
+    public CharacterAudio audioData = new CharacterAudio();
     private float FM_playerFallSpeedValue
     {
         get { return targetVelocity.y < 0 ? Mathf.Lerp(0, 1, Mathf.Abs(targetVelocity.y) / (maxSpeed * 0.5f)) : 0; }
@@ -128,8 +117,6 @@ public class Character : MonoBehaviour, IBounce
     {
         get { return targetVelocity.IgnoreY2().magnitude; }
     }
-    [Range(0, 1)]
-    public float jumpVolume = 0.5f, landVolume = 1, footstepVolume = 1;
 
     // PRIVATES
     private float gravity;                              // Current gravity on this character.
@@ -222,26 +209,19 @@ public class Character : MonoBehaviour, IBounce
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
 
-        // Setup FMOD
-        SetupFMOD();
+        // Setup audio data
+        audioData.Initialize(transform, rigidBody);
     }
 
-    void OnDisabled()
+    void OnDestroy()
     {
-        // Dispose FMOD instances
-        FM_jump.stop(STOP_MODE.IMMEDIATE);
-        FM_jump.release();
-
-        FM_land.stop(STOP_MODE.IMMEDIATE);
-        FM_land.release();
-
-        FM_footstep.stop(STOP_MODE.IMMEDIATE);
-        FM_footstep.release();
+        // Dispose of FMOD instances
+        audioData.Dispose();
     }
 
     void OnCollisionEnter(Collision col)
     {
-        PlaySound(FM_land, landSounds.Random(), col.relativeVelocity.magnitude > 1);
+        audioData.PlayLandAudio(FM_playerFallSpeedValue, col.relativeVelocity.magnitude > 1);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
@@ -276,20 +256,6 @@ public class Character : MonoBehaviour, IBounce
         // Apply heavy downward force and physics materials
         capsuleCollider.material = isHeavy ? heavyMaterial : normalMaterial;
         if (isHeavy) rigidBody.AddForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
-
-        // Update FMOD parameters
-        if (FM_playerFallSpeed != null) FM_playerFallSpeed.setValue(FM_playerFallSpeedValue);
-        if (FM_playerMovespeed != null) FM_playerMovespeed.setValue(FM_playerMovespeedValue);
-
-        var FM_attributes = GetFMODAttribute(transform, rigidBody.velocity);
-
-        if (FM_land != null) FM_land.set3DAttributes(FM_attributes);
-        if (FM_jump != null) FM_jump.set3DAttributes(FM_attributes);
-        if (FM_footstep != null) FM_footstep.set3DAttributes(FM_attributes);
-
-        if (FM_land != null) FM_land.setVolume(landVolume);
-        if (FM_jump != null) FM_jump.setVolume(jumpVolume);
-        if (FM_footstep != null) FM_footstep.setVolume(footstepVolume);
     }
 
     // Is called AFTER input is determined every frame
@@ -339,7 +305,7 @@ public class Character : MonoBehaviour, IBounce
 
         if (!jumpFlag) return;
 
-        PlaySound(FM_jump, jumpSounds.Random(), jumpTime <= GameManager.InputManager.jumpDelta);
+        audioData.PlayJumpAudio(jumpTime <= GameManager.InputManager.jumpDelta);
 
         if (!isHeavy)
         {
@@ -362,8 +328,6 @@ public class Character : MonoBehaviour, IBounce
         if (isPressed && canDash)
         {
             isDashing = true;
-
-            if (!useFMOD) audioSource.PlayClip(dashSounds.Random());
 
             if (isGrounded) targetVelocity.y += dashHeight;
         }
@@ -415,7 +379,7 @@ public class Character : MonoBehaviour, IBounce
 
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        PlaySound(FM_footstep, walkSounds.Random(), isWalking && isGrounded);
+        audioData.PlayWalkAudio(FM_playerMovespeedValue, isWalking && isGrounded);
     }
 
     #endregion
@@ -488,6 +452,7 @@ public class Character : MonoBehaviour, IBounce
         return MultiRayCheck(origins, direction, lengths, out groundObject, true);
     }
 
+    // Casts multiple rays and outs the result
     private bool MultiRayCheck(Vector3[] origins, Vector3 direction, float[] lengths, out RaycastHit groundObject, bool draw = false)
     {
         groundObject = default(RaycastHit);
@@ -502,51 +467,7 @@ public class Character : MonoBehaviour, IBounce
         return true;
     }
 
-    private void SetupFMOD()
-    {
-        FM_soundSystem = FMOD_StudioSystem.instance;
-
-        // Load in banks if necessary
-        if (!FM_soundSystem.System.isValid())
-        {
-            string fileName = Application.dataPath + @"/StreamingAssets/Master Bank.bank";
-            Bank bank, bankStrings;
-            FMOD_StudioSystem.ERRCHECK(FM_soundSystem.System.loadBankFile(fileName, LOAD_BANK_FLAGS.NORMAL, out bank));
-            FMOD_StudioSystem.ERRCHECK(FM_soundSystem.System.loadBankFile(fileName + ".strings", LOAD_BANK_FLAGS.NORMAL, out bankStrings));
-        }
-
-        // Find events
-        FM_jump = FM_soundSystem.GetEvent("event:/Sound Effects/Player/Jump");
-        FM_land = FM_soundSystem.GetEvent("event:/Sound Effects/Player/Land");
-        FM_footstep = FM_soundSystem.GetEvent(string.Format("event:/Sound Effects/Player/P{0} Footstep", isPlayerOne ? "1" : "2"));
-
-        // Set parameters
-        FM_land.getParameter("PlayerFallSpeed", out FM_playerFallSpeed);
-        FM_footstep.getParameter(string.Format("Player{0}MoveSpeed", isPlayerOne ? "1" : "2"), out FM_playerMovespeed);
-    }
-
-    private ATTRIBUTES_3D GetFMODAttribute(Transform transform, Vector3 velocity)
-    {
-        var FM_attribute = new ATTRIBUTES_3D();
-        FM_attribute.position = transform.position;
-        FM_attribute.velocity = velocity;
-        FM_attribute.forward = transform.forward;
-        FM_attribute.up = transform.up;
-        return FM_attribute;
-    }
-
-    private void PlaySound(EventInstance FM_event, AudioClip audioClip, bool condition = true)
-    {
-        if (!condition) return;
-
-        if (useFMOD)
-        {
-            if (FM_event != null)
-                FM_event.start();
-        }
-        else { audioSource.PlayClip(audioClip); }
-    }
-
+    // Resets the jump flag so the character can respond to jump input again
     private void ResetJumpFlag()
     {
         jumpFlag = false;
@@ -597,6 +518,84 @@ public class Character : MonoBehaviour, IBounce
                 return false;
             }
         }
+    }
+
+    #endregion
+
+    #region NESTED
+
+    /// <summary>
+    /// Stores all audio related data.
+    /// </summary>
+    [System.Serializable]
+    public class CharacterAudio : System.IDisposable
+    {
+        #region VARIABLES
+
+        public bool enabled = true;
+        [Range(0, 1)]
+        public float volume = 1;
+
+        // COMPONENTS
+        public AudioSource audioSource;
+        private Transform transform;
+        private Rigidbody rigidbody;
+
+        // SOUND EFFECTS
+        [Header("Sound Effects")]
+        public SoundClip walk = new SoundClip();
+        public SoundClip land = new SoundClip();
+        public SoundClip jump = new SoundClip();
+
+        // PRIVATES
+        private bool isInitialized;
+
+        #endregion
+
+        #region METHODS
+
+        // Initializes components and sound clips
+        public void Initialize(Transform transformObj, Rigidbody rigidbodyObj)
+        {
+            transform = transformObj; rigidbody = rigidbodyObj;
+
+            walk.Initialize();
+            land.Initialize();
+            jump.Initialize();
+
+            isInitialized = true;
+        }
+
+        public void PlayWalkAudio(float moveSpeed, bool condition = true)
+        {
+            if (!condition || !isInitialized || !enabled) return;
+
+            walk.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume, true, moveSpeed);
+        }
+
+        public void PlayLandAudio(float fallSpeed, bool condition = true)
+        {
+            if (!condition || !isInitialized || !enabled) return;
+
+            land.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume, true, fallSpeed);
+        }
+
+        public void PlayJumpAudio(bool condition = true)
+        {
+            if (!condition || !isInitialized || !enabled) return;
+
+            jump.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume);
+        }
+
+        // Dispose FMOD instances
+        public void Dispose()
+        {
+            walk.Dispose();
+            land.Dispose();
+            jump.Dispose();
+        }
+
+        #endregion
     }
 
     #endregion

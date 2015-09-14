@@ -19518,10 +19518,10 @@ AudioSource:
   Mute: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 100
+  MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -44643,6 +44643,15 @@ Prefab:
       propertyPath: m_ConnectedAnchor.z
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.walk.unityClip
+      value: 
+      objectReference: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.walk.FMODAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}
