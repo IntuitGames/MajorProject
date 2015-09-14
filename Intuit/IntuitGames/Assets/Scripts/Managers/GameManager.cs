@@ -6,7 +6,8 @@
 
     // References to other managers                         ---(STEP 1/2: ADD NEW MANAGERS HERE)---
     public static InputManager InputManager;
-    public static ModeManager ModeManager;    void Awake()
+    public static ModeManager ModeManager;
+    public static AudioManager AudioManager;    void Awake()
     {
         // Singleton check
         if (!gameManagerInstance)
@@ -26,6 +27,7 @@
         // Find manager references                          ---(STEP 2/2: ADD NEW MANAGERS HERE)---
         SetManager(ref InputManager);
         SetManager(ref ModeManager);
+        SetManager(ref AudioManager);
     }    private void SetManager<T>(ref T managerReference) where T: Manager
     {
         // First check to see if this manager should be overridden by another in the scene

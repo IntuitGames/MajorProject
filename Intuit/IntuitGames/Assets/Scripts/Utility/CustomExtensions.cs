@@ -196,7 +196,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <param name="Clip"></param>
         /// <param name="Detatch"></param>
         /// <returns>True if the clip was successfully played on the source.</returns>
-        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = true)
+        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach, float Volume)
         {
             // Null checking
             if (Source.IsNullOrEmpty() || Clip.IsNullOrEmpty() || Source == null || Clip == null)
@@ -206,6 +206,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             {
                 Source.clip = Clip;
                 Source.time = 0;
+                Source.volume = Volume;
                 Source.Play();
                 return true;
             }
@@ -213,7 +214,8 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             {
                 // Create and name new game object
                 GameObject NewObject = new GameObject();
-                NewObject.name = "Detached Sound Object (" + Source.gameObject.name + ")";
+                NewObject.hideFlags = HideFlags.HideInHierarchy;
+                NewObject.name = "Sound Object (" + Source.gameObject.name + " - " + Clip.name + ")";
 
                 // Add a new audio source component to the new game object and copy over values from the source audio component.
                 AudioSource NewSource;
@@ -226,6 +228,11 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 // Play the clip on the new audio source
                 return NewSource.PlayClip(Clip, false);
             }
+        }
+
+        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = true)
+        {
+            return Source.PlayClip(Clip, Detach, Source.volume);
         }
 
         /// <summary>
