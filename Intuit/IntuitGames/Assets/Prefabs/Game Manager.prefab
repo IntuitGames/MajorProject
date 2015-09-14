@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11463420}
   - 114: {fileID: 11409528}
   - 114: {fileID: 11492306}
+  - 114: {fileID: 11473098}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: GameController
@@ -47,6 +48,7 @@ MonoBehaviour:
   dashUpdates: 1
   heavyUpdates: 0
   pauseUpdates: 0
+  sprintUpdates: 0
 --- !u!114 &11463420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -58,6 +60,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b19b8770aee750549a6075bf485386ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11473098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d689a39ff6258994685f33946ff7f5ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterEnabled: 1
+  masterVolume: 1
+  unityVolume: 1
+  FMODVolume: 1
+  soundEffectVolume: 1
+  backgroundMusicVolume: 1
+  gameGroupVolume: 1
+  UIGroupVolume: 1
+  playerGroupVolume: 1
+  enemyGroupVolume: 1
 --- !u!114 &11492306
 MonoBehaviour:
   m_ObjectHideFlags: 1
