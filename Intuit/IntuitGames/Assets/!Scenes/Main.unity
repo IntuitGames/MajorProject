@@ -19600,7 +19600,7 @@ MonoBehaviour:
     volume: 1
     pitch: 0
     unityClip: {fileID: 8300000, guid: 8649a30ba6833ab4bb8c82228c3d75c1, type: 3}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 37f56e86a8c1628499def47c281e61cc, type: 2}
 --- !u!1 &770361295
 GameObject:
   m_ObjectHideFlags: 0
@@ -30811,6 +30811,14 @@ Prefab:
     - target: {fileID: 115460, guid: d523b58627c498d44a306448c1f3055f, type: 2}
       propertyPath: m_Name
       value: Player 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.jump.player
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.jump.volume
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d523b58627c498d44a306448c1f3055f, type: 2}
@@ -44652,6 +44660,14 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff,
         type: 2}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.jump.player
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: audioData.jump.volume
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}
