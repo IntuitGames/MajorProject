@@ -41,7 +41,9 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             GUI.enabled = false;
             EditorGUILayout.Vector3Field("Real Velocity", Target.rigidBody.velocity);
             EditorGUILayout.Slider("Move Speed", Mathf.Round(Target.rigidBody.velocity.magnitude * 100) / 100, 0, Target.maxSpeed);
+            EditorGUILayout.Slider("Slope", Target.slopeAngle, 0, 90);
             EditorGUILayout.Toggle("Walking", Target.isWalking);
+            EditorGUILayout.Toggle("Sprinting", Target.isSprinting);
             EditorGUILayout.Toggle("Grounded", Target.isGrounded);
             EditorGUILayout.Toggle("Falling", Target.isFalling);
             EditorGUILayout.Toggle("Dashing", Target.isDashing);

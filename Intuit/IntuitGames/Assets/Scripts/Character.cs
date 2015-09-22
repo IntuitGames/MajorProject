@@ -50,6 +50,18 @@ public class Character : MonoBehaviour, IBounce
     public float gravityGrowthRate = 3;
     public LayerMask groundedLayers;
     public PhysicMaterial normalMaterial;
+    [Range(0, LOW)]
+    public float normalMass = 1;
+
+    // TETHER
+    [Header("Tether")]
+    public bool constrainMovement = true;
+    [Range(0, MEDIUM)]
+    public float constrainingPower = 20;
+    [Range(0, 20)]
+    public float freeMovementLength = 8;
+    [Range(0, 20)]
+    public float maxDistanceLength = 15;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -88,6 +100,8 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, 90)]
     public float heavySlopeAngle = 0.2f;
     public PhysicMaterial heavyMaterial;
+    [Range(0, LOW)]
+    public float heavyMass = 5;
     public bool canBounceWhileHeavy = false;
 
     // BOUNCE
@@ -148,6 +162,10 @@ public class Character : MonoBehaviour, IBounce
     public float slopeAngle
     {
         get { return Vector3.Angle(Vector3.up, onObject.normal); }
+    }
+    public float currentMass
+    {
+        get { return isHeavy ? heavyMass : normalMass; }
     }
 
     // STATES
@@ -242,6 +260,9 @@ public class Character : MonoBehaviour, IBounce
         // Check for airborne changes
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
 
+        // Update mass
+        if(rigidBody.mass != currentMass) rigidBody.mass = currentMass;
+
         // Add to gravity
         if (!isGrounded) gravity = Mathf.Clamp(gravity - gravityGrowthRate * Time.deltaTime, maxGravity, 0);
         else gravity = normalGravity;
@@ -275,6 +296,9 @@ public class Character : MonoBehaviour, IBounce
 
         // Apply gravity
         rigidBody.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
+
+        // Apply constraining force
+        if(constrainMovement) ApplyConstrainForce();
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
@@ -382,6 +406,13 @@ public class Character : MonoBehaviour, IBounce
         audioData.PlayWalkAudio(FM_playerMovespeedValue, isWalking && isGrounded);
     }
 
+    public void ApplyConstrainForce()
+    {
+        float distanceToOther = Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
+        float alpha = Mathf.Lerp(0, 1, (distanceToOther - freeMovementLength) / (maxDistanceLength - freeMovementLength));
+        rigidBody.AddForce((GetOtherCharacter().transform.position - transform.position).normalized * alpha * constrainingPower, ForceMode.Impulse);
+    }
+
     #endregion
 
     #region INTERFACE MEMBERS
@@ -399,7 +430,7 @@ public class Character : MonoBehaviour, IBounce
         if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold && bouncyObj.isBouncy)
         {
             // Do not bounce if other character is bouncing on this character
-            if (bouncyObj.gameObject == GetOtherCharacter(isPlayerOne).gameObject && GetOtherCharacter(isPlayerOne).transform.position.y > transform.position.y) return;
+            if (bouncyObj.gameObject == GetOtherCharacter().gameObject && GetOtherCharacter().transform.position.y > transform.position.y) return;
             baseBouncePower = bouncePower;
             bounceMultiplier = bouncyObj.bounceMultiplier * (relativeVelocity.magnitude * momentumRetention);
             minBouncePower = bouncyObj.minBounceMagnitude * (GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBouncePower : 1);
@@ -474,18 +505,16 @@ public class Character : MonoBehaviour, IBounce
         jumpTime = 0;
     }
 
+    // Returns the other character
+    public Character GetOtherCharacter()
+    {
+        if (this == character1) return character2;
+        else return character1;
+    }
+
     #endregion
 
     #region STATICS
-
-    // Returns the other character
-    private static Character GetOtherCharacter(bool player1)
-    {
-        if (player1)
-            return character2;
-        else
-            return character1;
-    }
 
     // Set static character references
     private static bool SetStaticCharacter(Character character)

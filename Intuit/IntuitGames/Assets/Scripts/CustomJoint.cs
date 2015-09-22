@@ -43,7 +43,7 @@ using CustomExtensions;using System.Collections;using System.Collections.Gener
         rigidBody.AddForce(localForce * Time.fixedDeltaTime);
         rigidBody.AddForce(restForce * Time.fixedDeltaTime);
 
-        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, 100);
+        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, 10);
     }
 
     void Update()
