@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using CustomExtensions;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
-/// Our custom joint object for use in the tether.
-/// </summary>[RequireComponent(typeof(Rigidbody))]public class CustomJoint : MonoBehaviour{
+/// Our custom joint object for use in the dynamic tether system.
+/// </summary>[RequireComponent(typeof(Rigidbody)), System.Obsolete]public class CustomJoint : MonoBehaviour{
     [HideInInspector]
     public Rigidbody rigidBody;
 

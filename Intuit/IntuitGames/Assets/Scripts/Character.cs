@@ -28,6 +28,8 @@ public class Character : MonoBehaviour, IBounce
     public CapsuleCollider capsuleCollider;
     [HideInInspector]
     public Animator animator;
+    [HideInInspector]
+    public TetherManager tetherManager;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -216,6 +218,7 @@ public class Character : MonoBehaviour, IBounce
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
+        tetherManager = FindObjectOfType<TetherManager>();
     }
 
     void Start()
@@ -408,9 +411,11 @@ public class Character : MonoBehaviour, IBounce
 
     public void ApplyConstrainForce()
     {
-        float distanceToOther = Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
-        float alpha = Mathf.Lerp(0, 1, (distanceToOther - freeMovementLength) / (maxDistanceLength - freeMovementLength));
-        rigidBody.AddForce((GetOtherCharacter().transform.position - transform.position).normalized * alpha * constrainingPower, ForceMode.Impulse);
+        float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
+        if (length < freeMovementLength) return;
+        float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
+        Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetOtherCharacter().transform.position - transform.position).normalized;
+        rigidBody.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
     }
 
     #endregion

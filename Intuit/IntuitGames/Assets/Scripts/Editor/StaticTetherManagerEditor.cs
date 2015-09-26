@@ -1,5 +1,5 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEditor;[CustomEditor(typeof(StaticTetherManager))]public class StaticTetherManagerEditor : Editor{
+using UnityEditor;[CustomEditor(typeof(StaticTetherManager)), System.Obsolete]public class StaticTetherManagerEditor : Editor{
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();

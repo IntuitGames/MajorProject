@@ -725,7 +725,7 @@ Rigidbody:
   m_GameObject: {fileID: 115460}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: .25
   m_AngularDrag: 5
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -860,6 +860,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   capsuleCollider: {fileID: 0}
   animator: {fileID: 0}
+  tetherManager: {fileID: 0}
   _isPlayerOne: 1
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
@@ -897,8 +898,8 @@ MonoBehaviour:
   normalMass: 1
   constrainMovement: 1
   constrainingPower: 3
-  freeMovementLength: 10
-  maxDistanceLength: 15
+  freeMovementLength: 15
+  maxDistanceLength: 17
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
