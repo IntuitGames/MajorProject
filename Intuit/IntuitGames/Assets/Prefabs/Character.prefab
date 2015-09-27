@@ -909,7 +909,7 @@ MonoBehaviour:
   canHeavy: 1
   heavyMoveSpeed: 2
   canUnheavyMidair: 0
-  heavyJumpPower: 35
+  heavyJumpPower: 90
   heavyDownwardForce: 100
   heavySlopeAngle: 15
   heavyMaterial: {fileID: 13400000, guid: 921357e1343afc34f9347fea0ffe7866, type: 2}

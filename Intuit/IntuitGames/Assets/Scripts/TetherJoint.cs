@@ -12,6 +12,21 @@
     public Color debugColour = Color.red;
     private Color normalColour;#endif
 
+    private static TetherManager tetherManager;
+    public TetherJoint previousJoint
+    {
+        get { if (tetherManager.joints.IndexOf(this) > 0) return tetherManager.joints[tetherManager.joints.IndexOf(this) - 1]; else return null; }
+    }
+    public TetherJoint nextJoint
+    {
+        get { if (tetherManager.joints.IndexOf(this) < tetherManager.joints.Count - 1) return tetherManager.joints[tetherManager.joints.IndexOf(this) + 1]; else return null; }
+    }
+
+    void Awake()
+    {
+        if (!tetherManager) tetherManager = FindObjectOfType<TetherManager>();
+    }
+
 #if UNITY_EDITOR
     void Start()
     {
@@ -37,6 +52,12 @@
             SetIsColliding(false);
     }    private void SetIsColliding(bool value)
     {
+        if (tetherManager.experimentalWrapping && isColliding && !value)
+        {
+            rigidbodyComp.velocity = Vector3.zero;
+            rigidbodyComp.angularVelocity = Vector3.zero;
+        }
+
         isColliding = value;
 
 #if UNITY_EDITOR

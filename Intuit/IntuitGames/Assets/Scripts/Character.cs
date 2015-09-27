@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider)), SelectionBase]
 public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
@@ -21,7 +21,7 @@ public class Character : MonoBehaviour, IBounce
 
     // COMPONENTS
     [HideInInspector]
-    public Rigidbody rigidBody;
+    public Rigidbody rigidbodyComp;
     [HideInInspector]
     public AudioSource audioSource;
     [HideInInspector]
@@ -214,7 +214,7 @@ public class Character : MonoBehaviour, IBounce
         if (!SetStaticCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
-        rigidBody = GetComponent<Rigidbody>();
+        rigidbodyComp = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
@@ -231,7 +231,7 @@ public class Character : MonoBehaviour, IBounce
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
 
         // Setup audio data
-        audioData.Initialize(transform, rigidBody);
+        audioData.Initialize(transform, rigidbodyComp);
     }
 
     void OnDestroy()
@@ -264,7 +264,7 @@ public class Character : MonoBehaviour, IBounce
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
 
         // Update mass
-        if(rigidBody.mass != currentMass) rigidBody.mass = currentMass;
+        if(rigidbodyComp.mass != currentMass) rigidbodyComp.mass = currentMass;
 
         // Add to gravity
         if (!isGrounded) gravity = Mathf.Clamp(gravity - gravityGrowthRate * Time.deltaTime, maxGravity, 0);
@@ -279,7 +279,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Apply heavy downward force and physics materials
         capsuleCollider.material = isHeavy ? heavyMaterial : normalMaterial;
-        if (isHeavy) rigidBody.AddForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
+        if (isHeavy) AddConstrainedForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
     }
 
     // Is called AFTER input is determined every frame
@@ -295,10 +295,10 @@ public class Character : MonoBehaviour, IBounce
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * rotationSpeed);
 
         // Apply movement
-        rigidBody.MovePosition(transform.position + targetVelocity * delta);
+        AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        rigidBody.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
+        AddConstrainedForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
         if(constrainMovement) ApplyConstrainForce();
@@ -336,11 +336,11 @@ public class Character : MonoBehaviour, IBounce
 
         if (!isHeavy)
         {
-            rigidBody.AddForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpPower / jumpCurve.Duration()) * 7.5f * GameManager.InputManager.jumpDelta, ForceMode.Force);
+            AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpPower / jumpCurve.Duration()) * 7.5f * GameManager.InputManager.jumpDelta, ForceMode.Force);
         }
         else if (isGrounded)
         {
-            rigidBody.AddForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
+            AddConstrainedForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
             ResetJumpFlag();
         }
     }
@@ -400,7 +400,7 @@ public class Character : MonoBehaviour, IBounce
         else
         {
             isBouncing = true;
-            rigidBody.AddForce(direction * magnitude, ForceMode.Impulse);
+            AddConstrainedForce(direction * magnitude, ForceMode.Impulse);
         }
     }
 
@@ -412,10 +412,28 @@ public class Character : MonoBehaviour, IBounce
     public void ApplyConstrainForce()
     {
         float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
+
         if (length < freeMovementLength) return;
+
         float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
+
         Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetOtherCharacter().transform.position - transform.position).normalized;
-        rigidBody.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
+
+        rigidbodyComp.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
+    }
+
+    public void AddConstrainedForce(Vector3 movement, ForceMode forceMode)
+    {
+        if (!constrainMovement) rigidbodyComp.AddForce(movement, forceMode);
+
+        rigidbodyComp.AddForce(movement, forceMode);
+    }
+
+    public void AddConstrainedMovement(Vector3 movement)
+    {
+        if (!constrainMovement) rigidbodyComp.MovePosition(transform.position + movement);
+
+        rigidbodyComp.MovePosition(transform.position + movement);
     }
 
     #endregion

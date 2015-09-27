@@ -15,9 +15,14 @@
     [Header("Properties")]
     [Range(1, 200)]
     public int jointCount = 10;
+    [Range(0, 200)]
+    public float jointSpeed = 100;
+    public bool instantJointMovement = true;
     public bool showJoints = true;
     public bool showTetherVisual = true;
-    public bool showInHierarchy = false;    [Header("Info")]
+    public bool showInHierarchy = false;
+    public bool performanceBoost = true;
+    public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)    [Header("Info")]
     [ReadOnly]
     public float directLength;
     [ReadOnly]
@@ -48,7 +53,23 @@
 
         for (int i = 0; i < joints.Count; i++)
         {
-            joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
+            if (!experimentalWrapping)
+            {
+                if (instantJointMovement)
+                    joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
+                else
+                    joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
+            }
+            else
+            {
+                if (!joints[i].isColliding)
+                    if (instantJointMovement)
+                        joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
+                    else
+                        joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
+                else
+                    joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * 100 * Time.fixedDeltaTime, ForceMode.Force);
+            }
         }
     }    // Re-creates the joints and puts them in their starting positions    public void Rebuild()
     {
@@ -103,11 +124,21 @@
         }
         else
         {
+            // Declare locals
             Vector3 startPointPos, endPointPos;
             int relativeIndex, relativeCount;
+            TetherJoint startTempJoint, endTempJoint;
 
-            TetherJoint startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
-            TetherJoint endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
+            if (performanceBoost) // Left it as an option because there may be cases where this fails
+            {
+                startTempJoint = joints.GetRange(0, index).AsEnumerable().Reverse().ToList().Find(x => x.isColliding && x != joint);
+                endTempJoint = joints.GetRange(index, jointCount - index).Find(x => x.isColliding && x != joint);
+            }
+            else // Whereas this is basically fail proof
+            {
+                startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
+                endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
+            }
 
             if(startTempJoint && endTempJoint)
             {

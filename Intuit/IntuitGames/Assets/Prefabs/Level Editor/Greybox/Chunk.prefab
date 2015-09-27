@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2337978}
   - 114: {fileID: 11462994}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: Chunk
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

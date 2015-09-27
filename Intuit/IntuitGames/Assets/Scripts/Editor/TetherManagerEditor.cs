@@ -2,7 +2,7 @@
 using UnityEditor;[CustomEditor(typeof(TetherManager))]public class TetherManagerEditor : Editor{
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        DrawDefaultInspector();
 
         if(!Application.isPlaying && GUILayout.Button("Rebuild"))
         {

@@ -93,7 +93,7 @@ MonoBehaviour:
   colliderComp: {fileID: 13537208}
   rigidbodyComp: {fileID: 5413088}
   showDebugColour: 1
-  debugColour: {r: 1, g: 0, b: 0, a: 1}
+  debugColour: {r: 1, g: 0, b: 0, a: .196078435}
 --- !u!135 &13537208
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -145,6 +145,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0186de77e50aeae44810e637305c0026, type: 2}
+    - target: {fileID: 0}
+      propertyPath: debugColour.a
+      value: .196078435
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 132532}
