@@ -87,7 +87,7 @@ NavMeshSettings:
     minRegionArea: 2
     cellSize: .166666672
     manualCellSize: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 49541e2dca1a45048a2ca1ae00fb2fe3, type: 2}
 --- !u!1 &3164023
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,6 +233,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 20625263}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &20625263
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -5655,6 +5656,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 56543402}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &56543402
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -5935,6 +5937,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 65480009}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &65480009
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -6994,6 +6997,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 171641608}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &171641608
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -12421,6 +12425,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 201382460}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &201382460
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -14431,6 +14436,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 226288509}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &226288509
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -14537,6 +14543,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 238801125}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &238801125
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -15124,6 +15131,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 307512374}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &307512374
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -15459,6 +15467,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 337095893}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &337095893
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -16084,6 +16093,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 380120079}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &380120079
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -16190,6 +16200,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 382318147}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &382318147
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -16296,6 +16307,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 388782889}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &388782889
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -16564,6 +16576,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 392797379}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &392797379
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -17016,6 +17029,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!1001 &416058515
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 125.136345
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.01999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 29.1598606
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 457388, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 4deb54521a90ee447bd919b3ea2505b1, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &420226207
 Prefab:
   m_ObjectHideFlags: 0
@@ -19079,6 +19134,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 429249556}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &429249556
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -19185,6 +19241,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 434582842}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &434582842
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -21733,6 +21790,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 492457289}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &492457289
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -21839,6 +21897,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 502967477}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &502967477
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -22051,6 +22110,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 554118593}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &554118593
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -22255,6 +22315,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 586346076}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &586346076
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -22535,6 +22596,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 626679567}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &626679567
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -23090,6 +23152,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 653461842}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &653461842
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -23358,6 +23421,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 668699049}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &668699049
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -23822,6 +23886,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 747478326}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &747478326
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -23968,7 +24033,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
 --- !u!114 &747594663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24133,6 +24198,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 750331558}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &750331558
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -24401,6 +24467,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 765931783}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &765931783
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -24661,6 +24728,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 787506363}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &787506363
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -25345,6 +25413,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 820247529}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &820247529
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -25695,6 +25764,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 853385514}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &853385514
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -25821,6 +25891,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 880531336}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &880531336
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -25927,6 +25998,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 883010752}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &883010752
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -26033,6 +26105,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 887993235}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &887993235
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -26139,6 +26212,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 891502181}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &891502181
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -26326,6 +26400,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 903289216}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &903289216
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -26729,6 +26804,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 937910087}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &937910087
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -26835,6 +26911,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 961955572}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &961955572
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -27095,6 +27172,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 964010569}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &964010569
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -27368,6 +27446,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 968269161}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &968269161
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -27838,6 +27917,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1014654969}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1014654969
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -28812,6 +28892,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1127601064}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1127601064
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -28918,6 +28999,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1132300460}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1132300460
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -29024,6 +29106,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1139227306}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1139227306
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -29752,6 +29835,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1243884075}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1243884075
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -30020,6 +30104,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1248694298}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1248694298
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -30349,7 +30434,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
 --- !u!1 &1255071084
 GameObject:
   m_ObjectHideFlags: 0
@@ -30704,6 +30789,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1270287539}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1270287539
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -30810,6 +30896,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1286997024}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1286997024
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -31333,6 +31420,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1313102217}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1313102217
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -31439,6 +31527,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1320191226}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1320191226
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -31763,6 +31852,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1346407211}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1346407211
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -32589,6 +32679,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1416482801}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1416482801
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -33034,7 +33125,7 @@ Transform:
   - {fileID: 1117464615}
   - {fileID: 264990998}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!1 &1431077726
 GameObject:
   m_ObjectHideFlags: 1
@@ -33083,6 +33174,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1431077729}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1431077729
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -33398,6 +33490,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1469262572}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1469262572
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -34057,6 +34150,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1519098985}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1519098985
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -34642,6 +34736,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1568455149}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1568455149
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -34748,6 +34843,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1582517128}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1582517128
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -35561,6 +35657,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1652703882}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1652703882
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -41255,7 +41352,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
 --- !u!1001 &1738577525
 Prefab:
   m_ObjectHideFlags: 0
@@ -41485,6 +41582,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1766012201}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1766012201
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -42211,6 +42309,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1818783907}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1818783907
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -42475,6 +42574,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1829369997}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1829369997
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -42743,6 +42843,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1840309583}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1840309583
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -43015,6 +43116,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1842396430}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1842396430
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -48449,6 +48551,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1872263707}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1872263707
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -50148,7 +50251,7 @@ Transform:
   - {fileID: 1481026687}
   - {fileID: 1825269019}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!64 &1885950674
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -55797,6 +55900,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1916494926}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1916494926
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -55984,6 +56088,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1932686718}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1932686718
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -56175,6 +56280,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1943797098}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1943797098
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -56281,6 +56387,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 1948775325}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &1948775325
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -57078,6 +57185,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2001668407}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2001668407
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -57567,6 +57675,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2050859288}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2050859288
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -57673,6 +57782,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2052809121}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2052809121
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -57865,6 +57975,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2078958479}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2078958479
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58052,6 +58163,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2090292058}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2090292058
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58158,6 +58270,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2093839980}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2093839980
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58284,6 +58397,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2097947960}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2097947960
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58390,6 +58504,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2098889088}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2098889088
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58496,6 +58611,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2102088338}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2102088338
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -58602,6 +58718,7 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 2104118316}
   showDebugColour: 1
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
+  passingThroughWeakSpot: 0
 --- !u!54 &2104118316
 Rigidbody:
   m_ObjectHideFlags: 1

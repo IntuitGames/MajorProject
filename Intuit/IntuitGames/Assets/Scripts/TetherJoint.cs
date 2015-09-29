@@ -11,7 +11,7 @@
     public bool showDebugColour = true;
     public Color debugColour = Color.red;
     private Color normalColour;#endif
-
+	public bool passingThroughWeakSpot = false;
     private static TetherManager tetherManager;
     public TetherJoint previousJoint
     {
