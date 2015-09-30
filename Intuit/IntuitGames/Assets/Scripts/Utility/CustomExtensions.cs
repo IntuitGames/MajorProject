@@ -71,7 +71,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <param name="Source"></param>
         /// <param name="Predicate"></param>
         /// <param name="DefaultValue"></param>
-        /// <returns></returns>        public static T FirstOrDefault<T>(this IEnumerable<T> Source, Func<T, bool> Predicate, T DefaultValue = default(T))
+        /// <returns></returns>        public static T FirstOrDefault<T>(this IEnumerable<T> Source, Func<T, bool> Predicate, T DefaultValue)
         {
             if (Source.IsNullOrEmpty()) return DefaultValue;
 
@@ -93,6 +93,24 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 return DefaultValue;
             else
                 return Source;
+        }        public static T FirstOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
+        {
+            for (int i = 0; i < Source.Count; i++)
+            {
+                if (i > Max) return default(T);
+                if (Predicate(Source[i])) return Source[i];
+            }
+
+            return default(T);
+        }        public static T LastOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
+        {
+            for (int i = Source.Count - 1; i >= 0; i--)
+            {
+                if (i <= Max) return default(T);
+                if (Predicate(Source[i])) return Source[i];
+            }
+
+            return default(T);
         }    }    /// <summary>
     /// Unity specific extension methods.
     /// </summary>    public static partial class Unity

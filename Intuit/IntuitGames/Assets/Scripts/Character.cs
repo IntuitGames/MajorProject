@@ -38,11 +38,24 @@ public class Character : MonoBehaviour, IBounce
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
     public float sprintMoveSpeed = 11;
+    [Range(0, 1)]
+    public float aerialControl = 0.75f;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, HIGH)]
-    public float jumpPower = 10;
+    [Range(0, MEDIUM), Tooltip("The one-time force applied at the start of the jump.")]
+    public float jumpImpulse = 10;
+    [Range(0, HIGH), Tooltip("The jump curve force multiplier applied mid jump.")]
+    public float jumpForce = 250;
+    public bool doJumpMomentum = true;
+    [Range(0, LOW), Tooltip("Movement before the jump will influence the impulse direction.")]
+    public float jumpMomentum = 0.5f;
+    [Range(0, LOW)]
+    public float sprintJumpMomentum = 2;
     [Range(0, MEDIUM)]
-    public float rotationSpeed = 10;
+    public float rotationSpeed = 50;
+    [Range(0, MEDIUM)]
+    public float sprintRotationSpeed = 20;
+    [Range(0, MEDIUM)]
+    public float aerialRotationSpeed = 10;
     public float maxSpeed = 50;
     [Range(-MEDIUM, 0)]
     public float normalGravity = -9.8f;
@@ -60,9 +73,9 @@ public class Character : MonoBehaviour, IBounce
     public bool constrainMovement = true;
     [Range(0, MEDIUM)]
     public float constrainingPower = 20;
-    [Range(0, 20)]
+    [Range(0, MEDIUM)]
     public float freeMovementLength = 8;
-    [Range(0, 20)]
+    [Range(0, MEDIUM)]
     public float maxDistanceLength = 15;
 
     // DASH
@@ -131,7 +144,7 @@ public class Character : MonoBehaviour, IBounce
     }
     private float FM_playerMovespeedValue
     {
-        get { return Mathf.Lerp(0, 1, moveSpeed / sprintMoveSpeed); }
+        get { return Mathf.Lerp(0, 1, currentMoveSpeed / sprintMoveSpeed); }
     }
 
     // PRIVATES
@@ -150,14 +163,15 @@ public class Character : MonoBehaviour, IBounce
             _isPlayerOne = value;
         }
     }
-    public float moveSpeed
+    public float currentMoveSpeed
     {
         get
         {
             float value = baseMoveSpeed;
             if (isHeavy) value = heavyMoveSpeed;
-            if (isSprinting) value = sprintMoveSpeed;
-            if (isHeavy && isSprinting) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
+            if (isSprinting && isGrounded) value = sprintMoveSpeed;
+            if (isHeavy && isSprinting && isGrounded) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
+            if (!isGrounded) value *= aerialControl;
             return value;
         }
     }
@@ -168,6 +182,14 @@ public class Character : MonoBehaviour, IBounce
     public float currentMass
     {
         get { return isHeavy ? heavyMass : normalMass; }
+    }
+    public float currentRotationSpeed
+    {
+        get { return isGrounded ? (isSprinting ? sprintRotationSpeed : rotationSpeed) : aerialRotationSpeed; }
+    }
+    public float currentJumpMomentum
+    {
+        get { return isSprinting ? sprintJumpMomentum : jumpMomentum; }
     }
 
     // STATES
@@ -292,7 +314,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Rotate in movement direction
         if(targetVelocity != Vector3.zero)
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * rotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * currentRotationSpeed);
 
         // Apply movement
         AddConstrainedMovement(targetVelocity * delta);
@@ -305,7 +327,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
-        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (moveSpeed / baseMoveSpeed));
+        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
     }
 
     public void Movement(float forward, float right)
@@ -314,8 +336,8 @@ public class Character : MonoBehaviour, IBounce
 
         if (!isDashing)
         {
-            targetVelocity.x = direction.x * moveSpeed;
-            targetVelocity.z = direction.y * moveSpeed;
+            targetVelocity.x = direction.x * currentMoveSpeed;
+            targetVelocity.z = direction.y * currentMoveSpeed;
         }
         else
         {
@@ -336,7 +358,7 @@ public class Character : MonoBehaviour, IBounce
 
         if (!isHeavy)
         {
-            AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpPower / jumpCurve.Duration()) * 7.5f * GameManager.InputManager.jumpDelta, ForceMode.Force);
+            AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpForce / jumpCurve.Duration()) * GameManager.InputManager.jumpDelta, ForceMode.Force);
         }
         else if (isGrounded)
         {
@@ -348,6 +370,18 @@ public class Character : MonoBehaviour, IBounce
     public void JumpToggle(bool isPressed)
     {
         if(isPressed && isGrounded) jumpFlag = true;
+
+        if (isPressed && isGrounded)
+        {
+            if (!doJumpMomentum || targetVelocity.IgnoreY2() == Vector2.zero)
+                AddConstrainedForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+            else
+            {
+                Vector3 jumpVector = targetVelocity.normalized * currentJumpMomentum;
+                jumpVector.y = 10;
+                AddConstrainedForce(jumpVector.normalized * jumpImpulse, ForceMode.Impulse);
+            }
+        }
     }
 
     public void Dash(bool isPressed)

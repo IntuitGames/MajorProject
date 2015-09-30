@@ -58897,37 +58897,17 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: tetherManager
+      value: 
+      objectReference: {fileID: 1252406022}
     - target: {fileID: 115460, guid: d523b58627c498d44a306448c1f3055f, type: 2}
       propertyPath: m_Name
       value: Player 2
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: ad9d43858e7a31c41b46b33d10f807f2, type: 2}
     - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
       propertyPath: _isPlayerOne
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 13794552, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: ca82c0596e3a4d14b9791bdabdd1e266, type: 2}
-    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: walkSounds.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.x
-      value: 131.100006
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.y
-      value: 1.20000005
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.z
-      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
       propertyPath: audioData.walk.unityClip
@@ -58938,29 +58918,11 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff,
         type: 2}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.x
-      value: 130
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_ConnectedAnchor.z
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: tetherVisual
+    - target: {fileID: 13794552, guid: d523b58627c498d44a306448c1f3055f, type: 2}
+      propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 11447842, guid: d523b58627c498d44a306448c1f3055f, type: 2}
-      propertyPath: tetherManager
-      value: 
-      objectReference: {fileID: 1252406022}
-    m_RemovedComponents:
-    - {fileID: 0}
-    - {fileID: 0}
+      objectReference: {fileID: 2100000, guid: ca82c0596e3a4d14b9791bdabdd1e266, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d523b58627c498d44a306448c1f3055f, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &2118745210

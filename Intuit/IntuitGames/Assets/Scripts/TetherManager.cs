@@ -1,4 +1,5 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
+﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+using CustomExtensions;/// <summary>
 /// A tether system that determines joint positioning based on collisions.
 /// </summary>[ExecuteInEditMode]public class TetherManager : MonoBehaviour{
     // INSPECTOR
@@ -131,7 +132,9 @@
 
             if (performanceBoost) // Left it as an option because there may be cases where this fails
             {
-                startTempJoint = joints.GetRange(0, index).AsEnumerable().Reverse().ToList().Find(x => x.isColliding && x != joint);
+                List<TetherJoint> tempTetherList = joints.GetRange(0, index);
+                tempTetherList.Reverse();
+                startTempJoint = tempTetherList.Find(x => x.isColliding && x != joint);
                 endTempJoint = joints.GetRange(index, jointCount - index).Find(x => x.isColliding && x != joint);
             }
             else // Whereas this is basically fail proof
