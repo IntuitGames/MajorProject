@@ -42,6 +42,7 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.Vector3Field("Real Velocity", Target.rigidbodyComp.velocity);
             EditorGUILayout.Slider("Move Speed", Mathf.Round(Target.rigidbodyComp.velocity.magnitude * 100) / 100, 0, Target.maxSpeed);
             EditorGUILayout.Slider("Slope", Target.slopeAngle, 0, 90);
+            EditorGUILayout.Toggle("Weakened", Target.isWeakened);
             EditorGUILayout.Toggle("Walking", Target.isWalking);
             EditorGUILayout.Toggle("Sprinting", Target.isSprinting);
             EditorGUILayout.Toggle("Grounded", Target.isGrounded);
