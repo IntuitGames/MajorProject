@@ -38,24 +38,10 @@ public class Character : MonoBehaviour, IBounce
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
     public float sprintMoveSpeed = 11;
-    [Range(0, 1)]
-    public float aerialControl = 0.75f;
-    public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, MEDIUM), Tooltip("The one-time force applied at the start of the jump.")]
-    public float jumpImpulse = 10;
-    [Range(0, HIGH), Tooltip("The jump curve force multiplier applied mid jump.")]
-    public float jumpForce = 250;
-    public bool doJumpMomentum = true;
-    [Range(0, LOW), Tooltip("Movement before the jump will influence the impulse direction.")]
-    public float jumpMomentum = 0.5f;
-    [Range(0, LOW)]
-    public float sprintJumpMomentum = 2;
     [Range(0, MEDIUM)]
     public float rotationSpeed = 50;
     [Range(0, MEDIUM)]
     public float sprintRotationSpeed = 20;
-    [Range(0, MEDIUM)]
-    public float aerialRotationSpeed = 10;
     public float maxSpeed = 50;
     [Range(-MEDIUM, 0)]
     public float normalGravity = -9.8f;
@@ -68,6 +54,24 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, LOW)]
     public float normalMass = 1;
 
+    // JUMP
+    [Header("Jump"), SerializeField]
+    public bool canJump = true;
+    public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+    [Range(0, MEDIUM), Tooltip("The one-time force applied at the start of the jump.")]
+    public float jumpImpulse = 10;
+    [Range(0, HIGH), Tooltip("The jump curve force multiplier applied mid jump.")]
+    public float jumpForce = 250;
+    public bool doJumpMomentum = true;
+    [Range(0, LOW), Tooltip("Movement before the jump will influence the impulse direction.")]
+    public float jumpMomentum = 0.5f;
+    [Range(0, LOW)]
+    public float sprintJumpMomentum = 2;
+    [Range(0, 1)]
+    public float aerialControl = 0.75f;
+    [Range(0, MEDIUM)]
+    public float aerialRotationSpeed = 10;
+
     // TETHER
     [Header("Tether")]
     public bool constrainMovement = true;
@@ -77,6 +81,13 @@ public class Character : MonoBehaviour, IBounce
     public float freeMovementLength = 8;
     [Range(0, MEDIUM)]
     public float maxDistanceLength = 15;
+
+    // WEAKENED
+    [Header("Weakened")]
+    public bool canWeaken = true;
+    [Range(0, 1)]
+    public float weakenedMoveSpeedMulti = 0.5f;
+    public float reconnectionProximity = 1.5f;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -172,6 +183,7 @@ public class Character : MonoBehaviour, IBounce
             if (isSprinting && isGrounded) value = sprintMoveSpeed;
             if (isHeavy && isSprinting && isGrounded) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
             if (!isGrounded) value *= aerialControl;
+            if (isWeakened) value *= weakenedMoveSpeedMulti;
             return value;
         }
     }
@@ -208,6 +220,7 @@ public class Character : MonoBehaviour, IBounce
             return !isGrounded && targetVelocity.y < 0;
         }
     }
+    public bool isWeakened { get; set; }
     public bool isDashing
     {
         get { return dashTimer.IsPlaying; }
@@ -348,6 +361,8 @@ public class Character : MonoBehaviour, IBounce
 
     public void Jump(bool isPressed)
     {
+        if (!canJump) return;
+
         jumpTime += GameManager.InputManager.jumpDelta;
 
         if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration()) ResetJumpFlag();
@@ -381,6 +396,10 @@ public class Character : MonoBehaviour, IBounce
                 jumpVector.y = 10;
                 AddConstrainedForce(jumpVector.normalized * jumpImpulse, ForceMode.Impulse);
             }
+        }
+        else if (!isPressed && jumpTime < 0.1f)
+        {
+            rigidbodyComp.velocity = new Vector3(rigidbodyComp.velocity.x, 0, rigidbodyComp.velocity.z);
         }
     }
 
@@ -445,6 +464,8 @@ public class Character : MonoBehaviour, IBounce
 
     public void ApplyConstrainForce()
     {
+        if (isWeakened) return;
+
         float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
 
         if (length < freeMovementLength) return;
@@ -468,6 +489,11 @@ public class Character : MonoBehaviour, IBounce
         if (!constrainMovement) rigidbodyComp.MovePosition(transform.position + movement);
 
         rigidbodyComp.MovePosition(transform.position + movement);
+    }
+
+    public void Weaken()
+    {
+        if (canWeaken) isWeakened = true;
     }
 
     #endregion

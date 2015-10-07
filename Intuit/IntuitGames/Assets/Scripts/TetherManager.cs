@@ -6,6 +6,7 @@ using CustomExtensions;/// <summary>
     [Header("References")]
     public TetherJoint jointPrefab;
     public DebugTetherVisual tetherVisualPrefab;
+    public Joint disconnectionJointPrefab;
     public Transform startPoint;
     public Transform endPoint;
     [HideInInspector]
@@ -14,8 +15,8 @@ using CustomExtensions;/// <summary>
     public List<DebugTetherVisual> tetherVisuals;
 
     [Header("Properties")]
-    [Range(1, 200)]
-    public int jointCount = 10;
+    [Range(3, 200)]
+    public int jointCount = 100;
     [Range(0, 200)]
     public float jointSpeed = 100;
     public bool instantJointMovement = true;
@@ -23,7 +24,11 @@ using CustomExtensions;/// <summary>
     public bool showTetherVisual = true;
     public bool showInHierarchy = false;
     public bool performanceBoost = true;
-    public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)    [Header("Info")]
+    public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)
+
+    [Header("Info")]
+    [ReadOnly]
+    public bool disconnected = false;
     [ReadOnly]
     public float directLength;
     [ReadOnly]
@@ -48,29 +53,43 @@ using CustomExtensions;/// <summary>
 
         if (tetherVisuals.Any() && tetherVisuals.FirstOrDefault().gameObject.hideFlags != (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy))
             tetherVisuals.ForEach(x => x.gameObject.hideFlags = (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy));
+
+        if (!Application.isPlaying) return;
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            Disconnect(jointCount / 2);
+        }
     }    void FixedUpdate()
     {
         if (!Application.isPlaying) return;
 
-        for (int i = 0; i < joints.Count; i++)
+        if (!disconnected)
         {
-            if (!experimentalWrapping)
+            for (int i = 0; i < joints.Count; i++)
             {
-                if (instantJointMovement)
-                    joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
-                else
-                    joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
-            }
-            else
-            {
-                if (!joints[i].isColliding)
+                if (!experimentalWrapping)
+                {
                     if (instantJointMovement)
                         joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
                     else
                         joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
+                }
                 else
-                    joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * 100 * Time.fixedDeltaTime, ForceMode.Force);
+                {
+                    if (!joints[i].isColliding)
+                        if (instantJointMovement)
+                            joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
+                        else
+                            joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
+                    else
+                        joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * 100 * Time.fixedDeltaTime, ForceMode.Force);
+                }
             }
+        }
+        else // Disconnected movement
+        {
+
         }
     }    // Re-creates the joints and puts them in their starting positions    public void Rebuild()
     {
@@ -183,5 +202,50 @@ using CustomExtensions;/// <summary>
         else
         {
             return (joints.LastOrDefault().transform.position - endPoint.position).normalized;
+        }
+    }    public void Disconnect(int breakJoint)
+    {
+        if (!disconnectionJointPrefab || disconnected) return;
+
+        Joint tempJoint;
+
+        for (int i = 0; i < joints.Count; i++)
+        {
+            // Get the joint prefab and add it
+            if (disconnectionJointPrefab.GetComponent<HingeJoint>())
+                tempJoint = joints[i].gameObject.AddComponent<HingeJoint>(disconnectionJointPrefab.GetComponent<HingeJoint>());
+            else if (disconnectionJointPrefab.GetComponent<SpringJoint>())
+                tempJoint = joints[i].gameObject.AddComponent<SpringJoint>(disconnectionJointPrefab.GetComponent<SpringJoint>());
+            else if (disconnectionJointPrefab.GetComponent<FixedJoint>())
+                tempJoint = joints[i].gameObject.AddComponent<FixedJoint>(disconnectionJointPrefab.GetComponent<FixedJoint>());
+            else
+                break;
+
+            // Set its connections
+            if (i == 0)
+            {
+//                 tempJoint.connectedBody = startPoint.GetComponent<Rigidbody>();                Destroy(tempJoint);                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = startPoint;            }
+            else if (i == joints.Count - 1)
+            {
+//                 tempJoint.connectedBody = endPoint.GetComponent<Rigidbody>();                Destroy(tempJoint);                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = endPoint;            }
+            else if (i == breakJoint)
+            {
+                tempJoint.connectedBody = joints[i + 1].rigidbodyComp;
+                tetherVisuals[breakJoint].GetComponent<Renderer>().enabled = false;
+            }
+            else if (i < breakJoint)
+            {
+                tempJoint.connectedBody = joints[i - 1].rigidbodyComp;
+            }
+            else if (i > breakJoint)
+            {
+                tempJoint.connectedBody = joints[i + 1].rigidbodyComp;
+            }
+
+            // Set other
+            Character.character1.Weaken();
+            Character.character2.Weaken();
+            joints[i].rigidbodyComp.useGravity = true;
+            disconnected = true;
         }
     }}

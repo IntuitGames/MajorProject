@@ -90,7 +90,7 @@ public class Enemy : MonoBehaviour {
 				NavMeshPath path = new NavMeshPath();
 				wanderTarget = startLocation + (new Vector3(randPos.x, agent.destination.y, randPos.y));
 				agent.CalculatePath(wanderTarget, path);
-				Debug.Log(path.status.ToString());
+				//Debug.Log(path.status.ToString());
 				if(path.status == NavMeshPathStatus.PathComplete)
 				{
 					foundPathable = true;

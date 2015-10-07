@@ -865,7 +865,18 @@ MonoBehaviour:
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
   sprintMoveSpeed: 12.5
-  aerialControl: .75
+  rotationSpeed: 50
+  sprintRotationSpeed: 20
+  maxSpeed: 1000
+  normalGravity: -9.80000019
+  maxGravity: -50
+  gravityGrowthRate: 40
+  groundedLayers:
+    serializedVersion: 2
+    m_Bits: 769
+  normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
+  normalMass: 1
+  canJump: 1
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -891,22 +902,15 @@ MonoBehaviour:
   doJumpMomentum: 1
   jumpMomentum: 2
   sprintJumpMomentum: 5
-  rotationSpeed: 50
-  sprintRotationSpeed: 20
+  aerialControl: .75
   aerialRotationSpeed: 10
-  maxSpeed: 1000
-  normalGravity: -9.80000019
-  maxGravity: -50
-  gravityGrowthRate: 40
-  groundedLayers:
-    serializedVersion: 2
-    m_Bits: 769
-  normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
-  normalMass: 1
   constrainMovement: 1
   constrainingPower: 3
   freeMovementLength: 15
   maxDistanceLength: 17
+  canWeaken: 1
+  weakenedMoveSpeedMulti: .75
+  reconnectionProximity: 1.5
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
