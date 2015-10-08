@@ -2,29 +2,45 @@
 using System.Collections.Generic;
 using System;
 
-public class FSM {
+public class FSM<T> {
 
-	private Stack<Action> stack = new Stack<Action>();
+	T fsmOwner;
+
+	private Stack<FSMState<T>> stack = new Stack<FSMState<T>>();
+
+	public FSM (T owner)
+	{
+		fsmOwner = owner;
+	}
+
+	public FSM(T owner, FSMState<T> startState)
+	{
+		fsmOwner = owner;
+
+		stack.Push (startState);
+	}
 
 	public void Update()
 	{
 		if(getCurrentState() != null)
 		{
-			getCurrentState().Invoke();
+			getCurrentState().Update(fsmOwner);
 		}
 	}
 
-	public void popState()
+	public FSMState<T> popState()
 	{
-		stack.Pop();
+		getCurrentState ().End (fsmOwner);
+		return stack.Pop();
 	}
 
-	public void pushState(Action state)
+	public void pushState(FSMState<T> state)
 	{
 		stack.Push( state );
+		getCurrentState ().Begin (fsmOwner);
 	}
 
-	private Action getCurrentState()
+	private FSMState<T> getCurrentState()
 	{
 		return stack.Count > 0 ? stack.Peek() : null;
 	}
