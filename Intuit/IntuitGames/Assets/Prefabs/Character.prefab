@@ -73,7 +73,6 @@ GameObject:
   - 82: {fileID: 8201082}
   - 54: {fileID: 5494142}
   - 136: {fileID: 13631838}
-  - 114: {fileID: 11418134}
   m_Layer: 9
   m_Name: Character
   m_TagString: Character
@@ -726,7 +725,7 @@ Rigidbody:
   m_GameObject: {fileID: 115460}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: .25
   m_AngularDrag: 5
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -819,21 +818,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11418134
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 115460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3a2f56281deef04790606f1b1f9d0c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidBody: {fileID: 0}
-  next: {fileID: 0}
-  previous: {fileID: 0}
-  index: 0
 --- !u!114 &11446048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -872,14 +856,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6dfc27e20a2cf4387fe7bf6c90bbcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidBody: {fileID: 0}
+  rigidbodyComp: {fileID: 0}
   audioSource: {fileID: 0}
   capsuleCollider: {fileID: 0}
   animator: {fileID: 0}
+  tetherManager: {fileID: 0}
   _isPlayerOne: 1
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
   sprintMoveSpeed: 12.5
+  rotationSpeed: 50
+  sprintRotationSpeed: 20
+  maxSpeed: 1000
+  normalGravity: -9.80000019
+  maxGravity: -50
+  gravityGrowthRate: 40
+  groundedLayers:
+    serializedVersion: 2
+    m_Bits: 769
+  normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
+  normalMass: 1
+  canJump: 1
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -900,16 +897,20 @@ MonoBehaviour:
       tangentMode: 5
     m_PreInfinity: 2
     m_PostInfinity: 2
-  jumpPower: 250
-  rotationSpeed: 50
-  maxSpeed: 1000
-  normalGravity: -9.80000019
-  maxGravity: -50
-  gravityGrowthRate: 40
-  groundedLayers:
-    serializedVersion: 2
-    m_Bits: 769
-  normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
+  jumpImpulse: 10
+  jumpForce: 250
+  doJumpMomentum: 1
+  jumpMomentum: 2
+  sprintJumpMomentum: 5
+  aerialControl: .75
+  aerialRotationSpeed: 10
+  constrainMovement: 1
+  constrainingPower: 3
+  freeMovementLength: 15
+  maxDistanceLength: 17
+  canWeaken: 1
+  weakenedMoveSpeedMulti: .75
+  reconnectionProximity: 1.5
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
@@ -919,10 +920,11 @@ MonoBehaviour:
   canHeavy: 1
   heavyMoveSpeed: 2
   canUnheavyMidair: 0
-  heavyJumpPower: 35
+  heavyJumpPower: 90
   heavyDownwardForce: 100
   heavySlopeAngle: 15
   heavyMaterial: {fileID: 13400000, guid: 921357e1343afc34f9347fea0ffe7866, type: 2}
+  heavyMass: 5
   canBounceWhileHeavy: 0
   canBounce: 1
   momentumRetention: .5
@@ -941,7 +943,7 @@ MonoBehaviour:
       player: 2
       type: 0
       group: 2
-      volume: 1
+      volume: .5
       pitch: 0
       unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
       FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
@@ -949,15 +951,15 @@ MonoBehaviour:
       player: 2
       type: 0
       group: 2
-      volume: 1
+      volume: .5
       pitch: 0
       unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
       FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
     jump:
-      player: 1
+      player: 2
       type: 0
       group: 2
-      volume: .5
+      volume: 1
       pitch: 0
       unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
       FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}

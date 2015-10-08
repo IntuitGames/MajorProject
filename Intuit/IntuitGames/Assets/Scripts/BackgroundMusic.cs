@@ -17,10 +17,12 @@ public class BackgroundMusic : MonoBehaviour
         music.Play(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), detach: false);
     }
 
+#if UNITY_EDITOR
     void Update()
     {
-        music.UpdateVolume(audioSource);
+        music.UpdateSettings(audioSource);
     }
+#endif
 
     void OnDestroy()
     {

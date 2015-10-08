@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using CustomExtensions;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
 /// A tether system that creates and pools new custom joints.
-/// </summary>[ExecuteInEditMode]public class DynamicTetherManager : MonoBehaviour
+/// </summary>[ExecuteInEditMode, System.Obsolete]public class DynamicTetherManager : MonoBehaviour
 {
     #region VARIABLES
 

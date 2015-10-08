@@ -65,7 +65,7 @@ MonoBehaviour:
   unityVolume: 1
   FMODVolume: 1
   soundEffectVolume: 1
-  backgroundMusicVolume: 1
+  backgroundMusicVolume: .0500000007
   gameGroupVolume: 1
   UIGroupVolume: 1
   playerGroupVolume: 1

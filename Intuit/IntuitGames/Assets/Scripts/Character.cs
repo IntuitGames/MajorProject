@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider)), SelectionBase]
 public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
@@ -21,13 +21,15 @@ public class Character : MonoBehaviour, IBounce
 
     // COMPONENTS
     [HideInInspector]
-    public Rigidbody rigidBody;
+    public Rigidbody rigidbodyComp;
     [HideInInspector]
     public AudioSource audioSource;
     [HideInInspector]
     public CapsuleCollider capsuleCollider;
     [HideInInspector]
     public Animator animator;
+    [HideInInspector]
+    public TetherManager tetherManager;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -36,11 +38,10 @@ public class Character : MonoBehaviour, IBounce
     public Vector3 targetVelocity;
     public float baseMoveSpeed = 7;
     public float sprintMoveSpeed = 11;
-    public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, HIGH)]
-    public float jumpPower = 10;
     [Range(0, MEDIUM)]
-    public float rotationSpeed = 10;
+    public float rotationSpeed = 50;
+    [Range(0, MEDIUM)]
+    public float sprintRotationSpeed = 20;
     public float maxSpeed = 50;
     [Range(-MEDIUM, 0)]
     public float normalGravity = -9.8f;
@@ -50,6 +51,43 @@ public class Character : MonoBehaviour, IBounce
     public float gravityGrowthRate = 3;
     public LayerMask groundedLayers;
     public PhysicMaterial normalMaterial;
+    [Range(0, LOW)]
+    public float normalMass = 1;
+
+    // JUMP
+    [Header("Jump"), SerializeField]
+    public bool canJump = true;
+    public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+    [Range(0, MEDIUM), Tooltip("The one-time force applied at the start of the jump.")]
+    public float jumpImpulse = 10;
+    [Range(0, HIGH), Tooltip("The jump curve force multiplier applied mid jump.")]
+    public float jumpForce = 250;
+    public bool doJumpMomentum = true;
+    [Range(0, LOW), Tooltip("Movement before the jump will influence the impulse direction.")]
+    public float jumpMomentum = 0.5f;
+    [Range(0, LOW)]
+    public float sprintJumpMomentum = 2;
+    [Range(0, 1)]
+    public float aerialControl = 0.75f;
+    [Range(0, MEDIUM)]
+    public float aerialRotationSpeed = 10;
+
+    // TETHER
+    [Header("Tether")]
+    public bool constrainMovement = true;
+    [Range(0, MEDIUM)]
+    public float constrainingPower = 20;
+    [Range(0, MEDIUM)]
+    public float freeMovementLength = 8;
+    [Range(0, MEDIUM)]
+    public float maxDistanceLength = 15;
+
+    // WEAKENED
+    [Header("Weakened")]
+    public bool canWeaken = true;
+    [Range(0, 1)]
+    public float weakenedMoveSpeedMulti = 0.5f;
+    public float reconnectionProximity = 1.5f;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -88,6 +126,8 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, 90)]
     public float heavySlopeAngle = 0.2f;
     public PhysicMaterial heavyMaterial;
+    [Range(0, LOW)]
+    public float heavyMass = 5;
     public bool canBounceWhileHeavy = false;
 
     // BOUNCE
@@ -115,7 +155,7 @@ public class Character : MonoBehaviour, IBounce
     }
     private float FM_playerMovespeedValue
     {
-        get { return Mathf.Lerp(0, 1, moveSpeed / sprintMoveSpeed); }
+        get { return Mathf.Lerp(0, 1, currentMoveSpeed / sprintMoveSpeed); }
     }
 
     // PRIVATES
@@ -134,20 +174,34 @@ public class Character : MonoBehaviour, IBounce
             _isPlayerOne = value;
         }
     }
-    public float moveSpeed
+    public float currentMoveSpeed
     {
         get
         {
             float value = baseMoveSpeed;
             if (isHeavy) value = heavyMoveSpeed;
-            if (isSprinting) value = sprintMoveSpeed;
-            if (isHeavy && isSprinting) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
+            if (isSprinting && isGrounded) value = sprintMoveSpeed;
+            if (isHeavy && isSprinting && isGrounded) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
+            if (!isGrounded) value *= aerialControl;
+            if (isWeakened) value *= weakenedMoveSpeedMulti;
             return value;
         }
     }
     public float slopeAngle
     {
         get { return Vector3.Angle(Vector3.up, onObject.normal); }
+    }
+    public float currentMass
+    {
+        get { return isHeavy ? heavyMass : normalMass; }
+    }
+    public float currentRotationSpeed
+    {
+        get { return isGrounded ? (isSprinting ? sprintRotationSpeed : rotationSpeed) : aerialRotationSpeed; }
+    }
+    public float currentJumpMomentum
+    {
+        get { return isSprinting ? sprintJumpMomentum : jumpMomentum; }
     }
 
     // STATES
@@ -166,6 +220,7 @@ public class Character : MonoBehaviour, IBounce
             return !isGrounded && targetVelocity.y < 0;
         }
     }
+    public bool isWeakened { get; set; }
     public bool isDashing
     {
         get { return dashTimer.IsPlaying; }
@@ -194,10 +249,11 @@ public class Character : MonoBehaviour, IBounce
         if (!SetStaticCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
-        rigidBody = GetComponent<Rigidbody>();
+        rigidbodyComp = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
+        tetherManager = FindObjectOfType<TetherManager>();
     }
 
     void Start()
@@ -210,7 +266,7 @@ public class Character : MonoBehaviour, IBounce
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
 
         // Setup audio data
-        audioData.Initialize(transform, rigidBody);
+        audioData.Initialize(transform, rigidbodyComp);
     }
 
     void OnDestroy()
@@ -242,6 +298,9 @@ public class Character : MonoBehaviour, IBounce
         // Check for airborne changes
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
 
+        // Update mass
+        if(rigidbodyComp.mass != currentMass) rigidbodyComp.mass = currentMass;
+
         // Add to gravity
         if (!isGrounded) gravity = Mathf.Clamp(gravity - gravityGrowthRate * Time.deltaTime, maxGravity, 0);
         else gravity = normalGravity;
@@ -255,7 +314,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Apply heavy downward force and physics materials
         capsuleCollider.material = isHeavy ? heavyMaterial : normalMaterial;
-        if (isHeavy) rigidBody.AddForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
+        if (isHeavy) AddConstrainedForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
     }
 
     // Is called AFTER input is determined every frame
@@ -268,17 +327,20 @@ public class Character : MonoBehaviour, IBounce
 
         // Rotate in movement direction
         if(targetVelocity != Vector3.zero)
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * rotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity), delta * currentRotationSpeed);
 
         // Apply movement
-        rigidBody.MovePosition(transform.position + targetVelocity * delta);
+        AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        rigidBody.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
+        AddConstrainedForce(new Vector3(0, gravity, 0), ForceMode.Force);
+
+        // Apply constraining force
+        if(constrainMovement) ApplyConstrainForce();
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
-        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (moveSpeed / baseMoveSpeed));
+        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
     }
 
     public void Movement(float forward, float right)
@@ -287,8 +349,8 @@ public class Character : MonoBehaviour, IBounce
 
         if (!isDashing)
         {
-            targetVelocity.x = direction.x * moveSpeed;
-            targetVelocity.z = direction.y * moveSpeed;
+            targetVelocity.x = direction.x * currentMoveSpeed;
+            targetVelocity.z = direction.y * currentMoveSpeed;
         }
         else
         {
@@ -299,6 +361,8 @@ public class Character : MonoBehaviour, IBounce
 
     public void Jump(bool isPressed)
     {
+        if (!canJump) return;
+
         jumpTime += GameManager.InputManager.jumpDelta;
 
         if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration()) ResetJumpFlag();
@@ -309,11 +373,11 @@ public class Character : MonoBehaviour, IBounce
 
         if (!isHeavy)
         {
-            rigidBody.AddForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpPower / jumpCurve.Duration()) * 7.5f * GameManager.InputManager.jumpDelta, ForceMode.Force);
+            AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpForce / jumpCurve.Duration()) * GameManager.InputManager.jumpDelta, ForceMode.Force);
         }
         else if (isGrounded)
         {
-            rigidBody.AddForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
+            AddConstrainedForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
             ResetJumpFlag();
         }
     }
@@ -321,6 +385,22 @@ public class Character : MonoBehaviour, IBounce
     public void JumpToggle(bool isPressed)
     {
         if(isPressed && isGrounded) jumpFlag = true;
+
+        if (isPressed && isGrounded)
+        {
+            if (!doJumpMomentum || targetVelocity.IgnoreY2() == Vector2.zero)
+                AddConstrainedForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+            else
+            {
+                Vector3 jumpVector = targetVelocity.normalized * currentJumpMomentum;
+                jumpVector.y = 10;
+                AddConstrainedForce(jumpVector.normalized * jumpImpulse, ForceMode.Impulse);
+            }
+        }
+        else if (!isPressed && jumpTime < 0.1f)
+        {
+            rigidbodyComp.velocity = new Vector3(rigidbodyComp.velocity.x, 0, rigidbodyComp.velocity.z);
+        }
     }
 
     public void Dash(bool isPressed)
@@ -373,13 +453,47 @@ public class Character : MonoBehaviour, IBounce
         else
         {
             isBouncing = true;
-            rigidBody.AddForce(direction * magnitude, ForceMode.Impulse);
+            AddConstrainedForce(direction * magnitude, ForceMode.Impulse);
         }
     }
 
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
         audioData.PlayWalkAudio(FM_playerMovespeedValue, isWalking && isGrounded);
+    }
+
+    public void ApplyConstrainForce()
+    {
+        if (isWeakened) return;
+
+        float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
+
+        if (length < freeMovementLength) return;
+
+        float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
+
+        Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetOtherCharacter().transform.position - transform.position).normalized;
+
+        rigidbodyComp.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
+    }
+
+    public void AddConstrainedForce(Vector3 movement, ForceMode forceMode)
+    {
+        if (!constrainMovement) rigidbodyComp.AddForce(movement, forceMode);
+
+        rigidbodyComp.AddForce(movement, forceMode);
+    }
+
+    public void AddConstrainedMovement(Vector3 movement)
+    {
+        if (!constrainMovement) rigidbodyComp.MovePosition(transform.position + movement);
+
+        rigidbodyComp.MovePosition(transform.position + movement);
+    }
+
+    public void Weaken()
+    {
+        if (canWeaken) isWeakened = true;
     }
 
     #endregion
@@ -399,7 +513,7 @@ public class Character : MonoBehaviour, IBounce
         if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold && bouncyObj.isBouncy)
         {
             // Do not bounce if other character is bouncing on this character
-            if (bouncyObj.gameObject == GetOtherCharacter(isPlayerOne).gameObject && GetOtherCharacter(isPlayerOne).transform.position.y > transform.position.y) return;
+            if (bouncyObj.gameObject == GetOtherCharacter().gameObject && GetOtherCharacter().transform.position.y > transform.position.y) return;
             baseBouncePower = bouncePower;
             bounceMultiplier = bouncyObj.bounceMultiplier * (relativeVelocity.magnitude * momentumRetention);
             minBouncePower = bouncyObj.minBounceMagnitude * (GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBouncePower : 1);
@@ -474,18 +588,16 @@ public class Character : MonoBehaviour, IBounce
         jumpTime = 0;
     }
 
+    // Returns the other character
+    public Character GetOtherCharacter()
+    {
+        if (this == character1) return character2;
+        else return character1;
+    }
+
     #endregion
 
     #region STATICS
-
-    // Returns the other character
-    private static Character GetOtherCharacter(bool player1)
-    {
-        if (player1)
-            return character2;
-        else
-            return character1;
-    }
 
     // Set static character references
     private static bool SetStaticCharacter(Character character)

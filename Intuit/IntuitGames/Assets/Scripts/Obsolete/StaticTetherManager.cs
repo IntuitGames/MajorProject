@@ -2,7 +2,7 @@
 using CustomExtensions;
 using System;/// <summary>
 /// A tether manager that doesn't change based on distance.
-/// </summary>[ExecuteInEditMode]public class StaticTetherManager : MonoBehaviour{
+/// </summary>[ExecuteInEditMode, System.Obsolete]public class StaticTetherManager : MonoBehaviour{
     // CONSTANTS
     private const int MAX_JOINT_COUNT = 100;
     private const int TETHER_LAYER = 10;

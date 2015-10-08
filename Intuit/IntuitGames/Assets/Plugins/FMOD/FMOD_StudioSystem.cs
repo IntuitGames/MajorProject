@@ -255,6 +255,7 @@ public class FMOD_StudioSystem : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+        gameObject.hideFlags = HideFlags.HideInHierarchy;
 
         FMOD.Studio.UnityUtil.Log("FMOD_StudioSystem: System_Create");
         ERRCHECK(FMOD.Studio.System.create(out system));

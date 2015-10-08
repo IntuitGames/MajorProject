@@ -78,7 +78,7 @@ public class SoundClip : IDisposable
     }
 
     // Updates the volume value where necessary
-    public void UpdateVolume(AudioSource audioSource)
+    public void UpdateSettings(AudioSource audioSource)
     {
         float finalVolume = GameManager.AudioManager.GetFinalVolume(this);
 
