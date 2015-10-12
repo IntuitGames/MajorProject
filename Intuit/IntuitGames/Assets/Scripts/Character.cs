@@ -25,6 +25,7 @@ public class Character : MonoBehaviour, IBounce
     public TetherManager tetherManager;
     [HideInInspector]
     public CharacterAudio audioData;
+    public static SmoothCameraFollow cameraFollow;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -83,6 +84,10 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
     public bool reconnectOnTouch = true;
+    public float minCamZoomDistance = 5;
+    public float maxCamZoomDistance = 20;
+    public float minCamProximity = 3;
+    public float maxCamProximity = 20;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -120,6 +125,8 @@ public class Character : MonoBehaviour, IBounce
     public float heavyDownwardForce = 100;
     [Range(0, 90)]
     public float heavySlopeAngle = 0.2f;
+    [Range(0, MEDIUM)]
+    public float heavyRotationSpeed = 10;
     public PhysicMaterial heavyMaterial;
     [Range(0, LOW)]
     public float heavyMass = 5;
@@ -171,7 +178,9 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // PRIVATES
-    private float normalDrag;
+    private float normalDrag;                           // Normal rigidbody drag.
+    private Color normalColour;                         // Normal material full colour.
+    private Color heavyColor;                           // Heavy material full colour.
     private float gravity;                              // Current gravity on this character.
     private RaycastHit onObject;                        // Which object is currently under this character.
     private const float airborneRayOffset = 0.05f;      // How much additional height offset will the ray checks account for.
@@ -210,7 +219,7 @@ public class Character : MonoBehaviour, IBounce
     }
     public float currentRotationSpeed
     {
-        get { return isGrounded ? (isSprinting ? sprintRotationSpeed : rotationSpeed) : aerialRotationSpeed; }
+        get { return isGrounded ? (isSprinting ? sprintRotationSpeed : (isHeavy ? heavyRotationSpeed : rotationSpeed)) : aerialRotationSpeed; }
     }
     public float currentJumpMomentum
     {
@@ -272,6 +281,7 @@ public class Character : MonoBehaviour, IBounce
         animator = GetComponentInChildren<Animator>();
         tetherManager = FindObjectOfType<TetherManager>();
         audioData = GetComponent<CharacterAudio>();
+        cameraFollow = Camera.main.GetComponent<SmoothCameraFollow>();
     }
 
     void Start()
@@ -292,6 +302,10 @@ public class Character : MonoBehaviour, IBounce
             tetherManager.OnDisconnected += Weaken;
             tetherManager.OnReconnected += Unweaken;
         }
+
+        // Set debug heavy colours
+        normalColour = GetComponentInChildren<Renderer>().material.color;
+        heavyColor = normalColour * 0.1f;
     }
 
     void Update()
@@ -309,6 +323,12 @@ public class Character : MonoBehaviour, IBounce
         // Update drag value
         if (!exitHeavyDragTimer.IsPlaying)
             normalDrag = rigidbodyComp.drag;
+
+        // Update weakened camera zoom
+        if (isPlayerOne && isWeakened)
+        {
+            cameraFollow.distance = Vector3.Distance(transform.position, GetPartnerPosition()).Normalize(minCamProximity, maxCamProximity, minCamZoomDistance, maxCamZoomDistance);
+        }
     }
 
     void OnDestroy()
@@ -404,7 +424,7 @@ public class Character : MonoBehaviour, IBounce
 
         jumpTime += GameManager.InputManager.jumpDelta;
 
-        if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration()) ResetJumpFlag();
+        if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration() || jumpTime > 0.1f && isGrounded) ResetJumpFlag();
 
         if (!jumpFlag) return;
 
@@ -416,17 +436,19 @@ public class Character : MonoBehaviour, IBounce
         }
         else if (isGrounded)
         {
-            AddConstrainedForce(Vector3.up * heavyJumpPower, ForceMode.Impulse);
+            AddConstrainedForce(Vector3.up * heavyJumpPower * jumpImpulse, ForceMode.Impulse);
             ResetJumpFlag();
         }
     }
 
     public void JumpToggle(bool isPressed)
     {
-        if(isPressed && isGrounded) jumpFlag = true;
-
         if (isPressed && isGrounded)
         {
+            jumpFlag = true;
+
+            if (isHeavy) return;
+
             if (!doJumpMomentum || targetVelocity.IgnoreY2() == Vector2.zero)
                 AddConstrainedForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
             else
@@ -464,6 +486,8 @@ public class Character : MonoBehaviour, IBounce
 
             audioData.PlayStartHeavyAudio();
             unheavyDurationTimer.Restart();
+
+            GetComponentInChildren<Renderer>().material.color = heavyColor;
         }
         else if (!isPressed && canUnheavy)
         {
@@ -477,6 +501,8 @@ public class Character : MonoBehaviour, IBounce
                 rigidbodyComp.drag *= exitHeavyDragMulti;
                 exitHeavyDragTimer.Restart();
             }
+
+            GetComponentInChildren<Renderer>().material.color = normalColour;
         }
     }
 
@@ -703,8 +729,12 @@ public class Character : MonoBehaviour, IBounce
     public static void Unweaken(TetherJoint reconnectedJoint)
     {
         character1.isWeakened = false;
-        character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
         character2.isWeakened = false;
+
+        character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
+
+        // Reset camera zoom
+        cameraFollow.distance = cameraFollow.initialDistance;
     }
 
     #endregion

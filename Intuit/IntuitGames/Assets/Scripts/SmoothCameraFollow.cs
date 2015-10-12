@@ -20,9 +20,13 @@ public class SmoothCameraFollow : MonoBehaviour
     private Vector3 initialOffsetDirection;
     private Vector3 velocity = Vector3.zero;
 
+    [System.NonSerialized]
+    public float initialDistance;
+
     void Awake()
     {
         initialOffsetDirection = (target.transform.position - transform.position).normalized;
+        initialDistance = distance;
     }
 
     void Update()

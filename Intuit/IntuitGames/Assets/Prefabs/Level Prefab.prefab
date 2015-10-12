@@ -23988,20 +23988,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 1
+      value: 1.25
       inSlope: -8.45535469
-      outSlope: -0
+      outSlope: -.25
       tangentMode: 17
-    - time: .049999997
+    - time: 1
       value: 1
-      inSlope: 0
-      outSlope: -7.08226109
-      tangentMode: 5
-    - time: .5
-      value: 0
-      inSlope: -2.22222209
+      inSlope: -.25
       outSlope: 0
       tangentMode: 5
+    - time: 1.10000002
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
     m_PreInfinity: 2
     m_PostInfinity: 2
   jumpImpulse: 10
@@ -24018,6 +24018,10 @@ MonoBehaviour:
   canWeaken: 1
   weakenedMoveSpeedMulti: .75
   reconnectOnTouch: 1
+  minCamZoomDistance: 6
+  maxCamZoomDistance: 40
+  minCamProximity: 6
+  maxCamProximity: 30
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
@@ -24027,14 +24031,15 @@ MonoBehaviour:
   _canHeavy: 1
   heavyMoveSpeed: 2
   canUnheavyMidair: 0
-  heavyJumpPower: 90
+  heavyJumpPower: 15
   heavyDownwardForce: 500
   heavySlopeAngle: 15
+  heavyRotationSpeed: 10
   heavyMaterial: {fileID: 13400000, guid: 921357e1343afc34f9347fea0ffe7866, type: 2}
   heavyMass: 5
   canBounceWhileHeavy: 0
   exitHeavyDragMulti: 10
-  exitHeavyDragDuration: 2
+  exitHeavyDragDuration: 1
   minHeavyDuration: 1
   heavyCooldown: 0
   canBounce: 1
@@ -25598,20 +25603,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 1
+      value: 1.25
       inSlope: -8.45535469
-      outSlope: -0
+      outSlope: -.25
       tangentMode: 17
-    - time: .049999997
+    - time: 1
       value: 1
-      inSlope: 0
-      outSlope: -7.08226109
-      tangentMode: 5
-    - time: .5
-      value: 0
-      inSlope: -2.22222209
+      inSlope: -.25
       outSlope: 0
       tangentMode: 5
+    - time: 1.10000002
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
     m_PreInfinity: 2
     m_PostInfinity: 2
   jumpImpulse: 10
@@ -25628,6 +25633,10 @@ MonoBehaviour:
   canWeaken: 1
   weakenedMoveSpeedMulti: .75
   reconnectOnTouch: 1
+  minCamZoomDistance: 6
+  maxCamZoomDistance: 40
+  minCamProximity: 6
+  maxCamProximity: 30
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
@@ -25637,14 +25646,15 @@ MonoBehaviour:
   _canHeavy: 1
   heavyMoveSpeed: 2
   canUnheavyMidair: 0
-  heavyJumpPower: 90
+  heavyJumpPower: 15
   heavyDownwardForce: 500
   heavySlopeAngle: 15
+  heavyRotationSpeed: 10
   heavyMaterial: {fileID: 13400000, guid: 921357e1343afc34f9347fea0ffe7866, type: 2}
   heavyMass: 5
   canBounceWhileHeavy: 0
   exitHeavyDragMulti: 10
-  exitHeavyDragDuration: 2
+  exitHeavyDragDuration: 1
   minHeavyDuration: 1
   heavyCooldown: 0
   canBounce: 1
@@ -29412,7 +29422,7 @@ MonoBehaviour:
   showTetherVisual: 1
   showInHierarchy: 1
   performanceBoost: 1
-  breakForce: .100000001
+  breakForce: 50
   disconnectInput: 98
   reconnectInput: 110
   experimentalNoStick: 0
@@ -29473,7 +29483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d689a39ff6258994685f33946ff7f5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterEnabled: 1
+  masterEnabled: 0
   masterVolume: 1
   unityVolume: 1
   FMODVolume: 1

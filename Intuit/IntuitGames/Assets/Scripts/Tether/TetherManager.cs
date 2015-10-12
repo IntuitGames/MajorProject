@@ -27,8 +27,8 @@ public class TetherManager : MonoBehaviour
     public bool showTetherVisual = true;
     public bool showInHierarchy = false;
     public bool performanceBoost = true;
-    [Range(0, 5)]
-    public float breakForce = 5;
+    [Range(0, 100)]
+    public float breakForce = 50;
     public KeyCode disconnectInput = KeyCode.B;
     public KeyCode reconnectInput = KeyCode.N;
 
@@ -354,8 +354,8 @@ public class TetherManager : MonoBehaviour
         joints[breakJointIndex - 1].disconnectedEnd = true;
 
         // Add forces
-        joints[breakJointIndex].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.Impulse);
-        joints[breakJointIndex - 1].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.Impulse);
+        joints[breakJointIndex].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.VelocityChange);
+        joints[breakJointIndex - 1].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.VelocityChange);
 
         // Raise event
         OnDisconnected(breakJoint);
@@ -386,7 +386,7 @@ public class TetherManager : MonoBehaviour
             // Reset other values
             joints[i].rigidbodyComp.velocity = Vector3.zero;
             joints[i].rigidbodyComp.useGravity = false;
-            if (joints[i].disconnectedEnd)
+            if (!reconnectJoint && joints[i].disconnectedEnd)
                 reconnectJoint = joints[i];
             joints[i].disconnectedEnd = false;
         }

@@ -13,10 +13,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// If a particular element in the source IEnumerable meets the specified condition then perform a specified action(s).
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="Condition"></param>
-        /// <param name="Action"></param>
         public static void ConditionalAction<T>(this IEnumerable<T> Source, Predicate<T> Condition, params Action<T>[] Actions)
         {
             if (Source.IsNullOrEmpty())
@@ -28,11 +24,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                         Action(Item);
         }        /// <summary>
         /// Resizes a target list.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="List"></param>
-        /// <param name="NewCapacity"></param>
-        /// <param name="NewObjects"></param>        public static void Resize<T>(this List<T> List, int NewCapacity, T NewObjects = default(T))
+        /// </summary>        public static void Resize<T>(this List<T> List, int NewCapacity, T NewObjects = default(T))
         {
             int OldCapacity = List.Count;
 
@@ -42,12 +34,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 List.AddRange(Enumerable.Repeat(NewObjects, NewCapacity - OldCapacity));
         }        /// <summary>
         /// If it can it will convert a target list into another type.
-        /// </summary>
-        /// <typeparam name="TOutput"></typeparam>
-        /// <typeparam name="TInput"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="Converter"></param>
-        /// <returns></returns>        public static List<TOutput> ConvertValid<TInput, TOutput>(this List<TInput> Source, Converter<TInput, TOutput> Converter) where TOutput: class where TInput: class        {
+        /// </summary>        public static List<TOutput> ConvertValid<TInput, TOutput>(this List<TInput> Source, Converter<TInput, TOutput> Converter) where TOutput: class where TInput: class        {
             List<TOutput> New = new List<TOutput>();            foreach(TInput Obj in Source)
                 if(!Converter(Obj).IsNullOrEmpty())
                     New.Add(Converter(Obj));
@@ -55,10 +42,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             return New;
         }        /// <summary>
         /// Returns a random element of a list. If empty it returns the default value of specified type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <returns></returns>        public static T Random<T>(this List<T> Source)
+        /// </summary>        public static T Random<T>(this List<T> Source)
         {
             if (Source.IsNullOrEmpty())
                 return default(T);
@@ -66,12 +50,7 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                 return Source[UnityEngine.Random.Range(0, Source.Count)];
         }        /// <summary>
         /// Same as .NET FirstOrDefault but allows specification of default value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="Predicate"></param>
-        /// <param name="DefaultValue"></param>
-        /// <returns></returns>        public static T FirstOrDefault<T>(this IEnumerable<T> Source, Func<T, bool> Predicate, T DefaultValue)
+        /// </summary>        public static T FirstOrDefault<T>(this IEnumerable<T> Source, Func<T, bool> Predicate, T DefaultValue)
         {
             if (Source.IsNullOrEmpty()) return DefaultValue;
 
@@ -82,17 +61,17 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             return DefaultValue;
         }        /// <summary>
         /// Returns itself if the predicate is false.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="Predicate"></param>
-        /// <param name="DefaultValue"></param>
-        /// <returns></returns>        public static T Default<T>(this T Source, Func<T, bool> Predicate, T DefaultValue)
+        /// </summary>        public static T Default<T>(this T Source, Func<T, bool> Predicate, T DefaultValue)
         {
             if (Predicate(Source))
                 return DefaultValue;
             else
                 return Source;
+        }        /// <summary>
+        /// Normalizes a float between a new float range.
+        /// </summary>        public static float Normalize(this float Source, float OldMin, float OldMax, float NewMin, float NewMax)
+        {
+            return Mathf.Lerp(NewMin, NewMax, (Source - OldMin) / (OldMax - OldMin));
         }        public static T FirstOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
         {
             for (int i = 0; i < Source.Count; i++)
@@ -118,10 +97,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Returns the interface object if any components in the source game object implement it.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="IncludeChildren"></param>
-        /// <returns></returns>
         public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false, bool Infallible = false) where T : class
         {
             // Null checking
@@ -153,9 +128,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Copies over field and property values from one component to another (WARNING: uses reflection)
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <param name="Other"></param>
         /// <returns>The source object with newly changed properties and fields.</returns>
         public static T GetCopyof<T>(this Component Source, T Other) where T : Component
         {
@@ -198,10 +170,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Clones an existing component and adds it onto target game object.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="GameObj"></param>
-        /// <param name="CompToAdd"></param>
-        /// <returns></returns>
         public static T AddComponent<T>(this GameObject GameObj, T CompToAdd) where T : Component
         {
             return GameObj.AddComponent<T>().GetCopyof<T>(CompToAdd) as T;
@@ -210,9 +178,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Plays an audio clip and audio source. Handles null-checking. Can also specify if the audio source should be detached.
         /// </summary>
-        /// <param name="Source"></param>
-        /// <param name="Clip"></param>
-        /// <param name="Detatch"></param>
         /// <returns>True if the clip was successfully played on the source.</returns>
         public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach, float Volume)
         {
@@ -256,8 +221,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Returns a vector 2 from a vector 3 ignoring the Y axis.
         /// </summary>
-        /// <param name="Source"></param>
-        /// <returns></returns>
         public static Vector2 IgnoreY2(this Vector3 Source)
         {
             return new Vector2(Source.x, Source.z);
@@ -266,8 +229,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Zeros a vector 3's Y value.
         /// </summary>
-        /// <param name="Source"></param>
-        /// <returns></returns>
         public static Vector3 IgnoreY3(this Vector3 Source, float defaultY = 0)
         {
             return new Vector3(Source.x, defaultY, Source.z);
@@ -276,8 +237,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Returns the length of the animation curve in seconds.
         /// </summary>
-        /// <param name="Source"></param>
-        /// <returns></returns>
         public static float Duration(this AnimationCurve Source)
         {
             if (Source.IsNullOrEmpty() || Source.length <= 0)
@@ -289,9 +248,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Returns a component from an array of ray cast hit.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
-        /// <returns></returns>
         public static T GetComponent<T>(this RaycastHit[] Source) where T: Component
         {
             foreach (var Hit in Source)
@@ -305,10 +261,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Instantiates a new instance of a component and can parent it to another object.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Original"></param>
-        /// <param name="Parent"></param>
-        /// <returns></returns>
         public static T Instantiate<T>(this T Original, Transform Parent = null) where T: Component
         {
             if (Original.IsNullOrEmpty()) throw new NullReferenceException();
@@ -323,11 +275,6 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Instantiates a new instance of a component, can specify its name and can parent it to another object.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="Original"></param>
-        /// <param name="Parent"></param>
-        /// <param name="Name"></param>
-        /// <returns></returns>
         public static T Instantiate<T>(this T Original, Transform Parent, string Name) where T : Component
         {
             if (Original.IsNullOrEmpty()) throw new NullReferenceException();
@@ -341,6 +288,9 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             return NewComponent;
         }
 
+        /// <summary>
+        /// Iterates through both game object colliders and makes them ignore eachother.
+        /// </summary>
         public static void IgnoreCollision(this GameObject Source, GameObject Other, bool Ignore = true)
         {
             if (!Source || !Other) return;
