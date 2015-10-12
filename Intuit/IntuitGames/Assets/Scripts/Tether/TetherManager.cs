@@ -1,7 +1,10 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
 using CustomExtensions;/// <summary>
 /// A tether system that determines joint positioning based on collisions.
-/// </summary>[ExecuteInEditMode]public class TetherManager : MonoBehaviour{
+/// </summary>
+[ExecuteInEditMode]
+public class TetherManager : MonoBehaviour
+{
     // INSPECTOR
     [Header("References")]
     public TetherJoint jointPrefab;
@@ -25,6 +28,11 @@ using CustomExtensions;/// <summary>
     public bool showInHierarchy = false;
     public bool performanceBoost = true;
     public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)
+    public bool experimentalCollision = false;
+    [Range(0, 200)]
+    public int collisionBuffer = 30;
+    public KeyCode disconnectInput = KeyCode.B;
+    public KeyCode reconnectInput = KeyCode.N;
 
     [Header("Info")]
     [ReadOnly]
@@ -32,12 +40,30 @@ using CustomExtensions;/// <summary>
     [ReadOnly]
     public float directLength;
     [ReadOnly]
-    public float tetherLength;    void Update()
+    public float tetherLength;
+
+    // CONST
+    public const string JOINT_NAME = "TM_Joint";
+    public const string TETHER_NAME = "TM_Tether";
+
+    void Awake()
+    {
+        if (!Application.isPlaying) return;
+
+        // Setup collision buffer at the start of the game
+        if (experimentalCollision)
+        {
+            joints.GetRange(0, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(startPoint.gameObject));
+            joints.GetRange(joints.Count - collisionBuffer, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(endPoint.gameObject));
+        }
+    }
+
+    void Update()
     {
         // Update info
-        if(startPoint && endPoint) directLength = Vector3.Distance(startPoint.position, endPoint.position);
+        if (startPoint && endPoint) directLength = Vector3.Distance(startPoint.position, endPoint.position);
         else directLength = default(float);
-        if(tetherVisuals != null && tetherVisuals.Any()) tetherLength = tetherVisuals.Sum(x => x.distanceBetweenObjects);
+        if (tetherVisuals != null && tetherVisuals.Any()) tetherLength = tetherVisuals.Sum(x => x.distanceBetweenObjects);
         else tetherLength = default(float);
 
         if (!jointPrefab || !tetherVisualPrefab || !startPoint || !endPoint) return;
@@ -48,25 +74,35 @@ using CustomExtensions;/// <summary>
         if (tetherVisuals.Any() && tetherVisuals.FirstOrDefault().GetComponent<Renderer>().enabled != showTetherVisual)
             tetherVisuals.ForEach(x => x.GetComponent<Renderer>().enabled = showTetherVisual);
 
-        if(joints.Any() && joints.FirstOrDefault().gameObject.hideFlags != (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy))
+        if (joints.Any() && joints.FirstOrDefault().gameObject.hideFlags != (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy))
             joints.ForEach(x => x.gameObject.hideFlags = (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy));
 
         if (tetherVisuals.Any() && tetherVisuals.FirstOrDefault().gameObject.hideFlags != (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy))
             tetherVisuals.ForEach(x => x.gameObject.hideFlags = (showInHierarchy ? HideFlags.None : HideFlags.HideInHierarchy));
 
+        if (Physics.GetIgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Tether")) != !experimentalCollision)
+            Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Tether"), !experimentalCollision);
+
         if (!Application.isPlaying) return;
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(disconnectInput))
         {
-            Disconnect(jointCount / 2);
+            Disconnect(joints[jointCount / 2]);
         }
-    }    void FixedUpdate()
+
+        if (Input.GetKeyDown(reconnectInput))
+        {
+            Reconnect();
+        }
+    }
+
+    void FixedUpdate()
     {
         if (!Application.isPlaying) return;
 
-        if (!disconnected)
+        for (int i = 0; i < joints.Count; i++)
         {
-            for (int i = 0; i < joints.Count; i++)
+            if (!disconnected)
             {
                 if (!experimentalWrapping)
                 {
@@ -86,19 +122,22 @@ using CustomExtensions;/// <summary>
                         joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * 100 * Time.fixedDeltaTime, ForceMode.Force);
                 }
             }
+            else // Disconnected movement
+            {
+                joints[i].rigidbodyComp.velocity = Vector3.ClampMagnitude(joints[i].rigidbodyComp.velocity, 10);
+            }
         }
-        else // Disconnected movement
-        {
+    }
 
-        }
-    }    // Re-creates the joints and puts them in their starting positions    public void Rebuild()
+    // Re-creates the joints and puts them in their starting positions
+    public void Rebuild()
     {
         if (!jointPrefab || !tetherVisualPrefab || !startPoint || !endPoint) return;
 
         Reset();
 
-        joints = InstantiateMany(jointPrefab, jointCount).ToList();
-        tetherVisuals = InstantiateMany(tetherVisualPrefab, jointCount + 1).ToList();
+        joints = InstantiateMany(jointPrefab, jointCount, JOINT_NAME).ToList();
+        tetherVisuals = InstantiateMany(tetherVisualPrefab, jointCount + 1, TETHER_NAME).ToList();
 
         // Provides initial positioning for the joints
         for (int i = 0; i < joints.Count; i++)
@@ -109,12 +148,12 @@ using CustomExtensions;/// <summary>
         // Sets up tether visual references
         for (int i = 0; i < tetherVisuals.Count; i++)
         {
-            if(i == 0) // First
+            if (i == 0) // First
             {
                 tetherVisuals[i].objectA = startPoint;
                 tetherVisuals[i].objectB = joints[i].transform;
             }
-            else if(i < joints.Count) // In-between
+            else if (i < joints.Count) // In-between
             {
                 tetherVisuals[i].objectA = joints[i - 1].transform;
                 tetherVisuals[i].objectB = joints[i].transform;
@@ -125,7 +164,10 @@ using CustomExtensions;/// <summary>
                 tetherVisuals[i].objectB = endPoint;
             }
         }
-    }    // Destroys all current references and clears the joint and tether visual list    public void Reset()
+    }
+
+    // Destroys all current references and clears the joint and tether visual list
+    public void Reset()
     {
         if (joints != null)
         {
@@ -138,11 +180,17 @@ using CustomExtensions;/// <summary>
             tetherVisuals.ForEach(x => DestroyImmediate(x.gameObject));
             tetherVisuals.Clear();
         }
-    }    // Used to instantiate many joints and tether visuals (Probably should move to extension methods)    private IEnumerable<T> InstantiateMany<T>(T prefab, int amount) where T: Component
+    }
+
+    // Used to instantiate many joints and tether visuals (Probably should move to extension methods)
+    private IEnumerable<T> InstantiateMany<T>(T prefab, int amount, string name) where T : Component
     {
         for (int i = 0; i < amount; i++)
-            yield return Unity.Instantiate<T>(prefab, transform);
-    }    // Used to determine the position of each joint    private Vector3 GetMovePosition(TetherJoint joint, int index, bool direct)
+            yield return Unity.Instantiate<T>(prefab, transform, string.Format("{0} {1}", name, i));
+    }
+
+    // Used to determine the position of each joint
+    private Vector3 GetMovePosition(TetherJoint joint, int index, bool direct)
     {
         if (direct)
         {
@@ -168,21 +216,21 @@ using CustomExtensions;/// <summary>
                 endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
             }
 
-            if(startTempJoint && endTempJoint)
+            if (startTempJoint && endTempJoint)
             {
                 startPointPos = startTempJoint.transform.position;
                 endPointPos = endTempJoint.transform.position;
                 relativeIndex = index - (joints.IndexOf(startTempJoint) + 1) + 1;
                 relativeCount = joints.IndexOf(endTempJoint) - (joints.IndexOf(startTempJoint) + 1) + 1;
             }
-            else if(startTempJoint)
+            else if (startTempJoint)
             {
                 startPointPos = startTempJoint.transform.position;
                 endPointPos = endPoint.position;
                 relativeIndex = index - (joints.IndexOf(startTempJoint) + 1) + 1;
                 relativeCount = jointCount - (joints.IndexOf(startTempJoint) + 1) + 1;
             }
-            else if(endTempJoint)
+            else if (endTempJoint)
             {
                 startPointPos = startPoint.position;
                 endPointPos = endTempJoint.transform.position;
@@ -199,9 +247,14 @@ using CustomExtensions;/// <summary>
 
             return Vector3.Lerp(startPointPos, endPointPos, (float)relativeIndex / relativeCount);
         }
-    }    // Determines the direction the start and en points should move in    // Instead of the first and last maybe change this to the closest colliding joint    // Although the result will is the same anyway when normalized    public Vector3 GetStartAndEndMoveDirection(bool isStartPoint)
+    }
+
+    // Determines the direction the start and en points should move in
+    // Instead of the first and last maybe change this to the closest colliding joint
+    // Although the result will is the same anyway when normalized
+    public Vector3 GetStartAndEndMoveDirection(bool isStartPoint)
     {
-        if(isStartPoint)
+        if (isStartPoint)
         {
             return (joints.FirstOrDefault().transform.position - startPoint.position).normalized;
         }
@@ -209,10 +262,19 @@ using CustomExtensions;/// <summary>
         {
             return (joints.LastOrDefault().transform.position - endPoint.position).normalized;
         }
-    }    public void Disconnect(int breakJoint)
-    {
-        if (!disconnectionJointPrefab || disconnected) return;
+    }
 
+    [System.Obsolete("Use the one that takes a joint instead.")]
+    public void Disconnect(int breakJoint)
+    {
+        Disconnect(joints[Mathf.Clamp(breakJoint, 0, jointCount - 1)]);
+    }
+
+    public void Disconnect(TetherJoint breakJoint)
+    {
+        if (!disconnectionJointPrefab || disconnected || !joints.Contains(breakJoint)) return;
+
+        int breakJointIndex = joints.IndexOf(breakJoint);
         Joint tempJoint;
 
         for (int i = 0; i < joints.Count; i++)
@@ -230,28 +292,71 @@ using CustomExtensions;/// <summary>
             // Set its connections
             if (i == 0)
             {
-//                 tempJoint.connectedBody = startPoint.GetComponent<Rigidbody>();                Destroy(tempJoint);                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = startPoint;            }
+                //tempJoint.connectedBody = startPoint.GetComponent<Rigidbody>();
+                Destroy(tempJoint);
+                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = startPoint;
+            }
             else if (i == joints.Count - 1)
             {
-//                 tempJoint.connectedBody = endPoint.GetComponent<Rigidbody>();                Destroy(tempJoint);                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = endPoint;            }
-            else if (i == breakJoint)
+                //tempJoint.connectedBody = endPoint.GetComponent<Rigidbody>();
+                Destroy(tempJoint);
+                joints[i].gameObject.AddComponent<AttachRigidbody>().connectedBody = endPoint;
+            }
+            else if (i == breakJointIndex)
             {
                 tempJoint.connectedBody = joints[i + 1].rigidbodyComp;
-                tetherVisuals[breakJoint].GetComponent<Renderer>().enabled = false;
+                tetherVisuals[breakJointIndex].GetComponent<Renderer>().enabled = false;
             }
-            else if (i < breakJoint)
+            else if (i < breakJointIndex)
             {
                 tempJoint.connectedBody = joints[i - 1].rigidbodyComp;
             }
-            else if (i > breakJoint)
+            else if (i > breakJointIndex)
             {
                 tempJoint.connectedBody = joints[i + 1].rigidbodyComp;
             }
 
-            // Set other
-            Character.character1.Weaken();
-            Character.character2.Weaken();
+            // Use gravity
             joints[i].rigidbodyComp.useGravity = true;
-            disconnected = true;
         }
-    }}
+
+        // Set other
+        Character.Weaken(true);
+        disconnected = true;
+        joints[breakJointIndex].disconnectedEnd = true;
+        joints[breakJointIndex - 1].disconnectedEnd = true;
+
+        // Add forces
+        joints[breakJointIndex].rigidbodyComp.AddForce(Vector3.up * 0.05f);
+        joints[breakJointIndex - 1].rigidbodyComp.AddForce(Vector3.up * 0.05f);
+    }
+
+    public void Reconnect()
+    {
+        if (!disconnected) return;
+
+        for (int i = 0; i < joints.Count; i++)
+        {
+            Destroy(joints[i].GetComponent<Joint>());
+            
+            if (i == 0)
+            {
+                Destroy(joints[i].GetComponent<AttachRigidbody>());
+            }
+            else if (i == joints.Count - 1)
+            {
+                Destroy(joints[i].GetComponent<AttachRigidbody>());
+            }
+
+            joints[i].rigidbodyComp.velocity = Vector3.zero;
+            joints[i].rigidbodyComp.useGravity = false;
+            joints[i].disconnectedEnd = false;
+        }
+
+        // Set the missing tether visual
+        tetherVisuals.First(x => !x.GetComponent<Renderer>().enabled).GetComponent<Renderer>().enabled = true;
+
+        Character.Weaken(false);
+        disconnected = false;
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEditor;[CustomEditor(typeof(TetherManager))]public class TetherManagerEditor : Editor{
+using UnityEditor;
+using System.Reflection;[CustomEditor(typeof(TetherManager))]public class TetherManagerEditor : Editor{
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -16,7 +17,7 @@ using UnityEditor;[CustomEditor(typeof(TetherManager))]public class TetherMan
 
         if (!Application.isPlaying && GUILayout.Button("Clear"))
         {
-            GameObject.FindObjectsOfType<GameObject>().Where(x => x.hideFlags != HideFlags.None).ToList().ForEach(x => DestroyImmediate(x));
+            GameObject.FindObjectsOfType<GameObject>().Where(x => x.name.StartsWith(TetherManager.JOINT_NAME) || x.name.StartsWith(TetherManager.TETHER_NAME)).ToList().ForEach(x => DestroyImmediate(x));
         }
 
         if(!Application.isPlaying)

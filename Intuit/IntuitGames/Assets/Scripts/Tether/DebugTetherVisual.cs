@@ -26,13 +26,27 @@ public class DebugTetherVisual : MonoBehaviour
     [ReadOnly]
     public float distanceBetweenObjects;
 
-    private void Update()
+    private Renderer rendererComp;
+    private Vector3 lastA;
+    private Vector3 lastB;
+
+    void Start()
+    {
+        rendererComp = GetComponent<Renderer>();
+    }
+
+    void Update()
     {
         if (!objectA || !objectB)
             return;
 
-        // Determine the scale of the tether
         distanceBetweenObjects = Vector3.Distance(objectA.position, objectB.position);
+
+        // No need to update if no movement took place
+        if (lastA == objectA.position && lastB == objectB.position)
+            return;
+
+        // Determine the scale of the tether
         Vector3 ScaleVec = new Vector3(transform.localScale.x, transform.localScale.y, distanceBetweenObjects);
         transform.localScale = ScaleVec;
 
@@ -49,7 +63,7 @@ public class DebugTetherVisual : MonoBehaviour
         // Apply debug color if game is playing
         if (debugStrainColours && Application.isPlaying)
         {
-            Material mat = GetComponent<Renderer>().material;
+            Material mat = rendererComp.material;
             if (mat)
             {
                 if (distanceBetweenObjects < closeDistance)
@@ -60,5 +74,8 @@ public class DebugTetherVisual : MonoBehaviour
                     mat.color = strainedColour;
             }
         }
+
+        lastA = objectA.position;
+        lastB = objectB.position;
     }
 }

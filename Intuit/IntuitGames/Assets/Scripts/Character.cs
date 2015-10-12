@@ -10,11 +10,6 @@ public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
 
-    // CONSTANTS
-    private const int HIGH = 1000;
-    private const int MEDIUM = 100;
-    private const int LOW = 10;
-
     // STATICS
     public static Character character1 { get; private set; }
     public static Character character2 { get; private set; }
@@ -87,7 +82,7 @@ public class Character : MonoBehaviour, IBounce
     public bool canWeaken = true;
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
-    public float reconnectionProximity = 1.5f;
+    public bool reconnectOnTouch = true;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -239,6 +234,11 @@ public class Character : MonoBehaviour, IBounce
     public bool isBouncing { get; set; }
     public bool isSprinting { get; set; }
 
+    // CONSTANTS
+    private const int HIGH = 1000;
+    private const int MEDIUM = 100;
+    private const int LOW = 10;
+
     #endregion
 
     #region MESSAGES
@@ -284,6 +284,10 @@ public class Character : MonoBehaviour, IBounce
 
         // Stop dash on collision 
         if (stopDashOnCollision && col.contacts[0].normal.z != 0) isDashing = false;
+
+        // Reconnect on touch
+        if (reconnectOnTouch && col.collider.gameObject == GetPartner().gameObject)
+            tetherManager.Reconnect();
     }
 
     #endregion
@@ -466,13 +470,13 @@ public class Character : MonoBehaviour, IBounce
     {
         if (isWeakened) return;
 
-        float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetOtherCharacter().transform.position);
+        float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetPartnerPosition());
 
         if (length < freeMovementLength) return;
 
         float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
 
-        Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetOtherCharacter().transform.position - transform.position).normalized;
+        Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetPartnerPosition() - transform.position).normalized;
 
         rigidbodyComp.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
     }
@@ -489,11 +493,6 @@ public class Character : MonoBehaviour, IBounce
         if (!constrainMovement) rigidbodyComp.MovePosition(transform.position + movement);
 
         rigidbodyComp.MovePosition(transform.position + movement);
-    }
-
-    public void Weaken()
-    {
-        if (canWeaken) isWeakened = true;
     }
 
     #endregion
@@ -513,7 +512,7 @@ public class Character : MonoBehaviour, IBounce
         if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold && bouncyObj.isBouncy)
         {
             // Do not bounce if other character is bouncing on this character
-            if (bouncyObj.gameObject == GetOtherCharacter().gameObject && GetOtherCharacter().transform.position.y > transform.position.y) return;
+            if (bouncyObj.gameObject == GetPartner().gameObject && GetPartnerPosition().y > transform.position.y) return;
             baseBouncePower = bouncePower;
             bounceMultiplier = bouncyObj.bounceMultiplier * (relativeVelocity.magnitude * momentumRetention);
             minBouncePower = bouncyObj.minBounceMagnitude * (GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBouncePower : 1);
@@ -589,10 +588,16 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // Returns the other character
-    public Character GetOtherCharacter()
+    public Character GetPartner()
     {
         if (this == character1) return character2;
         else return character1;
+    }
+
+    // Returns the other character position
+    public Vector3 GetPartnerPosition()
+    {
+        return GetPartner().transform.position;
     }
 
     #endregion
@@ -630,6 +635,13 @@ public class Character : MonoBehaviour, IBounce
                 return false;
             }
         }
+    }
+
+    // Weakens both characters
+    public static void Weaken(bool isWeak)
+    {
+        if (character1.canWeaken) character1.isWeakened = isWeak;
+        if (character2.canWeaken) character2.isWeakened = isWeak;
     }
 
     #endregion

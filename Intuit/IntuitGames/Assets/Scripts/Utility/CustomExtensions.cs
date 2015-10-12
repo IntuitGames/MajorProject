@@ -303,13 +303,10 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
-        /// Instantiates a new instance of a component.
+        /// Instantiates a new instance of a component and can parent it to another object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="Source"></param>
         /// <param name="Original"></param>
-        /// <param name="Position"></param>
-        /// <param name="Rotation"></param>
         /// <param name="Parent"></param>
         /// <returns></returns>
         public static T Instantiate<T>(this T Original, Transform Parent = null) where T: Component
@@ -321,5 +318,39 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
             if(Parent) NewComponent.transform.parent = Parent;
 
             return NewComponent;
+        }
+
+        /// <summary>
+        /// Instantiates a new instance of a component, can specify its name and can parent it to another object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Original"></param>
+        /// <param name="Parent"></param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public static T Instantiate<T>(this T Original, Transform Parent, string Name) where T : Component
+        {
+            if (Original.IsNullOrEmpty()) throw new NullReferenceException();
+
+            T NewComponent = (T)GameObject.Instantiate(Original);
+
+            if (Parent) NewComponent.transform.parent = Parent;
+
+            NewComponent.name = Name;
+
+            return NewComponent;
+        }
+
+        public static void IgnoreCollision(this GameObject Source, GameObject Other, bool Ignore = true)
+        {
+            if (!Source || !Other) return;
+
+            foreach (var SCol in Source.GetComponentsInChildren<Collider>())
+            {
+                foreach (var OCol in Other.GetComponentsInChildren<Collider>())
+                {
+                    Physics.IgnoreCollision(SCol, OCol, Ignore);
+                }
+            }
         }
     }}

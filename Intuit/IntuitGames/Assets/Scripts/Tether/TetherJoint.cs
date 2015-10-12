@@ -7,11 +7,12 @@
     public Collider colliderComp;
     public Rigidbody rigidbodyComp;
 
-#if UNITY_EDITOR
     public bool showDebugColour = true;
     public Color debugColour = Color.red;
-    private Color normalColour;#endif
-	public bool passingThroughWeakSpot = false;
+    private Color normalColour;
+    [ReadOnly]	public bool passingThroughWeakSpot = false;
+    [ReadOnly]
+    public bool disconnectedEnd;
     private static TetherManager tetherManager;
     public TetherJoint previousJoint
     {
