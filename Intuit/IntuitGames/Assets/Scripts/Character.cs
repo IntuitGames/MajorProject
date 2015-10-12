@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(CapsuleCollider)), SelectionBase]
+[RequireComponent(typeof(Rigidbody), typeof(CharacterAudio), typeof(CapsuleCollider)), SelectionBase]
 public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
@@ -18,13 +18,13 @@ public class Character : MonoBehaviour, IBounce
     [HideInInspector]
     public Rigidbody rigidbodyComp;
     [HideInInspector]
-    public AudioSource audioSource;
-    [HideInInspector]
     public CapsuleCollider capsuleCollider;
     [HideInInspector]
     public Animator animator;
     [HideInInspector]
     public TetherManager tetherManager;
+    [HideInInspector]
+    public CharacterAudio audioData;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -141,9 +141,7 @@ public class Character : MonoBehaviour, IBounce
     public float minGroundBounceMagnitude = 5;
     public float maxGroundBounceMagnitude = 10;
 
-    // AUDIO
-    [Header("Audio")]
-    public CharacterAudio audioData = new CharacterAudio();
+    // FMOD PARAMS
     private float FM_playerFallSpeedValue
     {
         get { return targetVelocity.y < 0 ? Mathf.Lerp(0, 1, Mathf.Abs(targetVelocity.y) / (maxSpeed * 0.5f)) : 0; }
@@ -250,10 +248,10 @@ public class Character : MonoBehaviour, IBounce
 
         // Find component references
         rigidbodyComp = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
         tetherManager = FindObjectOfType<TetherManager>();
+        audioData = GetComponent<CharacterAudio>();
     }
 
     void Start()
@@ -265,8 +263,12 @@ public class Character : MonoBehaviour, IBounce
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
 
-        // Setup audio data
-        audioData.Initialize(transform, rigidbodyComp);
+        // Subscribe to the tether events
+        if (isPlayerOne)
+        {
+            tetherManager.OnDisconnected += Weaken;
+            tetherManager.OnReconnected += Unweaken;
+        }
     }
 
     void OnDestroy()
@@ -414,6 +416,8 @@ public class Character : MonoBehaviour, IBounce
             isDashing = true;
 
             if (isGrounded) targetVelocity.y += dashHeight;
+
+            audioData.PlayDashAudio();
         }
     }
 
@@ -430,6 +434,11 @@ public class Character : MonoBehaviour, IBounce
         else
         {
             isHeavy = isPressed;
+
+            if (isPressed)
+                audioData.PlayStartHeavyAudio();
+            else
+                audioData.PlayEndHeavyAudio();
         }
     }
 
@@ -638,88 +647,26 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // Weakens both characters
-    public static void Weaken(bool isWeak)
+    public static void Weaken(TetherJoint brokenJoint)
     {
-        if (character1.canWeaken) character1.isWeakened = isWeak;
-        if (character2.canWeaken) character2.isWeakened = isWeak;
+        if (character1.canWeaken)
+        {
+            character1.isWeakened = true;
+            character1.audioData.PlayTetherDisconnectAudio(brokenJoint.transform);
+        }
+
+        if (character2.canWeaken)
+        {
+            character2.isWeakened = true;
+        }
     }
 
-    #endregion
-
-    #region NESTED
-
-    /// <summary>
-    /// Stores all audio related data.
-    /// </summary>
-    [System.Serializable]
-    public class CharacterAudio : System.IDisposable
+    // Unweakens both characters
+    public static void Unweaken(TetherJoint reconnectedJoint)
     {
-        #region VARIABLES
-
-        public bool enabled = true;
-        [Range(0, 1)]
-        public float volume = 1;
-
-        // COMPONENTS
-        public AudioSource audioSource;
-        private Transform transform;
-        private Rigidbody rigidbody;
-
-        // SOUND EFFECTS
-        [Header("Sound Effects")]
-        public SoundClip walk = new SoundClip();
-        public SoundClip land = new SoundClip();
-        public SoundClip jump = new SoundClip();
-
-        // PRIVATES
-        private bool isInitialized;
-
-        #endregion
-
-        #region METHODS
-
-        // Initializes components and sound clips
-        public void Initialize(Transform transformObj, Rigidbody rigidbodyObj)
-        {
-            transform = transformObj; rigidbody = rigidbodyObj;
-
-            walk.Initialize();
-            land.Initialize();
-            jump.Initialize();
-
-            isInitialized = true;
-        }
-
-        public void PlayWalkAudio(float moveSpeed, bool condition = true)
-        {
-            if (!condition || !isInitialized || !enabled) return;
-
-            walk.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume, true, moveSpeed);
-        }
-
-        public void PlayLandAudio(float fallSpeed, bool condition = true)
-        {
-            if (!condition || !isInitialized || !enabled) return;
-
-            land.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume, true, fallSpeed);
-        }
-
-        public void PlayJumpAudio(bool condition = true)
-        {
-            if (!condition || !isInitialized || !enabled) return;
-
-            jump.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbody.velocity), volume);
-        }
-
-        // Dispose FMOD instances
-        public void Dispose()
-        {
-            walk.Dispose();
-            land.Dispose();
-            jump.Dispose();
-        }
-
-        #endregion
+        character1.isWeakened = false;
+        character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
+        character2.isWeakened = false;
     }
 
     #endregion

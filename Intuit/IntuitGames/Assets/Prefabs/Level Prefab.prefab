@@ -338,6 +338,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &105000
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 428330}
+  m_Layer: 9
+  m_Name: Feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &105214
 GameObject:
   m_ObjectHideFlags: 1
@@ -698,10 +713,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 401666}
   - 114: {fileID: 11434090}
-  - 114: {fileID: 11425666}
+  - 114: {fileID: 11407962}
   - 82: {fileID: 8232330}
   - 54: {fileID: 5466740}
   - 136: {fileID: 13663172}
+  - 114: {fileID: 11425666}
   m_Layer: 9
   m_Name: Player 1
   m_TagString: Character
@@ -1284,10 +1300,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 419968}
   - 114: {fileID: 11411496}
-  - 114: {fileID: 11497704}
+  - 114: {fileID: 11418252}
   - 82: {fileID: 8240284}
   - 54: {fileID: 5458776}
   - 136: {fileID: 13635070}
+  - 114: {fileID: 11497704}
   m_Layer: 9
   m_Name: Player 2
   m_TagString: Character
@@ -4155,6 +4172,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &160678
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 473234}
+  m_Layer: 9
+  m_Name: Feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &160856
 GameObject:
   m_ObjectHideFlags: 1
@@ -6697,6 +6729,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 467592}
+  - {fileID: 428330}
   m_Father: {fileID: 494334}
   m_RootOrder: 2
 --- !u!4 &401900
@@ -7339,6 +7372,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 483846}
+  - {fileID: 473234}
   m_Father: {fileID: 494334}
   m_RootOrder: 1
 --- !u!4 &420612
@@ -7701,6 +7735,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 465710}
   m_RootOrder: 186
+--- !u!4 &428330
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 105000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -.875, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 401666}
+  m_RootOrder: 1
 --- !u!4 &429170
 Transform:
   m_ObjectHideFlags: 1
@@ -10002,6 +10048,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 465710}
   m_RootOrder: 146
+--- !u!4 &473234
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160678}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -.875, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 419968}
+  m_RootOrder: 1
 --- !u!4 &473364
 Transform:
   m_ObjectHideFlags: 1
@@ -23731,6 +23789,83 @@ MonoBehaviour:
   debugColour: {r: 1, g: 0, b: 0, a: .196078435}
   passingThroughWeakSpot: 0
   disconnectedEnd: 0
+--- !u!114 &11407962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce05e0c387972f44fa5f34761d2b10c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  feetTransform: {fileID: 428330}
+  walk:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
+    FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
+  land:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
+    FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
+  jump:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
+    FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
+  dash:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  startHeavy:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  endHeavy:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  tetherDisconnect:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  tetherConnect:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
 --- !u!114 &11408078
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -24063,10 +24198,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbodyComp: {fileID: 0}
-  audioSource: {fileID: 0}
   capsuleCollider: {fileID: 0}
   animator: {fileID: 0}
   tetherManager: {fileID: 0}
+  audioData: {fileID: 0}
   _isPlayerOne: 0
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
@@ -24141,34 +24276,6 @@ MonoBehaviour:
   groundBouncePower: .200000003
   minGroundBounceMagnitude: 7.5
   maxGroundBounceMagnitude: 15
-  audioData:
-    enabled: 1
-    volume: 1
-    audioSource: {fileID: 8240284}
-    walk:
-      player: 2
-      type: 0
-      group: 2
-      volume: .5
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
-      FMODAsset: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff, type: 2}
-    land:
-      player: 2
-      type: 0
-      group: 2
-      volume: .5
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
-      FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
-    jump:
-      player: 2
-      type: 0
-      group: 2
-      volume: 1
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
-      FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
 --- !u!114 &11412186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -24487,6 +24594,83 @@ MonoBehaviour:
   closeDistance: 10
   farDistance: 13
   distanceBetweenObjects: .0662231445
+--- !u!114 &11418252
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 116992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce05e0c387972f44fa5f34761d2b10c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  feetTransform: {fileID: 473234}
+  walk:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
+    FMODAsset: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff, type: 2}
+  land:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
+    FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
+  jump:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
+    FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
+  dash:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  startHeavy:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  endHeavy:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  tetherDisconnect:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  tetherConnect:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 0
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
 --- !u!114 &11418406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25276,10 +25460,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbodyComp: {fileID: 0}
-  audioSource: {fileID: 0}
   capsuleCollider: {fileID: 0}
   animator: {fileID: 0}
   tetherManager: {fileID: 0}
+  audioData: {fileID: 0}
   _isPlayerOne: 1
   targetVelocity: {x: 0, y: 0, z: 0}
   baseMoveSpeed: 7
@@ -25354,34 +25538,6 @@ MonoBehaviour:
   groundBouncePower: .200000003
   minGroundBounceMagnitude: 7.5
   maxGroundBounceMagnitude: 15
-  audioData:
-    enabled: 1
-    volume: 1
-    audioSource: {fileID: 8232330}
-    walk:
-      player: 2
-      type: 0
-      group: 2
-      volume: .5
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
-      FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
-    land:
-      player: 2
-      type: 0
-      group: 2
-      volume: .5
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
-      FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
-    jump:
-      player: 2
-      type: 0
-      group: 2
-      volume: 1
-      pitch: 0
-      unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
-      FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
 --- !u!114 &11434128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29337,6 +29493,7 @@ MonoBehaviour:
   experimentalWrapping: 0
   experimentalCollision: 0
   collisionBuffer: 50
+  breakForce: .100000001
   disconnectInput: 98
   reconnectInput: 110
   disconnected: 0
@@ -29431,7 +29588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d689a39ff6258994685f33946ff7f5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterEnabled: 0
+  masterEnabled: 1
   masterVolume: 1
   unityVolume: 1
   FMODVolume: 1

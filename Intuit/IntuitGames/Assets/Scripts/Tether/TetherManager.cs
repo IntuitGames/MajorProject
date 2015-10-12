@@ -31,6 +31,8 @@ public class TetherManager : MonoBehaviour
     public bool experimentalCollision = false;
     [Range(0, 200)]
     public int collisionBuffer = 30;
+    [Range(0, 5)]
+    public float breakForce = 5;
     public KeyCode disconnectInput = KeyCode.B;
     public KeyCode reconnectInput = KeyCode.N;
 
@@ -41,6 +43,10 @@ public class TetherManager : MonoBehaviour
     public float directLength;
     [ReadOnly]
     public float tetherLength;
+
+    // EVENTS
+    public event System.Action<TetherJoint> OnDisconnected = delegate { };
+    public event System.Action<TetherJoint> OnReconnected = delegate { };
 
     // CONST
     public const string JOINT_NAME = "TM_Joint";
@@ -321,24 +327,31 @@ public class TetherManager : MonoBehaviour
         }
 
         // Set other
-        Character.Weaken(true);
         disconnected = true;
         joints[breakJointIndex].disconnectedEnd = true;
         joints[breakJointIndex - 1].disconnectedEnd = true;
 
         // Add forces
-        joints[breakJointIndex].rigidbodyComp.AddForce(Vector3.up * 0.05f);
-        joints[breakJointIndex - 1].rigidbodyComp.AddForce(Vector3.up * 0.05f);
+        joints[breakJointIndex].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.Impulse);
+        joints[breakJointIndex - 1].rigidbodyComp.AddForce(Vector3.up * breakForce, ForceMode.Impulse);
+
+        // Raise event
+        OnDisconnected(breakJoint);
     }
 
     public void Reconnect()
     {
         if (!disconnected) return;
 
+        // For the event
+        TetherJoint reconnectJoint = null;
+
         for (int i = 0; i < joints.Count; i++)
         {
+            // Remove the joint component
             Destroy(joints[i].GetComponent<Joint>());
             
+            // Remove the attaching component
             if (i == 0)
             {
                 Destroy(joints[i].GetComponent<AttachRigidbody>());
@@ -348,15 +361,19 @@ public class TetherManager : MonoBehaviour
                 Destroy(joints[i].GetComponent<AttachRigidbody>());
             }
 
+            // Reset other values
             joints[i].rigidbodyComp.velocity = Vector3.zero;
             joints[i].rigidbodyComp.useGravity = false;
+            if (joints[i].disconnectedEnd)
+                reconnectJoint = joints[i];
             joints[i].disconnectedEnd = false;
         }
 
         // Set the missing tether visual
         tetherVisuals.First(x => !x.GetComponent<Renderer>().enabled).GetComponent<Renderer>().enabled = true;
-
-        Character.Weaken(false);
         disconnected = false;
+
+        // Raise event
+        OnReconnected(reconnectJoint);
     }
 }
