@@ -383,6 +383,34 @@ public class TimerPlus: IDisposable
         IsRandomized = false;
     }
 
+    /// <summary>
+    /// Changes the length of the timer and also adjusts the value if it is currently above the new length.
+    /// </summary>
+    /// <param name="newLength">New length of this timer.</param>
+    public void ModifyLength(float newLength)
+    {
+        Length = newLength;
+        Value = Mathf.Min(Value, Length);
+    }
+
+    /// <summary>
+    /// Changes the length of the timer and also adjusts the value if it is currently above the new length with the option to scale it.
+    /// </summary>
+    /// <param name="newLength">New length of this timer.</param>
+    /// <param name="scaleValue">Scale the current value to the new length?</param>
+    public void ModifyLength(float newLength, bool scaleValue)
+    {
+        float NewValue;
+
+        if (scaleValue)
+            NewValue = newLength * Percentage;
+        else
+            NewValue = Mathf.Min(Value, Length);
+
+        Length = newLength;
+        Value = NewValue;
+    }
+
     #endregion
 
     #region Non-public

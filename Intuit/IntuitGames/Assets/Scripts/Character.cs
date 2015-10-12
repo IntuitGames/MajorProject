@@ -110,8 +110,8 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // HEAVY
-    [Header("Heavy")]
-    public bool canHeavy = true;
+    [Header("Heavy"), SerializeField]
+    private bool _canHeavy = true;
     public float heavyMoveSpeed = 2;
     public bool canUnheavyMidair = false;
     [Range(0, MEDIUM)]
@@ -124,6 +124,25 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, LOW)]
     public float heavyMass = 5;
     public bool canBounceWhileHeavy = false;
+    [Range(0, LOW)]
+    public float exitHeavyDragMulti = 5;
+    public float exitHeavyDragDuration = 2;
+    private TimerPlus exitHeavyDragTimer;
+    [Range(0, LOW)]
+    public float minHeavyDuration = 1;
+    [Range(0, LOW)]
+    public float heavyCooldown = 0;
+    private TimerPlus heavyCooldownTimer;
+    public bool canHeavy
+    {
+        get { return _canHeavy && !heavyCooldownTimer.IsPlaying; }
+        set { _canHeavy = value; }
+    }
+    private TimerPlus unheavyDurationTimer;
+    public bool canUnheavy
+    {
+        get { return (canUnheavyMidair ? true : isGrounded) && !unheavyDurationTimer.IsPlaying; }
+    }
 
     // BOUNCE
     [Header("Bounce")]
@@ -152,6 +171,7 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // PRIVATES
+    private float normalDrag;
     private float gravity;                              // Current gravity on this character.
     private RaycastHit onObject;                        // Which object is currently under this character.
     private const float airborneRayOffset = 0.05f;      // How much additional height offset will the ray checks account for.
@@ -197,7 +217,7 @@ public class Character : MonoBehaviour, IBounce
         get { return isSprinting ? sprintJumpMomentum : jumpMomentum; }
     }
 
-    // STATES
+    // FLAGS
     public bool isWalking
     {
         get
@@ -262,6 +282,9 @@ public class Character : MonoBehaviour, IBounce
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
+        heavyCooldownTimer = TimerPlus.Create(heavyCooldown, TimerPlus.Presets.Standard);
+        unheavyDurationTimer = TimerPlus.Create(minHeavyDuration, TimerPlus.Presets.Standard);
+        exitHeavyDragTimer = TimerPlus.Create(exitHeavyDragDuration, TimerPlus.Presets.Standard, () => rigidbodyComp.drag = normalDrag);
 
         // Subscribe to the tether events
         if (isPlayerOne)
@@ -269,6 +292,23 @@ public class Character : MonoBehaviour, IBounce
             tetherManager.OnDisconnected += Weaken;
             tetherManager.OnReconnected += Unweaken;
         }
+    }
+
+    void Update()
+    {
+        // Check for airborne changes
+        isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
+
+        // Apply any changes to timer lengths
+        dashTimer.ModifyLength(dashLength);
+        dashCooldownTimer.ModifyLength(dashCooldown);
+        heavyCooldownTimer.ModifyLength(heavyCooldown);
+        unheavyDurationTimer.ModifyLength(minHeavyDuration);
+        exitHeavyDragTimer.ModifyLength(exitHeavyDragDuration);
+
+        // Update drag value
+        if (!exitHeavyDragTimer.IsPlaying)
+            normalDrag = rigidbodyComp.drag;
     }
 
     void OnDestroy()
@@ -301,19 +341,12 @@ public class Character : MonoBehaviour, IBounce
     {
         if (!this.enabled) return;
 
-        // Check for airborne changes
-        isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
-
         // Update mass
         if(rigidbodyComp.mass != currentMass) rigidbodyComp.mass = currentMass;
 
         // Add to gravity
         if (!isGrounded) gravity = Mathf.Clamp(gravity - gravityGrowthRate * Time.deltaTime, maxGravity, 0);
         else gravity = normalGravity;
-
-        // Apply any changes to the dash length and cooldown
-        dashTimer.Length = dashLength;
-        dashCooldownTimer.Length = dashCooldown;
 
         // Check for bounce
         if (!isBouncing && onObject.collider && onObject.collider.GetComponent<Bouncy>()) Bounce(Vector3.one, onObject.collider.gameObject);
@@ -423,22 +456,27 @@ public class Character : MonoBehaviour, IBounce
 
     public void Heavy(bool isPressed)
     {
-        if (!canHeavy)
+        if (isPressed == isHeavy) return;
+
+        if (isPressed && canHeavy)
+        {
+            isHeavy = true;
+
+            audioData.PlayStartHeavyAudio();
+            unheavyDurationTimer.Restart();
+        }
+        else if (!isPressed && canUnheavy)
         {
             isHeavy = false;
-            return;
-        }
 
-        if (!canUnheavyMidair && isHeavy && !isPressed && !isGrounded)
-            return;
-        else
-        {
-            isHeavy = isPressed;
+            audioData.PlayEndHeavyAudio();
+            heavyCooldownTimer.Restart();
 
-            if (isPressed)
-                audioData.PlayStartHeavyAudio();
-            else
-                audioData.PlayEndHeavyAudio();
+            if (isGrounded) // Reduce sliding down slopes while not heavy
+            {
+                rigidbodyComp.drag *= exitHeavyDragMulti;
+                exitHeavyDragTimer.Restart();
+            }
         }
     }
 

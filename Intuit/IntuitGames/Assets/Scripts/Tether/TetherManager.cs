@@ -27,14 +27,17 @@ public class TetherManager : MonoBehaviour
     public bool showTetherVisual = true;
     public bool showInHierarchy = false;
     public bool performanceBoost = true;
-    public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)
-    public bool experimentalCollision = false;
-    [Range(0, 200)]
-    public int collisionBuffer = 30;
     [Range(0, 5)]
     public float breakForce = 5;
     public KeyCode disconnectInput = KeyCode.B;
     public KeyCode reconnectInput = KeyCode.N;
+
+    [Header("Experimental")]
+    public bool experimentalNoStick = false;
+    public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)
+    public bool experimentalCollision = false;
+    [Range(0, 200)]
+    public int collisionBuffer = 30;
 
     [Header("Info")]
     [ReadOnly]
@@ -222,6 +225,25 @@ public class TetherManager : MonoBehaviour
                 endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
             }
 
+            if (experimentalNoStick && joint.isColliding)
+            {
+                TetherJoint tempJoint;
+
+                while (startTempJoint && startTempJoint.isColliding)
+                {
+                    tempJoint = startTempJoint.previousJoint;
+                    if (tempJoint) startTempJoint = tempJoint;
+                    else break;
+                }
+
+                while (endTempJoint && endTempJoint.isColliding)
+                {
+                    tempJoint = endTempJoint.nextJoint;
+                    if (tempJoint) endTempJoint = tempJoint;
+                    else break;
+                }
+            }
+
             if (startTempJoint && endTempJoint)
             {
                 startPointPos = startTempJoint.transform.position;
@@ -255,7 +277,7 @@ public class TetherManager : MonoBehaviour
         }
     }
 
-    // Determines the direction the start and en points should move in
+    // Determines the direction the start and end points should move in
     // Instead of the first and last maybe change this to the closest colliding joint
     // Although the result will is the same anyway when normalized
     public Vector3 GetStartAndEndMoveDirection(bool isStartPoint)
