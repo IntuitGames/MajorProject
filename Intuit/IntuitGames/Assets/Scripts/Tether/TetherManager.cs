@@ -3,7 +3,7 @@ using CustomExtensions;/// <summary>
 /// A tether system that determines joint positioning based on collisions.
 /// </summary>
 [ExecuteInEditMode]
-public class TetherManager : MonoBehaviour
+public class TetherManager : Manager
 {
     // INSPECTOR
     [Header("References")]

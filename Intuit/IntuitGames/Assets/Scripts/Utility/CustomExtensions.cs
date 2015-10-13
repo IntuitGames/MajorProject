@@ -1,6 +1,7 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
 using System;
-using System.Reflection;namespace CustomExtensions{    /// <summary>
+using System.Reflection;
+using System.Diagnostics;namespace CustomExtensions{    /// <summary>
     /// Extension methods that may be used everywhere.
     /// </summary>    public static partial class General    {        /// <summary>
         /// Determines if target object is null OR empty (as an ICollection)
@@ -302,5 +303,21 @@ using System.Reflection;namespace CustomExtensions{    /// <summary>
                     Physics.IgnoreCollision(SCol, OCol, Ignore);
                 }
             }
+        }
+
+        /// <summary>
+        /// Times how long it takes to perform an action in a specified amount of iterations.
+        /// </summary>
+        /// <returns>Length in milliseconds it took.</returns>
+        public static float Benchmark(Action Act, int Iterations)
+        {
+            Stopwatch Timer = new Stopwatch();
+            Timer.Start();
+            for (int i = 0; i < Iterations; i++)
+            {
+                Act.Invoke();
+            }
+            Timer.Stop();
+            return Timer.ElapsedMilliseconds;
         }
     }}

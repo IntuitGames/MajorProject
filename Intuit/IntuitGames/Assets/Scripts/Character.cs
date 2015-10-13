@@ -22,8 +22,6 @@ public class Character : MonoBehaviour, IBounce
     [HideInInspector]
     public Animator animator;
     [HideInInspector]
-    public TetherManager tetherManager;
-    [HideInInspector]
     public CharacterAudio audioData;
     public static SmoothCameraFollow cameraFollow;
 
@@ -279,7 +277,6 @@ public class Character : MonoBehaviour, IBounce
         rigidbodyComp = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
-        tetherManager = FindObjectOfType<TetherManager>();
         audioData = GetComponent<CharacterAudio>();
         cameraFollow = Camera.main.GetComponent<SmoothCameraFollow>();
     }
@@ -299,8 +296,8 @@ public class Character : MonoBehaviour, IBounce
         // Subscribe to the tether events
         if (isPlayerOne)
         {
-            tetherManager.OnDisconnected += Weaken;
-            tetherManager.OnReconnected += Unweaken;
+            GameManager.TetherManager.OnDisconnected += Weaken;
+            GameManager.TetherManager.OnReconnected += Unweaken;
         }
 
         // Set debug heavy colours
@@ -349,7 +346,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Reconnect on touch
         if (reconnectOnTouch && col.collider.gameObject == GetPartner().gameObject)
-            tetherManager.Reconnect();
+            GameManager.TetherManager.Reconnect();
     }
 
     #endregion
@@ -543,13 +540,13 @@ public class Character : MonoBehaviour, IBounce
     {
         if (isWeakened) return;
 
-        float length = tetherManager ? tetherManager.tetherLength : Vector3.Distance(transform.position, GetPartnerPosition());
+        float length = GameManager.TetherManager ? GameManager.TetherManager.tetherLength : Vector3.Distance(transform.position, GetPartnerPosition());
 
         if (length < freeMovementLength) return;
 
         float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
 
-        Vector3 direction = tetherManager ? tetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetPartnerPosition() - transform.position).normalized;
+        Vector3 direction = GameManager.TetherManager ? GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetPartnerPosition() - transform.position).normalized;
 
         rigidbodyComp.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
     }
