@@ -65,4 +65,4 @@
         Renderer renderer = GetComponent<Renderer>();
         if (renderer) renderer.material.color = value ? debugColour : normalColour;
 #endif
-    }}
+    }	public void DisconnectAtThisJoint()		{				if (tetherManager.disconnected) return;						int thisIndex = tetherManager.joints.IndexOf(this);				if(thisIndex > 0) tetherManager.Disconnect(this);		}	public bool IsSevered()		{				if(tetherManager.disconnected) return true; else return false;		}}

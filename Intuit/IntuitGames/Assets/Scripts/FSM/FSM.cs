@@ -38,6 +38,7 @@ public class FSM<T> {
 	{
 		stack.Push( state );
 		getCurrentState ().Begin (fsmOwner);
+
 	}
 
 	private FSMState<T> getCurrentState()
