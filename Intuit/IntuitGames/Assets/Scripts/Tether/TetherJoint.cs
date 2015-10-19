@@ -3,7 +3,7 @@
 /// </summary>[RequireComponent(typeof(Rigidbody))]public class TetherJoint : MonoBehaviour{
     [ReadOnly]
     public bool isColliding;
-    public List<Collision> collisionInfoList = new List<Collision>();
+    public List<Collider> collisionList = new List<Collider>();
     public Collider colliderComp;
     public Rigidbody rigidbodyComp;
 
@@ -13,47 +13,68 @@
     [ReadOnly]	public bool passingThroughWeakSpot = false;
     [ReadOnly]
     public bool disconnectedEnd;
-    private static TetherManager tetherManager;
     public TetherJoint previousJoint
     {
-        get { if (tetherManager.joints.IndexOf(this) > 0) return tetherManager.joints[tetherManager.joints.IndexOf(this) - 1]; else return null; }
+        get
+        {
+            if (isIndexCached)
+                if (index > 0)
+                    return GameManager.TetherManager.joints[index - 1];
+                else
+                    return null;
+
+            index = GameManager.TetherManager.joints.IndexOf(this);
+            isIndexCached = true;
+
+            return previousJoint;
+        }
     }
     public TetherJoint nextJoint
     {
-        get { if (tetherManager.joints.IndexOf(this) < tetherManager.joints.Count - 1) return tetherManager.joints[tetherManager.joints.IndexOf(this) + 1]; else return null; }
+        get
+        {
+            if (isIndexCached)
+                if (index < GameManager.TetherManager.joints.Count - 1)
+                    return GameManager.TetherManager.joints[index + 1];
+                else
+                    return null;
+
+            index = GameManager.TetherManager.joints.IndexOf(this);
+            isIndexCached = true;
+
+            return previousJoint;
+        }
     }
 
-    void Awake()
-    {
-        if (!tetherManager) tetherManager = FindObjectOfType<TetherManager>();
-    }
+    private int index;
+    private bool isIndexCached;
 
-#if UNITY_EDITOR
     void Start()
     {
         Renderer renderer = GetComponent<Renderer>();
         if (renderer) normalColour = renderer.material.color;
     }
-#endif
 
     void OnCollisionEnter(Collision col)
     {
-        if(!collisionInfoList.Any(x => x.gameObject == col.gameObject))
+        if(!collisionList.Any(x => x.gameObject == col.gameObject))
         {
-            collisionInfoList.Add(col);
-            SetIsColliding(true);
+            if (collisionList.Count <= 0)
+                SetIsColliding(true);
+
+            collisionList.Add(col.collider);
         }
     }
 
     void OnCollisionExit(Collision col)
     {
-        collisionInfoList.RemoveAll(x => x.gameObject == col.gameObject);
+        collisionList.Remove(col.collider);
 
-        if (collisionInfoList.Count <= 0)
+        if (collisionList.Count <= 0)
             SetIsColliding(false);
     }    private void SetIsColliding(bool value)
     {
-        if (tetherManager.experimentalWrapping && isColliding && !value)
+        if (GameManager.TetherManager.experimentalWrapping && isColliding && !value)
         {
             rigidbodyComp.velocity = Vector3.zero;
             rigidbodyComp.angularVelocity = Vector3.zero;
@@ -61,8 +82,6 @@
 
         isColliding = value;
 
-#if UNITY_EDITOR
         Renderer renderer = GetComponent<Renderer>();
         if (renderer) renderer.material.color = value ? debugColour : normalColour;
-#endif
-    }	public void DisconnectAtThisJoint()		{				if (tetherManager.disconnected) return;						int thisIndex = tetherManager.joints.IndexOf(this);				if(thisIndex > 0) tetherManager.Disconnect(this);		}	public bool IsSevered()		{				if(tetherManager.disconnected) return true; else return false;		}}
+    }	public void DisconnectAtThisJoint()		{				if (GameManager.TetherManager.disconnected) return;						int thisIndex = GameManager.TetherManager.joints.IndexOf(this);				if(thisIndex > 0) GameManager.TetherManager.Disconnect(this);		}	public bool IsSevered()		{				if(GameManager.TetherManager.disconnected) return true; else return false;		}}

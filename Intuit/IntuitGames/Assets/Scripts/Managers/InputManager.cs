@@ -147,7 +147,7 @@ public class InputManager : Manager
         if (type == preAndPostUpdates) PreUpdate(delta);
 
         // Only check inputs for certain game modes
-        switch (GameManager.ModeManager.currentGameMode)
+        switch (ModeManager.currentGameMode)
         {
             case ModeManager.GameMode.InGame:
                 HandleInGameEvents(type);

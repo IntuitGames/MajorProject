@@ -9,7 +9,6 @@ using System;/// <summary>
     public enum Group { Game, UI, Player, Enemy };
 
     // INSPECTOR
-    public bool masterEnabled = true;
     [Range(0, 1)]
     public float masterVolume = 1;
     [Range(0, 1)]
@@ -27,9 +26,11 @@ using System;/// <summary>
     [Range(0, 1)]
     public float playerGroupVolume = 1;
     [Range(0, 1)]
-    public float enemyGroupVolume = 1;    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
+    public float enemyGroupVolume = 1;
+
+    void Start() { } // To show the enabled toggle box on inspector    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
     {
-        if(!masterEnabled) return 0;
+        if(!enabled) return 0;
 
         float value = masterVolume;
         value *= soundClip.volume;

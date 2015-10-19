@@ -55,6 +55,12 @@ public class TetherManager : Manager
     public const string JOINT_NAME = "TM_Joint";
     public const string TETHER_NAME = "TM_Tether";
 
+    // PRIVATES
+    private Vector3 startPointPos, endPointPos;
+    private int relativeIndex, relativeCount;
+    private TetherJoint startTempJoint, endTempJoint, tempJoint;
+    private List<TetherJoint> tempTetherList;
+
     void Awake()
     {
         if (!Application.isPlaying) return;
@@ -207,19 +213,15 @@ public class TetherManager : Manager
         }
         else
         {
-            // Declare locals
-            Vector3 startPointPos, endPointPos;
-            int relativeIndex, relativeCount;
-            TetherJoint startTempJoint, endTempJoint;
-
             if (performanceBoost) // Left it as an option because there may be cases where this fails
             {
-                List<TetherJoint> tempTetherList = joints.GetRange(0, index);
+                // Better CPU performance but horrendous GC alloc
+                tempTetherList = joints.GetRange(0, index);
                 tempTetherList.Reverse();
                 startTempJoint = tempTetherList.Find(x => x.isColliding && x != joint);
                 endTempJoint = joints.GetRange(index, jointCount - index).Find(x => x.isColliding && x != joint);
             }
-            else // Whereas this is basically fail proof
+            else // Whereas this is basically fail proof + better but still bad GC Alloc
             {
                 startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
                 endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
@@ -227,8 +229,6 @@ public class TetherManager : Manager
 
             if (experimentalNoStick && joint.isColliding)
             {
-                TetherJoint tempJoint;
-
                 while (startTempJoint && startTempJoint.isColliding)
                 {
                     tempJoint = startTempJoint.previousJoint;

@@ -1,14 +1,16 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
 /// Manages all other managers. Contains static references to other managers. Is singleton.
-/// </summary>public class GameManager : Manager{
+/// </summary>public class GameManager : MonoBehaviour{
     // References the instance to the singleton game manager instance
     private static GameManager gameManagerInstance = null;
 
-    // References to other managers                         ---(STEP 1/2: ADD NEW MANAGERS HERE)---
+    // References to other managers                         ---(STEP 1/4: ADD NEW MANAGERS HERE)---
     public static InputManager InputManager;
     public static ModeManager ModeManager;
     public static AudioManager AudioManager;
-    public static TetherManager TetherManager;    void Awake()
+    public static TetherManager TetherManager;
+    public static PlayerManager PlayerManager;
+    public static CameraManager CameraManager;    void Awake()
     {
         // Singleton check
         if (!gameManagerInstance)
@@ -25,11 +27,16 @@
 
     private void SetManagerReferences()
     {
-        // Find manager references                          ---(STEP 2/2: ADD NEW MANAGERS HERE)---
-        SetManager(ref InputManager);
-        SetManager(ref ModeManager);
-        SetManager(ref AudioManager);
-        SetManager(ref TetherManager);
+        // Find manager references                          ---(STEP 2/4: ADD NEW MANAGERS HERE)---
+        SetManager<InputManager>(ref InputManager);
+        SetManager<ModeManager>(ref ModeManager);
+        SetManager<AudioManager>(ref AudioManager);
+        SetManager<TetherManager>(ref TetherManager);
+        SetManager<PlayerManager>(ref PlayerManager);
+        SetManager<CameraManager>(ref CameraManager);
+
+        // STEP 3/4: Add in GameManageEditor script
+        // STEP 4/4: Add in Manager base class script
     }    private void SetManager<T>(ref T managerReference) where T: Manager
     {
         // First check to see if this manager should be overridden by another in the scene

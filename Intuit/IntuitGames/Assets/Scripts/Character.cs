@@ -10,10 +10,6 @@ public class Character : MonoBehaviour, IBounce
 {
     #region VARIABLES
 
-    // STATICS
-    public static Character character1 { get; private set; }
-    public static Character character2 { get; private set; }
-
     // COMPONENTS
     [HideInInspector]
     public Rigidbody rigidbodyComp;
@@ -23,7 +19,6 @@ public class Character : MonoBehaviour, IBounce
     public Animator animator;
     [HideInInspector]
     public CharacterAudio audioData;
-    public static SmoothCameraFollow cameraFollow;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -75,17 +70,6 @@ public class Character : MonoBehaviour, IBounce
     public float freeMovementLength = 8;
     [Range(0, MEDIUM)]
     public float maxDistanceLength = 15;
-
-    // WEAKENED
-    [Header("Weakened")]
-    public bool canWeaken = true;
-    [Range(0, 1)]
-    public float weakenedMoveSpeedMulti = 0.5f;
-    public bool reconnectOnTouch = true;
-    public float minCamZoomDistance = 5;
-    public float maxCamZoomDistance = 20;
-    public float minCamProximity = 3;
-    public float maxCamProximity = 20;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -203,7 +187,7 @@ public class Character : MonoBehaviour, IBounce
             if (isSprinting && isGrounded) value = sprintMoveSpeed;
             if (isHeavy && isSprinting && isGrounded) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
             if (!isGrounded) value *= aerialControl;
-            if (isWeakened) value *= weakenedMoveSpeedMulti;
+            if (isWeakened) value *= GameManager.PlayerManager.weakenedMoveSpeedMulti;
             return value;
         }
     }
@@ -240,7 +224,10 @@ public class Character : MonoBehaviour, IBounce
             return !isGrounded && targetVelocity.y < 0;
         }
     }
-    public bool isWeakened { get; set; }
+    public bool isWeakened
+    {
+        get { return GameManager.PlayerManager.isWeakened; }
+    }
     public bool isDashing
     {
         get { return dashTimer.IsPlaying; }
@@ -271,14 +258,13 @@ public class Character : MonoBehaviour, IBounce
     void Awake()
     {
         // Set self in static
-        if (!SetStaticCharacter(this)) DestroyImmediate(gameObject);
+        if (!GameManager.PlayerManager.SetCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
         rigidbodyComp = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponentInChildren<Animator>();
         audioData = GetComponent<CharacterAudio>();
-        cameraFollow = Camera.main.GetComponent<SmoothCameraFollow>();
     }
 
     void Start()
@@ -292,13 +278,6 @@ public class Character : MonoBehaviour, IBounce
         heavyCooldownTimer = TimerPlus.Create(heavyCooldown, TimerPlus.Presets.Standard);
         unheavyDurationTimer = TimerPlus.Create(minHeavyDuration, TimerPlus.Presets.Standard);
         exitHeavyDragTimer = TimerPlus.Create(exitHeavyDragDuration, TimerPlus.Presets.Standard, () => rigidbodyComp.drag = normalDrag);
-
-        // Subscribe to the tether events
-        if (isPlayerOne)
-        {
-            GameManager.TetherManager.OnDisconnected += Weaken;
-            GameManager.TetherManager.OnReconnected += Unweaken;
-        }
 
         // Set debug heavy colours
         normalColour = GetComponentInChildren<Renderer>().material.color;
@@ -320,12 +299,6 @@ public class Character : MonoBehaviour, IBounce
         // Update drag value
         if (!exitHeavyDragTimer.IsPlaying)
             normalDrag = rigidbodyComp.drag;
-
-        // Update weakened camera zoom
-        if (isPlayerOne && isWeakened)
-        {
-            cameraFollow.distance = Vector3.Distance(transform.position, GetPartnerPosition()).Normalize(minCamProximity, maxCamProximity, minCamZoomDistance, maxCamZoomDistance);
-        }
     }
 
     void OnDestroy()
@@ -345,7 +318,7 @@ public class Character : MonoBehaviour, IBounce
         if (stopDashOnCollision && col.contacts[0].normal.z != 0) isDashing = false;
 
         // Reconnect on touch
-        if (reconnectOnTouch && col.collider.gameObject == GetPartner().gameObject)
+        if (GameManager.PlayerManager.reconnectOnTouch && col.collider.gameObject == GetPartner().gameObject)
             GameManager.TetherManager.Reconnect();
     }
 
@@ -538,7 +511,7 @@ public class Character : MonoBehaviour, IBounce
 
     public void ApplyConstrainForce()
     {
-        if (isWeakened) return;
+        if (GameManager.TetherManager.disconnected) return;
 
         float length = GameManager.TetherManager ? GameManager.TetherManager.tetherLength : Vector3.Distance(transform.position, GetPartnerPosition());
 
@@ -660,78 +633,14 @@ public class Character : MonoBehaviour, IBounce
     // Returns the other character
     public Character GetPartner()
     {
-        if (this == character1) return character2;
-        else return character1;
+        if (this == GameManager.PlayerManager.character1) return GameManager.PlayerManager.character2;
+        else return GameManager.PlayerManager.character1;
     }
 
     // Returns the other character position
     public Vector3 GetPartnerPosition()
     {
         return GetPartner().transform.position;
-    }
-
-    #endregion
-
-    #region STATICS
-
-    // Set static character references
-    private static bool SetStaticCharacter(Character character)
-    {
-        if (!character) return false;
-
-        if (character.isPlayerOne)
-        {
-            if (!character1)
-            {
-                character1 = character;
-                return true;
-            }
-            else
-            {
-                Debug.LogWarning("Character 1 has already been set!");
-                return false;
-            }
-        }
-        else
-        {
-            if (!character2)
-            {
-                character2 = character;
-                return true;
-            }
-            else
-            {
-                Debug.LogWarning("Character 1 has already been set!");
-                return false;
-            }
-        }
-    }
-
-    // Weakens both characters
-    public static void Weaken(TetherJoint brokenJoint)
-    {
-        if (character1.canWeaken)
-        {
-            character1.isWeakened = true;
-            character1.audioData.PlayTetherDisconnectAudio(brokenJoint.transform);
-        }
-
-        if (character2.canWeaken)
-        {
-            character2.isWeakened = true;
-        }
-    }
-
-    // Unweakens both characters
-    public static void Unweaken(TetherJoint reconnectedJoint)
-    {
-        character1.isWeakened = false;
-        character2.isWeakened = false;
-
-        character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
-
-        // Reset camera zoom
-        cameraFollow.distance = cameraFollow.initialDistance;
     }
 
     #endregion

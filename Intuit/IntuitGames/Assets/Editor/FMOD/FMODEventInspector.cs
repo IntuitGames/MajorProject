@@ -52,21 +52,25 @@ public class FMODEventInspector : Editor
 	}
 	
 	public override void OnInspectorGUI()
-	{		
-		//GUILayout.Label("Event: " + currentAsset.name);
-		//GUILayout.Label("Path: " + currentAsset.path);
+	{
+        EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.PrefixLabel("Path");
         GUI.enabled = false;
-        EditorGUILayout.TextField("Path", currentAsset.path);
-		//GUILayout.Label("GUID: " + currentAsset.id);
-        EditorGUILayout.TextField("GUID", currentAsset.id);
+        EditorGUILayout.TextField(currentAsset.path);
         GUI.enabled = true;
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("GUID");
+        GUI.enabled = false;
+        EditorGUILayout.TextField(currentAsset.id);
+        GUI.enabled = true;
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(string.Format("Distance ({0})", is3D ? "3D" : "2D"));
-		//GUILayout.Label(is3D ? "3D" : "2D");
 		if (is3D)
 		{
-			//GUILayout.Label("Distance: (" + minDistance + " - " + maxDistance + ")");
             GUI.enabled = false;
             EditorGUILayout.FloatField(minDistance);
             EditorGUILayout.FloatField(maxDistance);
@@ -88,10 +92,11 @@ public class FMODEventInspector : Editor
 		GUILayout.EndHorizontal();		
 		
 		for (int i = 0; i < parameters.Length; ++i)
-		{			
+		{
+            if (i == 0)
+                EditorGUILayout.LabelField("Paramters", EditorStyles.boldLabel);
+
 			GUILayout.BeginHorizontal();	
-			//GUILayout.Label(parameters[i].desc.name);
-			//parameters[i].val = GUILayout.HorizontalSlider(parameters[i].val, parameters[i].desc.minimum, parameters[i].desc.maximum, new GUILayoutOption[0]);
             parameters[i].val = EditorGUILayout.Slider(parameters[i].desc.name, parameters[i].val, parameters[i].desc.minimum, parameters[i].desc.maximum, new GUILayoutOption[0]);
 			FMODEditorExtension.SetEventParameterValue(i, parameters[i].val);
 			GUILayout.EndHorizontal();
