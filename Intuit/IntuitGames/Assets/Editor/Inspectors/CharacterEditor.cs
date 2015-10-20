@@ -1,5 +1,5 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEditor : Editor{
+using UnityEditor;[CustomEditor(typeof(Character)), CanEditMultipleObjects()]public class CharacterEditor : Editor{
     private Character Target;
     private SerializedProperty property;
     bool showChildren;
@@ -12,6 +12,14 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
     }
 
     public override void OnInspectorGUI()
+    {
+        if (!serializedObject.isEditingMultipleObjects)
+            DrawSingleCharacter();
+        else
+            DrawMultipleCharacters();
+    }
+
+    private void DrawSingleCharacter()
     {
         if (!Target) return;
 
@@ -28,7 +36,6 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUI.indentLevel = property.depth;
             if (property.name.StartsWith("m_")) continue; // Ignore Unity properties
             showChildren = EditorGUILayout.PropertyField(property); // Draw property
-            
         }
         while (property.NextVisible(showChildren));
         EditorGUI.indentLevel = 0;
@@ -52,6 +59,37 @@ using UnityEditor;[CustomEditor(typeof(Character))]public class CharacterEdit
             EditorGUILayout.Toggle("Bouncing", Target.isBouncing);
             GUI.enabled = true;
         }
+
+        // Apply changes to the property
+        serializedObject.ApplyModifiedProperties();
+        serializedObject.UpdateIfDirtyOrScript();
+    }
+
+    private void DrawMultipleCharacters()
+    {
+        // Script fields
+        EditorGUI.indentLevel = 0;
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
+        EditorGUILayout.ObjectField("Editor Script", MonoScript.FromScriptableObject(this), this.GetType(), false);
+        
+        // Iterate through properties and draw them like it normally would
+        property.Reset();
+        property.Next(true);
+        do
+        {
+            EditorGUI.indentLevel = property.depth;
+            if (property.name.StartsWith("m_")) continue; // Ignore Unity properties
+            if (property.name == "_isPlayerOne")
+            {
+                EditorGUILayout.Separator();
+                EditorGUILayout.LabelField("Basic", EditorStyles.boldLabel);
+                continue;
+            }
+            showChildren = EditorGUILayout.PropertyField(property); // Draw property
+
+        }
+        while (property.NextVisible(showChildren));
+        EditorGUI.indentLevel = 0;
 
         // Apply changes to the property
         serializedObject.ApplyModifiedProperties();

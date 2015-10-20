@@ -26,7 +26,8 @@ public class TetherManager : Manager
     public bool showJoints = true;
     public bool showTetherVisual = true;
     public bool showInHierarchy = false;
-    public bool performanceBoost = true;
+    [Popup(new string[] { "Fast CPU | Low GC Alloc", "Very Fast CPU | Very High GC Alloc", "Very Slow CPU | High GC Alloc" })]
+    public string jointSearchMode = "Fast CPU | Low GC Alloc";
     [Range(0, 100)]
     public float breakForce = 50;
     public KeyCode disconnectInput = KeyCode.B;
@@ -114,33 +115,17 @@ public class TetherManager : Manager
     void FixedUpdate()
     {
         if (!Application.isPlaying) return;
-
         for (int i = 0; i < joints.Count; i++)
         {
-            if (!disconnected)
-            {
-                if (!experimentalWrapping)
-                {
-                    if (instantJointMovement)
-                        joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
-                    else
-                        joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
-                }
-                else
-                {
-                    if (!joints[i].isColliding)
-                        if (instantJointMovement)
-                            joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
-                        else
-                            joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
-                    else
-                        joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * 100 * Time.fixedDeltaTime, ForceMode.Force);
-                }
-            }
+            if (!disconnected) // Connect movement
+                if (experimentalWrapping && joints[i].isColliding) // Experiment wrapping
+                    joints[i].rigidbodyComp.AddForce((GetMovePosition(joints[i], i, false) - joints[i].transform.position).normalized * jointSpeed * Time.fixedDeltaTime, ForceMode.Acceleration);
+                else if (instantJointMovement) // Instantaneous movement
+                    joints[i].rigidbodyComp.MovePosition(GetMovePosition(joints[i], i, false));
+                else // Lerped movement
+                    joints[i].rigidbodyComp.MovePosition(Vector3.Lerp(joints[i].transform.position, GetMovePosition(joints[i], i, false), jointSpeed * Time.fixedDeltaTime));
             else // Disconnected movement
-            {
                 joints[i].rigidbodyComp.velocity = Vector3.ClampMagnitude(joints[i].rigidbodyComp.velocity, 10);
-            }
         }
     }
 
@@ -213,16 +198,28 @@ public class TetherManager : Manager
         }
         else
         {
-            if (performanceBoost) // Left it as an option because there may be cases where this fails
+            if (jointSearchMode == "Very Fast CPU | Very High GC Alloc")
             {
-                // Better CPU performance but horrendous GC alloc
+                // (ms: 0.6 - 1.3 GC: 118kb)
                 tempTetherList = joints.GetRange(0, index);
                 tempTetherList.Reverse();
                 startTempJoint = tempTetherList.Find(x => x.isColliding && x != joint);
                 endTempJoint = joints.GetRange(index, jointCount - index).Find(x => x.isColliding && x != joint);
             }
-            else // Whereas this is basically fail proof + better but still bad GC Alloc
+            else if (jointSearchMode == "Fast CPU | Low GC Alloc")
             {
+                // (ms: 1.0 - 1.5 GC: 2.9kb)
+                startTempJoint = joint.previousJoint;
+                while (startTempJoint && !startTempJoint.isColliding)
+                    startTempJoint = startTempJoint.previousJoint;
+
+                endTempJoint = joint.nextJoint;
+                while (endTempJoint && !endTempJoint.isColliding)
+                    endTempJoint = endTempJoint.nextJoint;
+            }
+            else
+            {
+                // (ms: 4.0 - 500.0+ GC: 25kb)
                 startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
                 endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
             }
@@ -248,22 +245,22 @@ public class TetherManager : Manager
             {
                 startPointPos = startTempJoint.transform.position;
                 endPointPos = endTempJoint.transform.position;
-                relativeIndex = index - (joints.IndexOf(startTempJoint) + 1) + 1;
-                relativeCount = joints.IndexOf(endTempJoint) - (joints.IndexOf(startTempJoint) + 1) + 1;
+                relativeIndex = index - (startTempJoint.index + 1) + 1;
+                relativeCount = endTempJoint.index - (startTempJoint.index + 1) + 1;
             }
             else if (startTempJoint)
             {
                 startPointPos = startTempJoint.transform.position;
                 endPointPos = endPoint.position;
-                relativeIndex = index - (joints.IndexOf(startTempJoint) + 1) + 1;
-                relativeCount = jointCount - (joints.IndexOf(startTempJoint) + 1) + 1;
+                relativeIndex = index - (startTempJoint.index + 1) + 1;
+                relativeCount = jointCount - (startTempJoint.index + 1) + 1;
             }
             else if (endTempJoint)
             {
                 startPointPos = startPoint.position;
                 endPointPos = endTempJoint.transform.position;
                 relativeIndex = index + 1;
-                relativeCount = joints.IndexOf(endTempJoint) + 1;
+                relativeCount = endTempJoint.index + 1;
             }
             else
             {

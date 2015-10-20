@@ -13,41 +13,58 @@
     [ReadOnly]	public bool passingThroughWeakSpot = false;
     [ReadOnly]
     public bool disconnectedEnd;
+    public int index
+    {
+        get
+        {
+            if (indexCache.HasValue) return indexCache.Value;
+            else
+            {
+                indexCache = GameManager.TetherManager.joints.IndexOf(this);
+                return indexCache.Value;
+            }
+        }
+    }
     public TetherJoint previousJoint
     {
         get
         {
-            if (isIndexCached)
-                if (index > 0)
-                    return GameManager.TetherManager.joints[index - 1];
-                else
-                    return null;
-
-            index = GameManager.TetherManager.joints.IndexOf(this);
-            isIndexCached = true;
-
-            return previousJoint;
+            if (prevJointCache) return prevJointCache;
+            if (!indexCache.HasValue) indexCache = GameManager.TetherManager.joints.IndexOf(this);
+            if (indexCache.HasValue)
+            {
+                indexCache = GameManager.TetherManager.joints.IndexOf(this);
+                if (indexCache > 0)
+                {
+                    prevJointCache = GameManager.TetherManager.joints[indexCache.Value - 1];
+                    return prevJointCache;
+                }
+            }
+            return null;
         }
     }
     public TetherJoint nextJoint
     {
         get
         {
-            if (isIndexCached)
-                if (index < GameManager.TetherManager.joints.Count - 1)
-                    return GameManager.TetherManager.joints[index + 1];
-                else
-                    return null;
-
-            index = GameManager.TetherManager.joints.IndexOf(this);
-            isIndexCached = true;
-
-            return previousJoint;
+            if (nextJointCache) return nextJointCache;
+            if (!indexCache.HasValue) indexCache = GameManager.TetherManager.joints.IndexOf(this);
+            if (indexCache.HasValue)
+            {
+                indexCache = GameManager.TetherManager.joints.IndexOf(this);
+                if (indexCache < GameManager.TetherManager.joints.Count - 1)
+                {
+                    nextJointCache = GameManager.TetherManager.joints[indexCache.Value + 1];
+                    return nextJointCache;
+                }
+            }
+            return null;
         }
     }
 
-    private int index;
-    private bool isIndexCached;
+    private int? indexCache = null;
+    private TetherJoint prevJointCache;
+    private TetherJoint nextJointCache;
 
     void Start()
     {
