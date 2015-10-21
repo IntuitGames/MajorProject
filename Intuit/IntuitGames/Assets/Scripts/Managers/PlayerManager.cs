@@ -24,10 +24,20 @@ using CustomExtensions;/// <summary>
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
     public bool reconnectOnTouch = true;
+    public bool canDie = false;
+    public float deathDuration = 10;
+    [Range(0, 1)]
+    public float recoveryRate = 0.5f;
+    [ReadOnly]
+    public float deathTime;
 
     public float distanceBetweenCharacters
     {
         get { return Vector3.Distance(character1.transform.position, character2.transform.position); }
+    }
+    public float deathPercentage
+    {
+        get { return deathTime / deathDuration; }
     }
 
     #endregion
@@ -36,9 +46,22 @@ using CustomExtensions;/// <summary>
 
     void Start()
     {
+        deathTime = deathDuration;
+
         // Subscribe to tether events
         GameManager.TetherManager.OnDisconnected += Weaken;
         GameManager.TetherManager.OnReconnected += Unweaken;
+    }
+
+    void Update()
+    {
+        if (isWeakened)
+            deathTime = Mathf.Clamp(deathTime - Time.deltaTime, 0, deathDuration);
+        else
+            deathTime = Mathf.Clamp(deathTime + (Time.deltaTime * recoveryRate), 0, deathDuration);
+
+        if (deathTime <= 0)
+            Death();
     }
 
     #endregion
@@ -73,5 +96,14 @@ using CustomExtensions;/// <summary>
         isWeakened = false;
 
         character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
+    }
+
+    public void Death()
+    {
+#if !UNITY_EDITOR
+        Application.Quit();
+#else
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }
