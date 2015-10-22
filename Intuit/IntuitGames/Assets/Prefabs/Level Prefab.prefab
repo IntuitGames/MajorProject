@@ -11290,6 +11290,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -23776,7 +23777,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
     FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
   land:
@@ -23784,7 +23785,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
     FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
   jump:
@@ -23792,7 +23793,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
     FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
   dash:
@@ -23800,7 +23801,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   startHeavy:
@@ -23808,7 +23809,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   endHeavy:
@@ -23816,7 +23817,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   tetherDisconnect:
@@ -23824,7 +23825,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   tetherConnect:
@@ -23832,7 +23833,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
 --- !u!114 &11408424
@@ -24811,11 +24812,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music:
-    player: 1
+    player: 2
     type: 1
     group: 0
     volume: .0500000007
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: 8649a30ba6833ab4bb8c82228c3d75c1, type: 3}
     FMODAsset: {fileID: 11400000, guid: 37f56e86a8c1628499def47c281e61cc, type: 2}
 --- !u!114 &11415520
@@ -24933,7 +24934,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
     FMODAsset: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff, type: 2}
   land:
@@ -24941,7 +24942,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: d50ef594c85bf754eacb995dc86505e2, type: 3}
     FMODAsset: {fileID: 11400000, guid: 4d1285891c6555047a0c835d7a8d8fb1, type: 2}
   jump:
@@ -24949,7 +24950,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 8300000, guid: 255dfa8e4d0741e4cb2c3beed76a64d6, type: 3}
     FMODAsset: {fileID: 11400000, guid: f87ab4bf5165d8e4c933e9e76e4b36ff, type: 2}
   dash:
@@ -24957,7 +24958,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   startHeavy:
@@ -24965,7 +24966,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   endHeavy:
@@ -24973,7 +24974,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   tetherDisconnect:
@@ -24981,7 +24982,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
   tetherConnect:
@@ -24989,7 +24990,7 @@ MonoBehaviour:
     type: 0
     group: 2
     volume: 1
-    pitch: 0
+    pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
 --- !u!114 &11418302
