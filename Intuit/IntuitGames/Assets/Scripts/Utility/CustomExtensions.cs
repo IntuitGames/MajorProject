@@ -214,6 +214,48 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             }
         }
 
+        /// <summary>
+        /// Plays an audio clip and audio source. Handles null-checking. Can also specify if the audio source should be detached.
+        /// </summary>
+        /// <returns>True if the clip was successfully played on the source.</returns>
+        public static AudioSource PlayClipSource(this AudioSource Source, AudioClip Clip, bool Detach, float Volume)
+        {
+            // Null checking
+            if (Source.IsNullOrEmpty() || Clip.IsNullOrEmpty() || Source == null || Clip == null)
+                return null;
+
+            if (!Detach) // Play the clip on the source normally.
+            {
+                Source.clip = Clip;
+                Source.time = 0;
+                Source.volume = Volume;
+                Source.Play();
+                return Source;
+            }
+            else // Create a new game object, copy over the audio source component, play the clip on new audio source, then destroy object.
+            {
+                // Create and name new game object
+                GameObject NewObject = new GameObject();
+                NewObject.hideFlags = HideFlags.HideInHierarchy;
+                NewObject.name = "Sound Object (" + Source.gameObject.name + " - " + Clip.name + ")";
+
+                // Add a new audio source component to the new game object and copy over values from the source audio component.
+                AudioSource NewSource;
+                try { NewSource = NewObject.AddComponent<AudioSource>(Source); }
+                catch { return null; }
+
+                // Destroy the new game object after the clip has finished playing
+                GameObject.Destroy(NewObject, Clip.length + 0.1f);
+
+                // Play the clip on the new audio source
+                NewSource.clip = Clip;
+                NewSource.time = 0;
+                NewSource.volume = Volume;
+                NewSource.Play();
+                return NewSource;
+            }
+        }
+
         public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = true)
         {
             return Source.PlayClip(Clip, Detach, Source.volume);
