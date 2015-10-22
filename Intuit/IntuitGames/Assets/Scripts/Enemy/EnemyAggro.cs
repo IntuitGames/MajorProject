@@ -1,86 +1,42 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEngine;
 
-public class EnemyAggro : MonoBehaviour {
+public class EnemyAggro : MonoBehaviour
+{
+    public EnemyAggroEnter enterZone;
+    public EnemyAggroExit exitZone;
 
-	[ReadOnlyAttribute]
-	public int playerObsInRange;
-	Enemy enemy;
-	
-	// Use this for initialization
-	void Start () {
-		enemy = transform.parent.gameObject.GetComponent<Enemy>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public Enemy enemy;
 
-	//Whenever a player or tether piece enters the aggro trigger, set the enemy to the aggro state and add to the count of how many tethers/players have entered 
-	void OnTriggerEnter(Collider other)
-	{
-		if(!enemy.isDead)
-		{
-			if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
-			{
-				if(!other.GetComponent<Character>().isWeakened)
-				{
-					ObjectEnteredRange();
-				}
-			}
+    [ReadOnly]
+    public int playerObsInRange = 0;
 
-			else if(other.gameObject.layer == LayerMask.NameToLayer("Tether"))
-			{
-				if(!other.GetComponent<TetherJoint>().IsSevered())
-				{
-					ObjectEnteredRange();
-				}
-			}
-		}
-	}
+    void Start()
+    {
+        if(enemy == null) enemy = transform.parent.gameObject.GetComponent<Enemy>();
+    }
 
-	//Each time a player/tether objects leaves the aggro range, subtract from the number of them that have entered.
-	//This allows the enemy to stay aggro'd to the players as long as theres something within its range
-	void OnTriggerExit(Collider other)
-	{
-		if(!enemy.isDead)
-		{
-			if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
-			{
-				if(!other.GetComponent<Character>().isWeakened)
-				{
-					ObjectLeftRange();
-				}
-			}
-			else if (other.gameObject.layer == LayerMask.NameToLayer("Tether"))
-			{
-				if(!other.GetComponent<TetherJoint>().IsSevered())
-				{
-					ObjectLeftRange();
-				}
+    public void ObjectEnteredRange()
+    {
+        if (!enemy.isAggro) enemy.isAggro = true;
+        playerObsInRange++;
+    }
 
-			}
-		}
-	}
+    public void ObjectLeftRange()
+    {
+        playerObsInRange--;
+        if (playerObsInRange <= 0 && enemy.isAggro)
+        {
+            enemy.isAggro = false;
+        }
+    }
 
-	public void StopAggro()
-	{
-		playerObsInRange = 0;
-	}
-
-	void ObjectEnteredRange()
-	{
-		if(!enemy.isAggro) enemy.isAggro = true;
-		playerObsInRange++;
-	}
-
-	void ObjectLeftRange()
-	{
-		playerObsInRange--;
-		if(playerObsInRange <= 0 && enemy.isAggro)
-		{
-			enemy.isAggro = false;
-		}
-	}
+    public void StopAggro()
+    {
+        playerObsInRange = 0;
+    }
 }
+

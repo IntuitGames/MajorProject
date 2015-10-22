@@ -2,9 +2,8 @@
 using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Enemy : MonoBehaviour {
+public class Enemy : EnemyBase {
 
-	private EnemyAggro enemyAggro;
 	private bool _isAggro;
 	public bool isAggro
 	{
@@ -15,7 +14,7 @@ public class Enemy : MonoBehaviour {
 			//If the enemy is already aggressive towards the player and we're told to no longer be, pop the Aggressive state
 			if (_isAggro && !value)
 			{
-				enemyAggro.StopAggro();
+                aggroHandler.StopAggro();
 				fsm.popState();
 			}
 			//If we are not aggressive and we are told to be, push the aggressive state
@@ -42,9 +41,10 @@ public class Enemy : MonoBehaviour {
 	[Tooltip("How hard the enemy will push the player when they collide with the enemy")]
 	public float knockbackForce;
 
-	[Header("Death")]
-	public Rigidbody[] BodyParts;
-	public float gibForce;
+    [Header("Attack")]
+
+
+	
 	[HideInInspector]
 	public Vector3 startLocation;
 	[HideInInspector]
@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour {
 	void Awake () {
 		agent = GetComponent<NavMeshAgent>();
 		fsm = new FSM<Enemy>(this);
-		enemyAggro = GetComponentInChildren<EnemyAggro>();
+        aggroHandler = GetComponentInChildren<EnemyAggro>();
 
 	}
 

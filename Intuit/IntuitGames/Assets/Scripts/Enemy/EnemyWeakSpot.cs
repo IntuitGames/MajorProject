@@ -3,6 +3,7 @@ using System.Collections;
 
 public class EnemyWeakSpot : MonoBehaviour {
 
+    [ReadOnly]
 	public int enteredCount;
 	Enemy enemy;
 	bool sliced = false;
@@ -25,7 +26,6 @@ public class EnemyWeakSpot : MonoBehaviour {
 			}
 			else
 			{
-				Debug.Log("Enemy Death");
 				enemy.Death();
 				sliced = false;
 			}
@@ -35,39 +35,42 @@ public class EnemyWeakSpot : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 
-		if(other.gameObject.layer == LayerMask.NameToLayer("Tether"))
-		{
-			TetherJoint joint = other.GetComponent<TetherJoint>();
-			if(!joint.passingThroughWeakSpot && !joint.IsSevered())
-			{
-//				Physics.IgnoreCollision(other, enemy.body, true);	//Make tether piece entering the weakspot ignore collision with the body
-//				Debug.Log("Enemy Weak Spot collided with " + other.gameObject.name);
-				enteredCount++;
-				joint.passingThroughWeakSpot = true;
-				sliced = true;
-			}
-			else
-			{
-				joint.passingThroughWeakSpot = false;
-			}
-		}
+        if (!enemy.isDead)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Tether"))
+            {
+                TetherJoint joint = other.GetComponent<TetherJoint>();
+                if (!joint.passingThroughWeakSpot && !joint.IsSevered())
+                {
+                    enteredCount++;
+                    joint.passingThroughWeakSpot = true;
+                    sliced = true;
+                }
+                else
+                {
+                    joint.passingThroughWeakSpot = false;
+                }
+            }
+        }
 	}
 	void OnTriggerExit(Collider other)
 	{
-		if(other.gameObject.layer == LayerMask.NameToLayer("Tether"))
-		{
-			TetherJoint joint = other.GetComponent<TetherJoint>();
-			if(!joint.passingThroughWeakSpot)
-			{
-//				Physics.IgnoreCollision(other, enemy.body, false);
-				enteredCount--;
-			}
-//			if(enteredCount <= 0)
-//			{
-//				enemy.Death();
-//				Debug.Log ("Tether passed through weakspot entirely");
-//			}
-		}
+        if (!enemy.isDead)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Tether"))
+            {
+                TetherJoint joint = other.GetComponent<TetherJoint>();
+                if (!joint.passingThroughWeakSpot)
+                {
+                    enteredCount--;
+                }
+                //			if(enteredCount <= 0)
+                //			{
+                //				enemy.Death();
+                //				Debug.Log ("Tether passed through weakspot entirely");
+                //			}
+            }
+        }
 		 
 	}
 }

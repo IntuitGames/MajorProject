@@ -60,7 +60,7 @@ using CustomExtensions;/// <summary>
         else
             deathTime = Mathf.Clamp(deathTime + (Time.deltaTime * recoveryRate), 0, deathDuration);
 
-        if (deathTime <= 0)
+        if (deathTime <= 0 && canDie)
             Death();
     }
 

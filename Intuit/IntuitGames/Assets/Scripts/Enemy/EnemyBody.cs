@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyBody : MonoBehaviour {
 
 	Enemy enemy;
 	Rigidbody rigidBody;
+    List<Collision> collisionList = new List<Collision>();
 
 	void Start () 
 	{
@@ -18,9 +20,9 @@ public class EnemyBody : MonoBehaviour {
 	{
 		if(!enemy.isDead)
 		{
-			ContactPoint contact = collision.contacts[0];
 			if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
 			{
+                ContactPoint contact = collision.contacts[0];
 				Vector3 knockbackdir = (contact.point - transform.position).normalized;
 				collision.collider.GetComponent<Rigidbody>().velocity = knockbackdir * enemy.knockbackForce;
 
@@ -29,10 +31,29 @@ public class EnemyBody : MonoBehaviour {
 			{
 				if(!collision.collider.GetComponent<TetherJoint>().passingThroughWeakSpot)
 				{
-					collision.collider.GetComponent<TetherJoint>().DisconnectAtThisJoint();
-					enemy.isAggro = false;
+                    collisionList.Add(collision);
+                    collision.collider.GetComponent<TetherJoint>().DisconnectAtThisJoint();
+                    enemy.isAggro = false;
 				}
 			}
 		}
 	}
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Tether"))
+        {
+            if (!collision.collider.GetComponent<TetherJoint>().passingThroughWeakSpot)
+            {
+                collisionList.Remove(collision);
+                //collision.collider.GetComponent<TetherJoint>().DisconnectAtThisJoint();
+                //enemy.isAggro = false;
+            }
+        }
+    }
+
+    void BeginBite()
+    { 
+
+    }
 }
