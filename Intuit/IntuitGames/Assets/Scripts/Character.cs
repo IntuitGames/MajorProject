@@ -64,12 +64,14 @@ public class Character : MonoBehaviour, IBounce
     // TETHER
     [Header("Tether")]
     public bool constrainMovement = true;
-    [Range(0, MEDIUM)]
-    public float constrainingPower = 20;
+    [Range(0, LOW)]
+    public float constrainingPower = 2;
     [Range(0, MEDIUM)]
     public float freeMovementLength = 8;
     [Range(0, MEDIUM)]
     public float maxDistanceLength = 15;
+    [Range(0, LOW)]
+    public float yankingDashForce = 2;
 
     // DASH
     [Header("Dash"), SerializeField]
@@ -168,6 +170,7 @@ public class Character : MonoBehaviour, IBounce
     private const float airborneRayOffset = 0.05f;      // How much additional height offset will the ray checks account for.
     private float jumpTime;                             // How long the jump button has been held in for.
     private bool jumpFlag;                              // Is the character ready to jump again?
+    public bool yankFlag = true;                        // Is the character able to be yanked
 
     // PROPERTIES
     public bool isPlayerOne
@@ -273,7 +276,7 @@ public class Character : MonoBehaviour, IBounce
         GameManager.InputManager.SetupCharacterInput(this);
 
         // Setup dash timers
-        dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard);
+        dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard, () => GetPartner().FlipYankFlag(true));
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
         heavyCooldownTimer = TimerPlus.Create(heavyCooldown, TimerPlus.Presets.Standard);
         unheavyDurationTimer = TimerPlus.Create(minHeavyDuration, TimerPlus.Presets.Standard);
@@ -362,7 +365,7 @@ public class Character : MonoBehaviour, IBounce
         AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        AddConstrainedForce(new Vector3(0, gravity, 0), ForceMode.Force);
+        rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
         if(constrainMovement) ApplyConstrainForce();
@@ -504,38 +507,78 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
+    // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
         audioData.PlayWalkAudio(FM_playerMovespeedValue, isWalking && isGrounded);
     }
 
+    //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below
     public void ApplyConstrainForce()
     {
-        if (GameManager.TetherManager.disconnected) return;
+        float length = GameManager.TetherManager.tetherLength;
 
-        float length = GameManager.TetherManager ? GameManager.TetherManager.tetherLength : Vector3.Distance(transform.position, GetPartnerPosition());
+        if (GameManager.TetherManager.disconnected || length < freeMovementLength) return;
 
-        if (length < freeMovementLength) return;
-
-        float alpha = Mathf.Lerp(0, 1, (length - freeMovementLength) / (maxDistanceLength - freeMovementLength));
-
-        Vector3 direction = GameManager.TetherManager ? GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne) : (GetPartnerPosition() - transform.position).normalized;
-
-        rigidbodyComp.AddForce(direction * alpha * constrainingPower, ForceMode.Impulse);
+        Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne);
+        float constrainMulti = length.Normalize(freeMovementLength, maxDistanceLength, 0, 1000);
+        rigidbodyComp.AddForce(direction * constrainMulti * constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
     }
 
+    // Rigidbody.AddForce() with constraining
     public void AddConstrainedForce(Vector3 movement, ForceMode forceMode)
     {
-        if (!constrainMovement) rigidbodyComp.AddForce(movement, forceMode);
+        float length = GameManager.TetherManager.tetherLength;
 
-        rigidbodyComp.AddForce(movement, forceMode);
+        if (!constrainMovement || length < freeMovementLength || GameManager.TetherManager.disconnected)
+        {
+            rigidbodyComp.AddForce(movement, forceMode);
+            return;
+        }
+
+        // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
+        float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
+        rigidbodyComp.AddForce(movement * dotValue * constrainingPower, forceMode);
     }
 
+    // RigidBody.MovePosition with constraining
     public void AddConstrainedMovement(Vector3 movement)
     {
-        if (!constrainMovement) rigidbodyComp.MovePosition(transform.position + movement);
+        float length = GameManager.TetherManager.tetherLength;
 
-        rigidbodyComp.MovePosition(transform.position + movement);
+        if (!constrainMovement || length < freeMovementLength || GameManager.TetherManager.disconnected)
+        {
+            rigidbodyComp.MovePosition(transform.position + movement);
+            return;
+        }
+        else if (isDashing && length >= freeMovementLength)
+        {
+            if (!GetPartner().isHeavy || length > maxDistanceLength)
+                rigidbodyComp.MovePosition(transform.position + movement);
+            else
+                isDashing = false;
+
+            GetPartner().Yank();
+            return;
+        }
+
+        // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
+        float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
+        Vector3 additiveVec = movement * dotValue.Normalize(-1, 1, -0.25f, 1);
+        rigidbodyComp.MovePosition(transform.position + Vector3.ClampMagnitude(additiveVec, length.Normalize(freeMovementLength, maxDistanceLength, additiveVec.magnitude, 0)));
+    }
+
+    public void Yank()
+    {
+        if (yankFlag && !isHeavy)
+        {
+            yankFlag = false;
+            rigidbodyComp.drag = 0.25f;
+            TimerPlus.Create(1, () => rigidbodyComp.drag = normalDrag);
+            Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
+            direction.y = direction.magnitude / 2;
+            AddConstrainedForce(direction * yankingDashForce, ForceMode.Impulse);
+        }
     }
 
     #endregion
@@ -628,6 +671,11 @@ public class Character : MonoBehaviour, IBounce
     {
         jumpFlag = false;
         jumpTime = 0;
+    }
+
+    public void FlipYankFlag(bool value)
+    {
+        yankFlag = value;
     }
 
     // Returns the other character

@@ -47,6 +47,8 @@ public class TetherManager : Manager
     public float directLength;
     [ReadOnly]
     public float tetherLength;
+    [ReadOnly]
+    public float collidingJointCount;
 
     // EVENTS
     public event System.Action<TetherJoint> OnDisconnected = delegate { };

@@ -25,11 +25,12 @@ using CustomExtensions;/// <summary>
     public float weakenedMoveSpeedMulti = 0.5f;
     public bool reconnectOnTouch = true;
     public bool canDie = false;
-    public float deathDuration = 10;
+    public float maxJelly = 10;
+    public bool autoRecover = false;
     [Range(0, 1)]
     public float recoveryRate = 0.5f;
     [ReadOnly]
-    public float deathTime;
+    public float currentJelly;
 
     public float distanceBetweenCharacters
     {
@@ -37,7 +38,7 @@ using CustomExtensions;/// <summary>
     }
     public float deathPercentage
     {
-        get { return deathTime / deathDuration; }
+        get { return currentJelly / maxJelly; }
     }
 
     #endregion
@@ -46,7 +47,7 @@ using CustomExtensions;/// <summary>
 
     void Start()
     {
-        deathTime = deathDuration;
+        currentJelly = maxJelly;
 
         // Subscribe to tether events
         GameManager.TetherManager.OnDisconnected += Weaken;
@@ -56,11 +57,11 @@ using CustomExtensions;/// <summary>
     void Update()
     {
         if (isWeakened)
-            deathTime = Mathf.Clamp(deathTime - Time.deltaTime, 0, deathDuration);
-        else
-            deathTime = Mathf.Clamp(deathTime + (Time.deltaTime * recoveryRate), 0, deathDuration);
+            AddDeathTime(-Time.deltaTime);
+        else if (autoRecover)
+            AddDeathTime(Time.deltaTime * recoveryRate);
 
-        if (deathTime <= 0 && canDie)
+        if (currentJelly <= 0 && canDie)
             Death();
     }
 
@@ -105,5 +106,10 @@ using CustomExtensions;/// <summary>
 #else
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+
+    public void AddDeathTime(float value)
+    {
+        currentJelly = Mathf.Clamp(currentJelly + value, 0, maxJelly);
     }
 }

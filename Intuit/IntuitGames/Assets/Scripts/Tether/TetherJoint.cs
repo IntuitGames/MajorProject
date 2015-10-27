@@ -101,4 +101,9 @@
 
         Renderer renderer = GetComponent<Renderer>();
         if (renderer) renderer.material.color = value ? debugColour : normalColour;
+
+        if (isColliding)
+            GameManager.TetherManager.collidingJointCount++;
+        else
+            GameManager.TetherManager.collidingJointCount--;
     }	public void DisconnectAtThisJoint()		{				if (GameManager.TetherManager.disconnected) return;						int thisIndex = GameManager.TetherManager.joints.IndexOf(this);				if(thisIndex > 0) GameManager.TetherManager.Disconnect(this);		}	public bool IsSevered()		{				if(GameManager.TetherManager.disconnected) return true; else return false;		}}
