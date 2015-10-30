@@ -5,7 +5,7 @@ using UnityEngine.UI;using System.Collections;using System.Collections.Generic
     public bool doWeakenedSliderFade = true;
     public float weakenedSliderFadeRate = 1;    void Update()
     {
-        weakenedSlider.value = GameManager.PlayerManager.deathPercentage;
+        weakenedSlider.value = GameManager.PlayerManager.jellyPercentage;
 
         if (GameManager.PlayerManager.currentJelly < 0.5f && GameManager.PlayerManager.currentJelly > 0)
             weakenedTextValue.text = "1";

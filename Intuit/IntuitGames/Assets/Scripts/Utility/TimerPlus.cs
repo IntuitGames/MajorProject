@@ -476,7 +476,8 @@ public class TimerPlus: IDisposable
         // Free managed objects
         if(Disposing)
         {
-            Handle.Dispose();
+            if (Handle != null)
+                Handle.Dispose();
             Elapsed = null;
         }
         

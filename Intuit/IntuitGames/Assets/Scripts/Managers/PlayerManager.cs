@@ -36,7 +36,7 @@ using CustomExtensions;/// <summary>
     {
         get { return Vector3.Distance(character1.transform.position, character2.transform.position); }
     }
-    public float deathPercentage
+    public float jellyPercentage
     {
         get { return currentJelly / maxJelly; }
     }
@@ -57,9 +57,9 @@ using CustomExtensions;/// <summary>
     void Update()
     {
         if (isWeakened)
-            AddDeathTime(-Time.deltaTime);
+            AddJelly(-Time.deltaTime);
         else if (autoRecover)
-            AddDeathTime(Time.deltaTime * recoveryRate);
+            AddJelly(Time.deltaTime * recoveryRate);
 
         if (currentJelly <= 0 && canDie)
             Death();
@@ -108,7 +108,7 @@ using CustomExtensions;/// <summary>
 #endif
     }
 
-    public void AddDeathTime(float value)
+    public void AddJelly(float value)
     {
         currentJelly = Mathf.Clamp(currentJelly + value, 0, maxJelly);
     }

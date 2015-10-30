@@ -73,6 +73,18 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         /// </summary>        public static float Normalize(this float Source, float OldMin, float OldMax, float NewMin, float NewMax)
         {
             return Mathf.Lerp(NewMin, NewMax, (Source - OldMin) / (OldMax - OldMin));
+        }
+
+        /// <summary>
+        /// Returns true if the source object equals any of the objects given.
+        /// </summary>
+        public static bool EqualToAny<T>(this T Source, params T[] Comparisons)
+        {
+            foreach (T Comparison in Comparisons)
+                if (Source.Equals(Comparison))
+                    return true;
+
+            return false;
         }        public static T FirstOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
         {
             for (int i = 0; i < Source.Count; i++)
