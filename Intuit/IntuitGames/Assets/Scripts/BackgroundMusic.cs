@@ -14,15 +14,13 @@ public class BackgroundMusic : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         music.Initialize();
-        music.Play(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), detach: false);
+        music.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
     }
 
-#if UNITY_EDITOR
     void Update()
     {
-        music.UpdateSettings(audioSource);
+        music.Update(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
     }
-#endif
 
     void OnDestroy()
     {

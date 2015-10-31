@@ -1,4 +1,5 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+using CustomExtensions;
 
 /// <summary>
 /// Stores all character related audio related.
@@ -12,8 +13,12 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public float volume = 1;
 
     // COMPONENTS
-    private AudioSource audioSource;
-    private Rigidbody rigidbodyComp;
+    [HideInInspector]
+    public Character character;
+    [HideInInspector]
+    public AudioSource audioSource;
+    [HideInInspector]
+    public Rigidbody rigidbodyComp;
     public Transform feetTransform;
 
     // SOUND EFFECTS
@@ -27,6 +32,12 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip tetherDisconnect = new SoundClip();
     public SoundClip tetherConnect = new SoundClip();
 
+    // FMOD PARAMS
+    private float playerMoveSpeed
+    {
+        get { return Mathf.Lerp(0, 1, character.currentMoveSpeed / character.sprintMoveSpeed); }
+    }
+
     #endregion
 
     #region METHODS
@@ -34,8 +45,12 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     // Initializes components and sound clips
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        rigidbodyComp = GetComponent<Rigidbody>();
+        if (!character)
+            character = GetComponent<Character>();
+        if (!audioSource)
+            audioSource = GetComponent<AudioSource>();
+        if (!rigidbodyComp)
+            rigidbodyComp = GetComponent<Rigidbody>();
 
         walk.Initialize();
         land.Initialize();
@@ -47,60 +62,60 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         tetherConnect.Initialize();
     }
 
-    public void PlayWalkAudio(float moveSpeed, bool condition = true)
+    public void PlayWalkAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        walk.Play(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, true, moveSpeed, 0);
+        walk.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
     }
 
-    public void PlayLandAudio(float fallSpeed, bool condition = true)
+    public void PlayLandAudio(float downwardVelocity, bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        land.Play(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, true, 0, fallSpeed);
+        land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, 0, downwardVelocity.Normalize(2, 30, 0, 1));
     }
 
     public void PlayJumpAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        jump.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
     public void PlayDashAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        dash.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
     public void PlayStartHeavyAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        startHeavy.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        startHeavy.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
     public void PlayEndHeavyAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        endHeavy.Play(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        endHeavy.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
     public void PlayTetherDisconnectAudio(Transform jointTransform, bool condition = true)
     {
         if (!condition || !enabled || !jointTransform) return;
 
-        tetherDisconnect.Play(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume);
+        tetherDisconnect.PlayDetached(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume, jointTransform);
     }
 
     public void PlayTetherConnectAudio(Transform jointTransform, bool condition = true)
     {
         if (!condition || !enabled || !jointTransform) return;
 
-        tetherConnect.Play(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume);
+        tetherConnect.PlayDetached(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume, jointTransform);
     }
 
     // Dispose FMOD instances
@@ -109,6 +124,11 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         walk.Dispose();
         land.Dispose();
         jump.Dispose();
+        dash.Dispose();
+        startHeavy.Dispose();
+        endHeavy.Dispose();
+        tetherDisconnect.Dispose();
+        tetherConnect.Dispose();
     }
 
     #endregion

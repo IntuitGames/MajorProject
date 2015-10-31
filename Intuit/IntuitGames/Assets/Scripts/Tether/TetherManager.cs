@@ -26,7 +26,7 @@ public class TetherManager : Manager
     public bool showJoints = true;
     public bool showTetherVisual = true;
     public bool showInHierarchy = false;
-    [Popup(new string[] { "Fast CPU | Low GC Alloc", "Very Fast CPU | Very High GC Alloc", "Very Slow CPU | High GC Alloc" })]
+    [Popup(new string[] { "Fast CPU | Low GC Alloc", "Very Fast CPU | Very High GC Alloc", "Very Fast and Slow CPU | High GC Alloc" })]
     public string jointSearchMode = "Fast CPU | Low GC Alloc";
     [Range(0, 100)]
     public float breakForce = 50;
@@ -64,7 +64,7 @@ public class TetherManager : Manager
     private TetherJoint startTempJoint, endTempJoint, tempJoint;
     private List<TetherJoint> tempTetherList;
 
-    void Awake()
+    public override void ManagerAwake()
     {
         if (!Application.isPlaying) return;
 
@@ -222,8 +222,12 @@ public class TetherManager : Manager
             else
             {
                 // (ms: 4.0 - 500.0+ GC: 25kb)
-                startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
-                endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
+                //startTempJoint = joints.LastOrDefault(x => x.isColliding && joints.IndexOf(x) < index);
+                //endTempJoint = joints.FirstOrDefault(x => x.isColliding && joints.IndexOf(x) > index);
+
+                // (ms: 0.4 - 2.8 GC: 17kb)
+                startTempJoint = joints.LastOrDefaultInRange(x => x.isColliding && x != joint, 0, index);
+                endTempJoint = joints.FirstOrDefaultInRange(x => x.isColliding && x != joint, index + 1, jointCount);
             }
 
             if (experimentalNoStick && joint.isColliding)

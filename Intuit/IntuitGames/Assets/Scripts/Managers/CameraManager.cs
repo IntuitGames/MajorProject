@@ -17,7 +17,9 @@ using CustomExtensions;/// <summary>
     [Range(0, 50)]
     public float minCamProximity = 3;
     [Range(0, 50)]
-    public float maxCamProximity = 20;    void Awake()
+    public float maxCamProximity = 20;
+
+    public override void ManagerAwake()
     {
         if (!mainCamera) mainCamera = Camera.main;
         if (!followCamera) followCamera = mainCamera.GetComponent<SmoothCameraFollow>();

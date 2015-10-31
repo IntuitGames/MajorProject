@@ -1,4 +1,5 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
+﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
+using CustomExtensions;/// <summary>
 /// Manages all other managers. Contains static references to other managers. Is singleton.
 /// </summary>public class GameManager : MonoBehaviour{
     // References the instance to the singleton game manager instance
@@ -10,20 +11,55 @@
     public static AudioManager AudioManager;
     public static TetherManager TetherManager;
     public static PlayerManager PlayerManager;
-    public static CameraManager CameraManager;    void Awake()
+    public static CameraManager CameraManager;
+
+    #region MESSAGES
+
+    void Awake()
     {
         // Singleton check
         if (!gameManagerInstance)
+        {
             gameManagerInstance = this;
+        }
         else
+        {
             Destroy(this.gameObject);
+            return;
+        }
 
         // Give this game object persistence across scenes
-        //DontDestroyOnLoad(gameManagerInstance.gameObject);               // TEMPORARILY OFF (NOT SCENE PERSISTANT)
+        DontDestroyOnLoad(gameManagerInstance.gameObject);
 
         // Ensure all manager references are set
         SetManagerReferences();
+
+        // Sub-manager awake calls must be after references are set
+        InvokeManagerAwake();
     }
+
+    // Update all the timers
+    void Update()
+    {
+        TimerPlus.UpdateAll();
+    }
+
+    // Disable timers that should only exist on one level
+    void OnLevelWasLoaded(int level)
+    {
+        TimerPlus.DisposeAllOnLoad();
+
+        InvokeManagerOnLevelLoad();
+    }
+
+    // Disable timers that should only exist on one level
+    void OnDestroy()
+    {
+        if (this == gameManagerInstance)
+            TimerPlus.DisposeAllOnLoad();
+    }
+
+    #endregion
 
     private void SetManagerReferences()
     {
@@ -39,22 +75,9 @@
         // STEP 4/4: Add in Manager base class script
     }    private void SetManager<T>(ref T managerReference) where T: Manager
     {
-        // First check to see if this manager should be overridden by another in the scene
-        if (managerReference && managerReference.sceneOverride)
-        {
-            // Save a reference to the old manager
-            T oldManager = managerReference;
-
-            // Attempt to find a different manager of the same type in the scene
-            managerReference = GameObject.FindObjectsOfType<T>().ToList().FirstOrDefault(x => x != oldManager);
-
-            // If succesful; destroy unneeded manager and return
-            if (managerReference && oldManager)
-            {
-                Destroy(oldManager);
-                return;
-            }
-        }
+        // Check if the manager already exists
+        if (managerReference)
+            return;
 
         // Find on self
         managerReference = GetComponent<T>();
@@ -67,10 +90,20 @@
 
         if (!managerReference)
             Debug.LogWarningFormat("Unable to find or create a {0} manager reference.", typeof(T).Name);
-    }    // Update all the timers    void Update()
+    }    private void InvokeManagerAwake()
     {
-        TimerPlus.UpdateAll();
-    }    // Disable timers that should only exist on one level    void OnLevelWasLoaded(int level)
+        InputManager.ManagerAwake();
+        ModeManager.ManagerAwake();
+        AudioManager.ManagerAwake();
+        TetherManager.ManagerAwake();
+        PlayerManager.ManagerAwake();
+        CameraManager.ManagerAwake();
+    }    private void InvokeManagerOnLevelLoad()
     {
-        TimerPlus.DisposeAllOnLoad();
+        InputManager.ManagerOnLevelLoad();
+        ModeManager.ManagerOnLevelLoad();
+        AudioManager.ManagerOnLevelLoad();
+        TetherManager.ManagerOnLevelLoad();
+        PlayerManager.ManagerOnLevelLoad();
+        CameraManager.ManagerOnLevelLoad();
     }}

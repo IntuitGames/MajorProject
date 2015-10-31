@@ -23787,6 +23787,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: 1
+  character: {fileID: 0}
+  audioSource: {fileID: 0}
+  rigidbodyComp: {fileID: 0}
   feetTransform: {fileID: 428330}
   walk:
     player: 2
@@ -24948,6 +24951,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: 1
+  character: {fileID: 0}
+  audioSource: {fileID: 0}
+  rigidbodyComp: {fileID: 0}
   feetTransform: {fileID: 473234}
   walk:
     player: 2

@@ -140,13 +140,13 @@ using CustomExtensions;[CustomEditor(typeof(Trigger), true)]public class Trig
     }    // Destroying the component immediately causes an error    private void DestroyComponent(Collider colliderToDestroy)
     {
         // Destroy all flagged components
-        foreach (var comp in Target.GetComponents<Collider>().Where(x => x.hideFlags == HideFlags.HideInInspector))
+        foreach (var comp in Target.GetComponents<Collider>().Where(x => (x.hideFlags | HideFlags.HideInInspector) == x.hideFlags))
             DestroyImmediate(comp, true);
 
         // Flag to destroy
         if (colliderToDestroy)
         {
-            colliderToDestroy.hideFlags = HideFlags.HideInInspector;
+            colliderToDestroy.hideFlags = HideFlags.HideInInspector | HideFlags.DontSave;
             colliderToDestroy.enabled = false;
         }
     }

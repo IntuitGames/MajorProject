@@ -5,14 +5,6 @@ using CustomExtensions;/// <summary>
 {
     #region VARIABLES
 
-    public override bool sceneOverride
-    {
-        get
-        {
-            return true;
-        }
-    }
-
     [Header("Characters")]
     public Character character1;
     public Character character2;

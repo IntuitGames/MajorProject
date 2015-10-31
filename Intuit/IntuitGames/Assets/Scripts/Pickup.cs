@@ -16,8 +16,13 @@
     protected override void OnTrigger(GameObject triggerObject)
     {
         GameManager.PlayerManager.AddJelly(jellyValue);
-        soundEffect.Play(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), detach: false);
+        soundEffect.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
         gameObject.SetActive(false);
         Destroy(gameObject, 5);
+    }
+
+    void OnDestroy()
+    {
+        soundEffect.Dispose();
     }
 }

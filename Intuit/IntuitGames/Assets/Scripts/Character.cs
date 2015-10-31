@@ -151,16 +151,6 @@ public class Character : MonoBehaviour, IBounce
     public float minGroundBounceMagnitude = 5;
     public float maxGroundBounceMagnitude = 10;
 
-    // FMOD PARAMS
-    private float FM_playerFallSpeedValue
-    {
-        get { return targetVelocity.y < 0 ? Mathf.Lerp(0, 1, Mathf.Abs(targetVelocity.y) / (maxSpeed * 0.5f)) : 0; }
-    }
-    private float FM_playerMovespeedValue
-    {
-        get { return Mathf.Lerp(0, 1, currentMoveSpeed / sprintMoveSpeed); }
-    }
-
     // PRIVATES
     private float normalDrag;                           // Normal rigidbody drag.
     private Color normalColour;                         // Normal material full colour.
@@ -264,10 +254,14 @@ public class Character : MonoBehaviour, IBounce
         if (!GameManager.PlayerManager.SetCharacter(this)) DestroyImmediate(gameObject);
 
         // Find component references
-        rigidbodyComp = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        animator = GetComponentInChildren<Animator>();
-        audioData = GetComponent<CharacterAudio>();
+        if (!rigidbodyComp)
+            rigidbodyComp = GetComponent<Rigidbody>();
+        if (!capsuleCollider)
+            capsuleCollider = GetComponent<CapsuleCollider>();
+        if (!animator)
+            animator = GetComponentInChildren<Animator>();
+        if (!audioData)
+            audioData = GetComponent<CharacterAudio>();
     }
 
     void Start()
@@ -312,7 +306,7 @@ public class Character : MonoBehaviour, IBounce
 
     void OnCollisionEnter(Collision col)
     {
-        audioData.PlayLandAudio(FM_playerFallSpeedValue, col.relativeVelocity.magnitude > 1);
+        audioData.PlayLandAudio(Mathf.Abs(col.relativeVelocity.y), col.relativeVelocity.magnitude > 2);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
@@ -510,7 +504,7 @@ public class Character : MonoBehaviour, IBounce
     // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        audioData.PlayWalkAudio(FM_playerMovespeedValue, isWalking && isGrounded);
+        audioData.PlayWalkAudio(isWalking && isGrounded);
     }
 
     //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below

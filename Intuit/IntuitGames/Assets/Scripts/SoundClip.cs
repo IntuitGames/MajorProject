@@ -53,15 +53,50 @@ public class SoundClip : IDisposable
         isInitialized = true;
     }
 
-    // Plays the sound clip (Pitch does nothing atm)
-    public void Play(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti = 1, bool detach = true, params float[] parameters)
+    // Plays the sound clip on specified audio source
+    // Returns if it was successful in playing the sound
+    public bool PlayAttached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, params float[] parameters)
     {
+        // Initialization and volume checking
         float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
-        if (finalVolume <= 0 || !isInitialized) return;
+        if (finalVolume <= 0 || !isInitialized) return false;
 
+        // Play Unity Sound
         if (player == AudioManager.Player.Unity && audioSource)
         {
-            audioSource.PlayClipSource(unityClip, detach, finalVolume).pitch = pitch;
+            audioSource.PlayClipAttached(unityClip);
+            audioSource.volume = finalVolume;
+            audioSource.pitch = pitch;
+        }
+        else if (player == AudioManager.Player.FMOD && FMODEvent != null) // Play FMOD Sound
+        {
+            // Set the FMOD parameters
+            for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
+            {
+                FMODParameters[i].setValue(parameters[i]);
+            }
+            FMODEvent.setPitch(pitch);
+            FMODEvent.set3DAttributes(attributes);
+            FMODEvent.setVolume(finalVolume);
+            FMODEvent.start();
+        }
+        return true;
+    }
+
+    // Plays the sound clip on a detached clone audio source
+    // Returns the new audio source if applicable
+    public AudioSource PlayDetached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, Transform target, params float[] parameters)
+    {
+        // Initialization and volume checking
+        float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
+        if (finalVolume <= 0 || !isInitialized) return null;
+
+        if (player == AudioManager.Player.Unity && audioSource) // Play Unity Sound
+        {
+            AudioSource newSource = audioSource.PlayClipDetached(unityClip, target);
+            newSource.volume = finalVolume;
+            newSource.pitch = pitch;
+            return newSource;
         }
         else if (player == AudioManager.Player.FMOD && FMODEvent != null)
         {
@@ -75,21 +110,38 @@ public class SoundClip : IDisposable
             FMODEvent.setVolume(finalVolume);
             FMODEvent.start();
         }
+        return null;
     }
 
-    // Updates the volume value where necessary
-    public void UpdateSettings(AudioSource audioSource)
+    // Applies sound clip values to the audio source if able
+    // Returns if it was successful in updating settings
+    public bool Update(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, params float[] parameters)
     {
-        float finalVolume = GameManager.AudioManager.GetFinalVolume(this);
+        float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
 
-        if (player == AudioManager.Player.Unity && audioSource)
+        if (player == AudioManager.Player.Unity && audioSource && audioSource.isPlaying)
         {
             audioSource.volume = finalVolume;
+            audioSource.pitch = pitch;
+            return true;
         }
         else if (player == AudioManager.Player.FMOD && FMODEvent != null)
         {
+            PLAYBACK_STATE playState;
+            FMODEvent.getPlaybackState(out playState);
+            if (playState == PLAYBACK_STATE.STOPPED) return false;
+
+            for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
+            {
+                FMODParameters[i].setValue(parameters[i]);
+            }
+            FMODEvent.set3DAttributes(attributes);
             FMODEvent.setVolume(finalVolume);
+            FMODEvent.setPitch(pitch);
+            return true;
         }
+
+        return false;
     }
 
     // Dispose FMOD instances

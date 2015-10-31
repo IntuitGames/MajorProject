@@ -6,9 +6,25 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
     /// </summary>    public static partial class General    {        /// <summary>
         /// Determines if target object is null OR empty (as an ICollection)
         /// </summary>
-        public static bool IsNullOrEmpty<T>(this T Source) where T : class
+        public static bool IsNullOrEmpty<T>(this T Source)
         {
-            return Source == null ? true : (Source as ICollection) == null ? false : (Source as ICollection).Count <= 0;
+            if (Source == null)
+                return true;
+            else if (typeof(T).IsValueType)
+                return false;
+            else if ((Source as ICollection) != null)
+                return (Source as ICollection).Count <= 0;
+#pragma warning disable 168
+            else if ((Source as IEnumerable) != null)
+            {
+                int count = 0;
+                foreach (var elem in (Source as IEnumerable))
+                    count++;
+                return count <= 0;
+            }
+#pragma warning restore 168
+            else
+                return false;
         }
 
         /// <summary>
@@ -33,14 +49,19 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
                 List.RemoveRange(NewCapacity, OldCapacity - NewCapacity);
             else
                 List.AddRange(Enumerable.Repeat(NewObjects, NewCapacity - OldCapacity));
-        }        /// <summary>
-        /// If it can it will convert a target list into another type.
-        /// </summary>        public static List<TOutput> ConvertValid<TInput, TOutput>(this List<TInput> Source, Converter<TInput, TOutput> Converter) where TOutput: class where TInput: class        {
-            List<TOutput> New = new List<TOutput>();            foreach(TInput Obj in Source)
-                if(!Converter(Obj).IsNullOrEmpty())
-                    New.Add(Converter(Obj));
+        }
 
-            return New;
+        /// <summary>
+        /// If it can it will convert a target IEnumerable into another type.
+        /// </summary>
+        public static IEnumerable<TOutput> ConvertValid<TInput, TOutput>(this IEnumerable<TInput> Source, Converter<TInput, TOutput> Converter)
+        {
+            foreach (TInput Obj in Source)
+            {
+                TOutput Temp = Converter(Obj);
+                if (!(Temp as object).IsNullOrEmpty())
+                    yield return Temp;
+            }
         }        /// <summary>
         /// Returns a random element of a list. If empty it returns the default value of specified type.
         /// </summary>        public static T Random<T>(this List<T> Source)
@@ -85,20 +106,54 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
                     return true;
 
             return false;
-        }        public static T FirstOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
+        }        /// <summary>
+        /// Similar to FirstOrDefault except this includes a max number of iterations. Returns default if it reaches that point.
+        /// </summary>        public static T FirstOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
         {
             for (int i = 0; i < Source.Count; i++)
             {
-                if (i > Max) return default(T);
+                if (i >= Max) return default(T);
                 if (Predicate(Source[i])) return Source[i];
             }
 
             return default(T);
-        }        public static T LastOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
+        }
+
+        /// <summary>
+        /// Similar to FirstOrDefault except this includes a max number of iterations. Returns the last valid value or default if it reaches that point.
+        /// </summary>        public static T LastOrDefaultWithMax<T>(this List<T> Source, Func<T, bool> Predicate, int Max)
         {
             for (int i = Source.Count - 1; i >= 0; i--)
             {
-                if (i <= Max) return default(T);
+                if (i < Source.Count - Max) return default(T);
+                if (Predicate(Source[i])) return Source[i];
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
+        /// Similar to FirstOrDefault except this only includes values in a range. Returns default if it reaches the end.
+        /// </summary>
+        public static T FirstOrDefaultInRange<T>(this List<T> Source, Func<T, bool> Predicate, int From, int To)
+        {
+            for (int i = Math.Max(0, From - 1); i < Source.Count; i++)
+            {
+                if (i >= To) return default(T);
+                if (Predicate(Source[i])) return Source[i];
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
+        /// Similar to LastOrDefault except this only includes values in a range. Returns default if it reaches the start.
+        /// </summary>
+        public static T LastOrDefaultInRange<T>(this List<T> Source, Func<T, bool> Predicate, int From, int To)
+        {
+            for (int i = To; i >= 0; i--)
+            {
+                if (i < From - 1) return default(T);
                 if (Predicate(Source[i])) return Source[i];
             }
 
@@ -110,7 +165,7 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Returns the interface object if any components in the source game object implement it.
         /// </summary>
-        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false, bool Infallible = false) where T : class
+        public static T GetInterface<T>(this UnityEngine.GameObject Source, bool IncludeParents = false, bool IncludeChildren = false, bool Infallible = false) where T : class, IUnityInterface
         {
             // Null checking
             if (Source.IsNullOrEmpty())
@@ -118,13 +173,6 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
                     return default(T);
                 else
                     throw new ArgumentNullException();
-
-            // T must be an interface
-            if (!typeof(T).IsInterface)
-                if (Infallible)
-                    return default(T);
-                else
-                    throw new ArgumentException("T Must be an interface.");
 
             // List of components on itself, in children and parent (gets monobehaviours instead because this method specializes in finding custom interfaces)
             List<MonoBehaviour> Components = Source.GetComponents<MonoBehaviour>().ToList();
@@ -134,7 +182,7 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             if (IncludeChildren) Components = Components.Concat(Source.GetComponentsInChildren<MonoBehaviour>()).ToList();
 
             // Attempt to return interface
-            T InterfaceObj = Components.FirstOrDefault(x => x is T) as T;
+            T InterfaceObj = Components.FirstOrDefaultWithMax(x => x is T, Components.Count) as T;
             return !InterfaceObj.IsNullOrEmpty() ? InterfaceObj : default(T);
         }
 
@@ -189,88 +237,45 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
-        /// Plays an audio clip and audio source. Handles null-checking. Can also specify if the audio source should be detached.
+        /// Plays an audio clip on the specified audio source. Handles null-checking.
         /// </summary>
         /// <returns>True if the clip was successfully played on the source.</returns>
-        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach, float Volume)
+        public static void PlayClipAttached(this AudioSource Source, AudioClip Clip)
         {
             // Null checking
-            if (Source.IsNullOrEmpty() || Clip.IsNullOrEmpty() || Source == null || Clip == null)
-                return false;
+            if (Source == null || Clip == null) return;
 
-            if (!Detach) // Play the clip on the source normally.
-            {
-                Source.clip = Clip;
-                Source.time = 0;
-                Source.volume = Volume;
-                Source.Play();
-                return true;
-            }
-            else // Create a new game object, copy over the audio source component, play the clip on new audio source, then destroy object.
-            {
-                // Create and name new game object
-                GameObject NewObject = new GameObject();
-                NewObject.hideFlags = HideFlags.HideInHierarchy;
-                NewObject.name = "Sound Object (" + Source.gameObject.name + " - " + Clip.name + ")";
-
-                // Add a new audio source component to the new game object and copy over values from the source audio component.
-                AudioSource NewSource;
-                try { NewSource = NewObject.AddComponent<AudioSource>(Source); }
-                catch { return false; }
-
-                // Destroy the new game object after the clip has finished playing
-                GameObject.Destroy(NewObject, Clip.length + 0.1f);
-
-                // Play the clip on the new audio source
-                return NewSource.PlayClip(Clip, false);
-            }
+            Source.clip = Clip;
+            Source.time = 0;
+            Source.Play();
         }
 
         /// <summary>
-        /// Plays an audio clip and audio source. Handles null-checking. Can also specify if the audio source should be detached.
+        /// Plays an audio clip on a clone of the specified audio source. Handles null-checking.
         /// </summary>
-        /// <returns>True if the clip was successfully played on the source.</returns>
-        public static AudioSource PlayClipSource(this AudioSource Source, AudioClip Clip, bool Detach, float Volume)
+        public static AudioSource PlayClipDetached(this AudioSource Source, AudioClip Clip, Transform Target = null)
         {
             // Null checking
-            if (Source.IsNullOrEmpty() || Clip.IsNullOrEmpty() || Source == null || Clip == null)
-                return null;
+            if (Source == null || Clip == null) return null;
 
-            if (!Detach) // Play the clip on the source normally.
-            {
-                Source.clip = Clip;
-                Source.time = 0;
-                Source.volume = Volume;
-                Source.Play();
-                return Source;
-            }
-            else // Create a new game object, copy over the audio source component, play the clip on new audio source, then destroy object.
-            {
-                // Create and name new game object
-                GameObject NewObject = new GameObject();
-                NewObject.hideFlags = HideFlags.HideInHierarchy;
-                NewObject.name = "Sound Object (" + Source.gameObject.name + " - " + Clip.name + ")";
+            // Create a new game object, copy over the audio source component, play the clip on new audio source, then destroy object.
+            // Create and name new game object
+            GameObject NewObject = new GameObject();
+            NewObject.transform.SetParent(Target);
+            NewObject.hideFlags = HideFlags.HideInHierarchy;
+            NewObject.name = "Sound Object (" + Source.gameObject.name + " - " + Clip.name + ")";
 
-                // Add a new audio source component to the new game object and copy over values from the source audio component.
-                AudioSource NewSource;
-                try { NewSource = NewObject.AddComponent<AudioSource>(Source); }
-                catch { return null; }
+            // Add a new audio source component to the new game object and copy over values from the source audio component.
+            AudioSource NewSource;
+            try { NewSource = NewObject.AddComponent<AudioSource>(Source); }
+            catch { return null; }
 
-                // Destroy the new game object after the clip has finished playing
-                GameObject.Destroy(NewObject, Clip.length + 0.1f);
+            // Destroy the new game object after the clip has finished playing
+            GameObject.Destroy(NewObject, Clip.length + 0.1f);
 
-                // Play the clip on the new audio source
-                NewSource.clip = Clip;
-                NewSource.time = 0;
-                NewSource.volume = Volume;
-                NewSource.Play();
-                return NewSource;
-            }
-        }
-
-        public static bool PlayClip(this AudioSource Source, AudioClip Clip, bool Detach = true)
-        {
-            return Source.PlayClip(Clip, Detach, Source.volume);
+            // Play the clip on the new audio source
+            NewSource.PlayClipAttached(Clip);
+            return NewSource;
         }
 
         /// <summary>

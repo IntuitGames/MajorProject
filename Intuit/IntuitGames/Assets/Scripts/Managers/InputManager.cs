@@ -24,12 +24,40 @@ public class InputManager : Manager
     private const string sprintStr = "Sprint_";
 
     // Input Booleans
-    [System.NonSerialized] public bool p1JumpDown, p2JumpDown, p1JumpHold, p2JumpHold, p1JumpUp, p2JumpUp;
-    [System.NonSerialized] public bool p1DashDown, p2DashDown, p1DashHold, p2DashHold, p1DashUp, p2DashUp;
-    [System.NonSerialized] public bool p1HeavyDown, p2HeavyDown, p1HeavyHold, p2HeavyHold, p1HeavyUp, p2HeavyUp;
-    [System.NonSerialized] public bool p1PauseDown, p2PauseDown, p1PauseHold, p2PauseHold, p1PauseUp, p2PauseUp;
-    [System.NonSerialized] public bool p1UnpauseDown, p2UnpauseDown, p1UnpauseHold, p2UnpauseHold, p1UnpauseUp, p2UnpauseUp;
-    [System.NonSerialized] public bool p1SprintDown, p2SprintDown, p1SprintHold, p2SprintHold, p1SprintUp, p2SprintUp;
+    [System.NonSerialized] public InputData jumpData = new InputData(jumpStr);
+    [System.NonSerialized] public InputData dashData = new InputData(dashStr);
+    [System.NonSerialized] public InputData heavyData = new InputData(heavyStr);
+    [System.NonSerialized] public InputData pauseData = new InputData(pauseStr);
+    [System.NonSerialized] public InputData unpauseData = new InputData(unpauseStr);
+    [System.NonSerialized] public InputData sprintData = new InputData(sprintStr);
+
+    [System.Serializable]
+    public struct InputData
+    {
+        public readonly string actionStr;
+
+        public bool p1Down, p2Down;
+        public bool p1Hold, p2Hold;
+        public bool p1Up, p2Up;
+
+        public InputData(string inputStr)
+        {
+            actionStr = inputStr;
+            p1Down = false; p2Down = false;
+            p1Hold = false; p2Hold = false;
+            p1Up = false; p2Up = false;
+        }
+
+        public void Update()
+        {
+            if (Input.GetButtonDown(actionStr + player1Str)) p1Down = true;
+            if (Input.GetButtonDown(actionStr + player2Str)) p2Down = true;
+            p1Hold = Input.GetButton(actionStr + player1Str);
+            p2Hold = Input.GetButton(actionStr + player2Str);
+            if (Input.GetButtonUp(actionStr + player1Str)) p1Up = true;
+            if (Input.GetButtonUp(actionStr + player2Str)) p2Up = true;
+        }
+    }
 
     // Events
     public event Action<float> PreUpdate = delegate { };
@@ -99,47 +127,12 @@ public class InputManager : Manager
 
     private void CheckForInput()
     {
-        if (Input.GetButtonDown(jumpStr + player1Str)) p1JumpDown = true;
-        if (Input.GetButtonDown(jumpStr + player2Str)) p2JumpDown = true;
-        p1JumpHold = Input.GetButton(jumpStr + player1Str);
-        p2JumpHold = Input.GetButton(jumpStr + player2Str);
-        if (Input.GetButtonUp(jumpStr + player1Str)) p1JumpUp = true;
-        if (Input.GetButtonUp(jumpStr + player2Str)) p2JumpUp = true;
-
-        if (Input.GetButtonDown(dashStr + player1Str)) p1DashDown = true;
-        if (Input.GetButtonDown(dashStr + player2Str)) p2DashDown = true;
-        p1DashHold = Input.GetButton(dashStr + player1Str);
-        p2DashHold = Input.GetButton(dashStr + player2Str);
-        if (Input.GetButtonUp(dashStr + player1Str)) p1DashUp = true;
-        if (Input.GetButtonUp(dashStr + player2Str)) p2DashUp = true;
-
-        if (Input.GetButtonDown(heavyStr + player1Str)) p1HeavyDown = true;
-        if (Input.GetButtonDown(heavyStr + player2Str)) p2HeavyDown = true;
-        p1HeavyHold = Input.GetButton(heavyStr + player1Str);
-        p2HeavyHold = Input.GetButton(heavyStr + player2Str);
-        if (Input.GetButtonUp(heavyStr + player1Str)) p1HeavyUp = true;
-        if (Input.GetButtonUp(heavyStr + player2Str)) p2HeavyUp = true;
-
-        if (Input.GetButtonDown(pauseStr + player1Str)) p1PauseDown = true;
-        if (Input.GetButtonDown(pauseStr + player2Str)) p2PauseDown = true;
-        p1PauseHold = Input.GetButton(pauseStr + player1Str);
-        p2PauseHold = Input.GetButton(pauseStr + player2Str);
-        if (Input.GetButtonUp(pauseStr + player1Str)) p1PauseUp = true;
-        if (Input.GetButtonUp(pauseStr + player2Str)) p2PauseUp = true;
-
-        if (Input.GetButtonDown(unpauseStr + player1Str)) p1UnpauseDown = true;
-        if (Input.GetButtonDown(unpauseStr + player2Str)) p2UnpauseDown = true;
-        p1UnpauseHold = Input.GetButton(unpauseStr + player1Str);
-        p2UnpauseHold = Input.GetButton(unpauseStr + player2Str);
-        if (Input.GetButtonUp(unpauseStr + player1Str)) p1UnpauseUp = true;
-        if (Input.GetButtonUp(unpauseStr + player2Str)) p2UnpauseUp = true;
-
-        if (Input.GetButtonDown(sprintStr + player1Str)) p1SprintDown = true;
-        if (Input.GetButtonDown(sprintStr + player2Str)) p2SprintDown = true;
-        p1SprintHold = Input.GetButton(sprintStr + player1Str);
-        p2SprintHold = Input.GetButton(sprintStr + player2Str);
-        if (Input.GetButtonUp(sprintStr + player1Str)) p1SprintUp = true;
-        if (Input.GetButtonUp(sprintStr + player2Str)) p2SprintUp = true;
+        jumpData.Update();
+        dashData.Update();
+        heavyData.Update();
+        pauseData.Update();
+        unpauseData.Update();
+        sprintData.Update();
     }
 
     private void HandleInput(UpdateTypes type, float delta)
@@ -190,132 +183,132 @@ public class InputManager : Manager
 
     private void HandleJumpEvents()
     {
-        if (p1JumpDown)
+        if (jumpData.p1Down)
         {
             JumpToggleP1(true);
-            p1JumpDown = false;
+            jumpData.p1Down = false;
         }
-        if (p2JumpDown)
+        if (jumpData.p2Down)
         {
             JumpToggleP2(true);
-            p2JumpDown = false;
+            jumpData.p2Down = false;
         }
 
-        JumpP1(p1JumpHold);
-        JumpP2(p2JumpHold);
+        JumpP1(jumpData.p1Hold);
+        JumpP2(jumpData.p2Hold);
 
-        if (p1JumpUp)
+        if (jumpData.p1Up)
         {
             JumpToggleP1(false);
-            p1JumpUp = false;
+            jumpData.p1Up = false;
         }
-        if (p2JumpUp)
+        if (jumpData.p2Up)
         {
             JumpToggleP2(false);
-            p2JumpUp = false;
+            jumpData.p2Up = false;
         }
     }
 
     private void HandleDashEvents()
     {
-        if (p1DashDown)
+        if (dashData.p1Down)
         {
             DashToggleP1(true);
-            p1DashDown = false;
+            dashData.p1Down = false;
         }
-        if (p2DashDown)
+        if (dashData.p2Down)
         {
             DashToggleP2(true);
-            p2DashDown = false;
+            dashData.p2Down = false;
         }
 
-        DashP1(p1DashHold);
-        DashP2(p2DashHold);
+        DashP1(dashData.p1Hold);
+        DashP2(dashData.p2Hold);
 
-        if (p1DashUp)
+        if (dashData.p1Up)
         {
             DashToggleP1(false);
-            p1DashUp = false;
+            dashData.p1Up = false;
         }
-        if (p2DashUp)
+        if (dashData.p2Up)
         {
             DashToggleP2(false);
-            p2DashUp = false;
+            dashData.p2Up = false;
         }
     }
 
     private void HandleHeavyEvents()
     {
-        if (p1HeavyDown)
+        if (heavyData.p1Down)
         {
             HeavyToggleP1(true);
-            p1HeavyDown = false;
+            heavyData.p1Down = false;
         }
-        if (p2HeavyDown)
+        if (heavyData.p2Down)
         {
             HeavyToggleP2(true);
-            p2HeavyDown = false;
+            heavyData.p2Down = false;
         }
 
-        HeavyP1(p1HeavyHold);
-        HeavyP2(p2HeavyHold);
+        HeavyP1(heavyData.p1Hold);
+        HeavyP2(heavyData.p2Hold);
 
-        if (p1HeavyUp)
+        if (heavyData.p1Up)
         {
             HeavyToggleP1(false);
-            p1HeavyUp = false;
+            heavyData.p1Up = false;
         }
-        if (p2HeavyUp)
+        if (heavyData.p2Up)
         {
             HeavyToggleP2(false);
-            p2HeavyUp = false;
+            heavyData.p2Up = false;
         }
     }
 
     private void HandlePauseEvents()
     {
-        if (p1PauseDown || p2PauseDown)
+        if (pauseData.p1Down || pauseData.p2Down)
         {
             PauseToggle(true);
-            p1PauseDown = false;
-            p2PauseDown = false;
+            pauseData.p1Down = false;
+            pauseData.p2Down = false;
         }
 
-        Pause(p1PauseHold || p2PauseHold);
+        Pause(pauseData.p1Hold || pauseData.p2Hold);
 
-        if(p1PauseUp || p2PauseUp)
+        if (pauseData.p1Up || pauseData.p2Up)
         {
             PauseToggle(false);
-            p1PauseUp = false;
-            p2PauseUp = false;
+            pauseData.p1Up = false;
+            pauseData.p2Up = false;
         }
     }
 
     private void HandleSprintEvents()
     {
-        if (p1SprintDown)
+        if (sprintData.p1Down)
         {
             SprintToggleP1(true);
-            p1SprintDown = false;
+            sprintData.p1Down = false;
         }
-        if (p2SprintDown)
+        if (sprintData.p2Down)
         {
             SprintToggleP2(true);
-            p2SprintDown = false;
+            sprintData.p2Down = false;
         }
 
-        SprintP1(p1SprintHold);
-        SprintP2(p2SprintHold);
+        SprintP1(sprintData.p1Hold);
+        SprintP2(sprintData.p2Hold);
 
-        if (p1SprintUp)
+        if (sprintData.p1Up)
         {
             SprintToggleP1(false);
-            p1SprintUp = false;
+            sprintData.p1Up = false;
         }
-        if (p2SprintUp)
+        if (sprintData.p2Up)
         {
             SprintToggleP2(false);
-            p2SprintUp = false;
+            sprintData.p2Up = false;
         }
     }
 
@@ -326,20 +319,20 @@ public class InputManager : Manager
     // Is called every frame if the game is in a paused state
     private void HandlePauseMenuEvents()
     {
-        if (p1UnpauseDown || p2UnpauseDown)
+        if (unpauseData.p1Down || unpauseData.p2Down)
         {
             UnpauseToggle(true);
-            p1UnpauseDown = false;
-            p2UnpauseDown = false;
+            unpauseData.p1Down = false;
+            unpauseData.p2Down = false;
         }
 
-        Unpause(p1UnpauseHold || p2UnpauseHold);
+        Unpause(unpauseData.p1Hold || unpauseData.p2Hold);
 
-        if (p1UnpauseUp || p2UnpauseUp)
+        if (unpauseData.p1Up || unpauseData.p2Up)
         {
             UnpauseToggle(false);
-            p1UnpauseUp = false;
-            p2UnpauseUp = false;
+            unpauseData.p1Up = false;
+            unpauseData.p2Up = false;
         }
     }
 
@@ -387,9 +380,9 @@ public class InputManager : Manager
     public bool IsRequestingJump(bool player1)
     {
         if (player1)
-            return p1JumpHold;
+            return jumpData.p1Hold;
         else
-            return p2JumpHold;
+            return jumpData.p2Hold;
     }
 
     #endregion
