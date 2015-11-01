@@ -6,8 +6,31 @@ using CustomExtensions;/// <summary>
     #region VARIABLES
 
     [Header("Characters")]
-    public Character character1;
-    public Character character2;
+    [SerializeField, HideInInspector]
+    private Character _character1;
+    [SerializeField, HideInInspector]
+    private Character _character2;
+
+    public Character character1
+    {
+        get
+        {
+            if (_character1)
+                return _character1;
+            _character1 = GameObject.FindObjectsOfType<Character>().FirstOrDefault(x => x.isPlayerOne);
+            return _character1;
+        }
+    }
+    public Character character2
+    {
+        get
+        {
+            if (_character2)
+                return _character2;
+            _character2 = GameObject.FindObjectsOfType<Character>().FirstOrDefault(x => !x.isPlayerOne);
+            return _character2;
+        }
+    }
 
     // WEAKENED
     [Header("Weakened State"), ReadOnly]
@@ -16,7 +39,8 @@ using CustomExtensions;/// <summary>
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
     public bool reconnectOnTouch = true;
-    public bool canDie = false;
+    [Popup(new string[] { "Nothing", "Reload Level", "Exit Game" })]
+    public string actionOnDeath = "Reload Level";
     public float maxJelly = 10;
     public bool autoRecover = false;
     [Range(0, 1)]
@@ -53,23 +77,11 @@ using CustomExtensions;/// <summary>
         else if (autoRecover)
             AddJelly(Time.deltaTime * recoveryRate);
 
-        if (currentJelly <= 0 && canDie)
-            Death();
+        if (currentJelly <= 0)
+            DeathAction();
     }
 
     #endregion
-
-    public bool SetCharacter(Character character)
-    {
-        if (!character) return false;
-
-        if (character.isPlayerOne)
-            character1 = character;
-        else
-            character2 = character;
-
-        return true;
-    }
 
     public void Weaken(TetherJoint brokenJoint)
     {
@@ -91,13 +103,14 @@ using CustomExtensions;/// <summary>
         character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
     }
 
-    public void Death()
+    public void DeathAction()
     {
-#if !UNITY_EDITOR
-        Application.Quit();
-#else
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
+        if (actionOnDeath == "Nothing")
+            return;
+        else if (actionOnDeath == "Reload Level")
+            GameManager.ReloadLevel();
+        else if (actionOnDeath == "Exit Game")
+            GameManager.ExitGame();
     }
 
     public void AddJelly(float value)

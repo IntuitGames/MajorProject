@@ -277,6 +277,7 @@ public class TimerPlus: IDisposable
     public static void UpdateAll()
     {
         AllTimers.ForEach(x => { if (x.TimeScaled) x.Update(Time.deltaTime); else x.Update(Time.unscaledDeltaTime); });
+        AllTimers.RemoveAll(x => x.IsDisposed);
     }
 
     /// <summary>
@@ -454,7 +455,7 @@ public class TimerPlus: IDisposable
 
     #region Disposal
 
-    private bool IsDisposed = false;
+    public bool IsDisposed { get; private set; }
     private SafeHandle Handle = new SafeFileHandle(IntPtr.Zero, true);
 
     /// <summary>
@@ -647,7 +648,7 @@ public class TimerPlus<T> : TimerPlus
 
     #region Disposal
 
-    private bool IsDisposed = false;
+    new public bool IsDisposed { get; private set;}
     private SafeHandle Handle = new SafeFileHandle(IntPtr.Zero, true);
 
     protected override void Dispose(bool Disposing)

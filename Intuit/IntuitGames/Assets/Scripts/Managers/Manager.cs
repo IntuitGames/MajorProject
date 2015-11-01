@@ -9,7 +9,7 @@ using CustomExtensions;/// <summary>
     public static PlayerManager PlayerManager { get { return GameManager.PlayerManager; } }
     public static CameraManager CameraManager { get { return GameManager.CameraManager; } }    protected void Awake()
     {
-        if (!this.EqualToAny(InputManager, ModeManager, AudioManager, TetherManager, PlayerManager, CameraManager))
+        if (Application.isPlaying && !this.EqualToAny(InputManager, ModeManager, AudioManager, TetherManager, PlayerManager, CameraManager))
             Destroy(this);
     }
 

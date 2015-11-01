@@ -32,6 +32,7 @@ public class TetherManager : Manager
     public float breakForce = 50;
     public KeyCode disconnectInput = KeyCode.B;
     public KeyCode reconnectInput = KeyCode.N;
+    public bool instantReconnection = true;
 
     [Header("Experimental")]
     public bool experimentalNoStick = false;
@@ -74,6 +75,14 @@ public class TetherManager : Manager
             joints.GetRange(0, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(startPoint.gameObject));
             joints.GetRange(joints.Count - collisionBuffer, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(endPoint.gameObject));
         }
+    }
+
+    public override void ManagerOnLevelLoad()
+    {
+        startPoint = GameManager.PlayerManager.character1.transform;
+        endPoint = GameManager.PlayerManager.character2.transform;
+        tetherVisuals.SafeGet(0).objectA = startPoint;
+        tetherVisuals.SafeGet(jointCount).objectB = endPoint;
     }
 
     void Update()
@@ -295,7 +304,6 @@ public class TetherManager : Manager
         }
     }
 
-    [System.Obsolete("Use the one that takes a joint instead.")]
     public void Disconnect(int breakJoint)
     {
         Disconnect(joints[Mathf.Clamp(breakJoint, 0, jointCount - 1)]);
@@ -392,6 +400,9 @@ public class TetherManager : Manager
             if (!reconnectJoint && joints[i].disconnectedEnd)
                 reconnectJoint = joints[i];
             joints[i].disconnectedEnd = false;
+
+            if (instantReconnection)
+                joints[i].transform.position = GetMovePosition(joints[i], i, true);
         }
 
         // Set the missing tether visual

@@ -99,8 +99,11 @@
 
         isColliding = value;
 
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer) renderer.material.color = value ? debugColour : normalColour;
+        if (showDebugColour)
+        {
+            Renderer renderer = GetComponent<Renderer>();
+            if (renderer) renderer.material.color = value ? debugColour : normalColour;
+        }
 
         if (isColliding)
             GameManager.TetherManager.collidingJointCount++;

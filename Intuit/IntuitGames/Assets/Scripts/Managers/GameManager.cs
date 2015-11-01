@@ -28,9 +28,6 @@ using CustomExtensions;/// <summary>
             return;
         }
 
-        // Give this game object persistence across scenes
-        DontDestroyOnLoad(gameManagerInstance.gameObject);
-
         // Ensure all manager references are set
         SetManagerReferences();
 
@@ -61,6 +58,8 @@ using CustomExtensions;/// <summary>
 
     #endregion
 
+    #region MANAGER MANAGEMENT
+
     private void SetManagerReferences()
     {
         // Find manager references                          ---(STEP 2/4: ADD NEW MANAGERS HERE)---
@@ -90,7 +89,7 @@ using CustomExtensions;/// <summary>
 
         if (!managerReference)
             Debug.LogWarningFormat("Unable to find or create a {0} manager reference.", typeof(T).Name);
-    }    private void InvokeManagerAwake()
+    }    // Calls manager awake methods    private void InvokeManagerAwake()
     {
         InputManager.ManagerAwake();
         ModeManager.ManagerAwake();
@@ -98,7 +97,7 @@ using CustomExtensions;/// <summary>
         TetherManager.ManagerAwake();
         PlayerManager.ManagerAwake();
         CameraManager.ManagerAwake();
-    }    private void InvokeManagerOnLevelLoad()
+    }    // Calls manager on level load methods    private void InvokeManagerOnLevelLoad()
     {
         InputManager.ManagerOnLevelLoad();
         ModeManager.ManagerOnLevelLoad();
@@ -106,4 +105,25 @@ using CustomExtensions;/// <summary>
         TetherManager.ManagerOnLevelLoad();
         PlayerManager.ManagerOnLevelLoad();
         CameraManager.ManagerOnLevelLoad();
-    }}
+    }
+
+    #endregion
+
+    #region PUBLIC STATICS
+
+    public static void ExitGame()
+    {
+#if !UNITY_EDITOR
+        Application.Quit();
+#else
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+    public static void ReloadLevel()
+    {
+        Application.LoadLevel(Application.loadedLevel);
+    }
+
+    #endregion
+}

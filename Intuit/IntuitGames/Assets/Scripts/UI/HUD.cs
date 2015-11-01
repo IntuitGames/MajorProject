@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;public class HUD : MonoBehaviour{
     public Slider weakenedSlider;
-    public Text weakenedTextValue;
-    public bool doWeakenedSliderFade = true;
-    public float weakenedSliderFadeRate = 1;    void Update()
+    public Text weakenedTextValue;    void Update()
     {
         weakenedSlider.value = GameManager.PlayerManager.jellyPercentage;
 

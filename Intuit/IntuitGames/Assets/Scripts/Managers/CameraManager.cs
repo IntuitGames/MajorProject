@@ -21,6 +21,14 @@ using CustomExtensions;/// <summary>
 
     public override void ManagerAwake()
     {
+        FindComponentReferences();
+    }
+
+    public override void ManagerOnLevelLoad()
+    {
+        FindComponentReferences();
+    }    private void FindComponentReferences()
+    {
         if (!mainCamera) mainCamera = Camera.main;
         if (!followCamera) followCamera = mainCamera.GetComponent<SmoothCameraFollow>();
         if (!backgroundMusic) backgroundMusic = mainCamera.GetComponent<BackgroundMusic>();

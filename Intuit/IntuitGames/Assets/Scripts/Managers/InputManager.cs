@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Handles all input related elements.
@@ -10,6 +11,9 @@ using System;
 public class InputManager : Manager
 {
     #region VARIABLES
+
+    // References
+    public EventSystem eventSystem;
 
     // Input Axes Strings
     private const string player1Str = "P1";
@@ -19,8 +23,8 @@ public class InputManager : Manager
     private const string jumpStr = "Jump_";
     private const string dashStr = "Dash_";
     private const string heavyStr = "Heavy_";
-    private const string pauseStr = "Submit_";
-    private const string unpauseStr = "Submit_";
+    private const string pauseStr = "Cancel_";
+    private const string unpauseStr = "Cancel_";
     private const string sprintStr = "Sprint_";
 
     // Input Booleans
@@ -106,6 +110,14 @@ public class InputManager : Manager
 
     #region MESSAGES
 
+    public override void ManagerAwake()
+    {
+        if (!eventSystem)
+            eventSystem = GameObject.FindObjectOfType<EventSystem>();
+
+        eventSystem.enabled = true;
+    }
+
     void Update()
     {
         CheckForInput();
@@ -142,12 +154,12 @@ public class InputManager : Manager
         // Only check inputs for certain game modes
         switch (ModeManager.currentGameMode)
         {
-            case ModeManager.GameMode.InGame:
-                HandleInGameEvents(type);
-                break;
-
             case ModeManager.GameMode.PauseMenu:
                 if (type == pauseUpdates) HandlePauseMenuEvents();
+                break;
+
+            case ModeManager.GameMode.InGame:
+                HandleInGameEvents(type);
                 break;
 
             default:
@@ -341,13 +353,13 @@ public class InputManager : Manager
     #region HELPERS
 
     // Subscribes to all character specific events
-    public void SetupCharacterInput(Character characterObj)
+    public void SubscribeCharacterEvents(Character characterObj)
     {
-        // Ensure these methods are only subscribed to once
+        // General events
         PreUpdate += characterObj.PreInputUpdate;
         PostUpdate += characterObj.PostInputUpdate;
         PauseToggle += characterObj.Pause;
-        UnpauseToggle += characterObj.Pause;
+        UnpauseToggle += characterObj.Unpause;
 
         if (characterObj.isPlayerOne)
         {
@@ -368,6 +380,37 @@ public class InputManager : Manager
             DashToggleP2 += characterObj.Dash;
             HeavyP2 += characterObj.Heavy;
             SprintP2 += characterObj.Sprint;
+        }
+    }
+
+    // Should be called when characters get destroyed
+    public void UnsubscribeCharacterEvents(Character characterObj)
+    {
+        // General events
+        PreUpdate -= characterObj.PreInputUpdate;
+        PostUpdate -= characterObj.PostInputUpdate;
+        PauseToggle -= characterObj.Pause;
+        UnpauseToggle -= characterObj.Unpause;
+
+        if (characterObj.isPlayerOne)
+        {
+            // Subscribe to player 1 events
+            MovementP1 -= characterObj.Movement;
+            JumpP1 -= characterObj.Jump;
+            JumpToggleP1 -= characterObj.JumpToggle;
+            DashToggleP1 -= characterObj.Dash;
+            HeavyP1 -= characterObj.Heavy;
+            SprintP1 -= characterObj.Sprint;
+        }
+        else
+        {
+            // Subscribe to player 2 events
+            MovementP2 -= characterObj.Movement;
+            JumpP2 -= characterObj.Jump;
+            JumpToggleP2 -= characterObj.JumpToggle;
+            DashToggleP2 -= characterObj.Dash;
+            HeavyP2 -= characterObj.Heavy;
+            SprintP2 -= characterObj.Sprint;
         }
     }
 

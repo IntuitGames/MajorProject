@@ -30,15 +30,21 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// If a particular element in the source IEnumerable meets the specified condition then perform a specified action(s).
         /// </summary>
-        public static void ConditionalAction<T>(this IEnumerable<T> Source, Predicate<T> Condition, params Action<T>[] Actions)
+        public static void ConditionalAction<T>(this IEnumerable<T> Source, Predicate<T> Condition, Action<T> Action)
         {
             if (Source.IsNullOrEmpty())
                 throw new ArgumentNullException();
 
             foreach (T Item in Source)
                 if (Condition(Item))
-                    foreach (Action<T> Action in Actions)
-                        Action(Item);
+                    Action(Item);
+        }        /// <summary>
+        /// Retrives an element safely from a list. Checks for null and appropriate index.
+        /// </summary>        public static T SafeGet<T>(this IList<T> Source, int Index) where T: class
+        {
+            if (Source.IsNullOrEmpty()) return null;
+            if (Index < 0 || Index >= Source.Count) return null;
+            return Source[Index];
         }        /// <summary>
         /// Resizes a target list.
         /// </summary>        public static void Resize<T>(this List<T> List, int NewCapacity, T NewObjects = default(T))
@@ -378,5 +384,10 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             }
             Timer.Stop();
             return Timer.ElapsedMilliseconds;
+        }
+
+        public static Color SetAlpha(this Color Source, float Alpha)
+        {
+            return new Color(Source.r, Source.g, Source.b, Alpha);
         }
     }}

@@ -15,11 +15,11 @@ using System;/// <summary>
     public float unityVolume = 1;
     [Range(0, 1)]
     public float FMODVolume = 1;
-    [Range(0, 1)]
+    [Header("Types"), Range(0, 1)]
     public float soundEffectVolume = 1;
     [Range(0, 1)]
     public float backgroundMusicVolume = 1;
-    [Range(0, 1)]
+    [Header("Groups"), Range(0, 1)]
     public float gameGroupVolume = 1;
     [Range(0, 1)]
     public float UIGroupVolume = 1;
@@ -27,6 +27,12 @@ using System;/// <summary>
     public float playerGroupVolume = 1;
     [Range(0, 1)]
     public float enemyGroupVolume = 1;
+    [Header("Modes"), Range(0, 1)]
+    public float inGameModeVolume = 1;
+    [Range(0, 1)]
+    public float pauseModeVolume = 0.5f;
+    [Range(0, 1)]
+    public float mainMenuModeVolume = 1;
 
     void Start() { } // To show the enabled toggle box on inspector    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
     {
@@ -56,6 +62,13 @@ using System;/// <summary>
             value *= playerGroupVolume;
         else if (soundClip.group == Group.Enemy)
             value *= enemyGroupVolume;
+
+        if (GameManager.ModeManager.currentGameMode == global::ModeManager.GameMode.InGame)
+            value *= inGameModeVolume;
+        else if (GameManager.ModeManager.currentGameMode == global::ModeManager.GameMode.PauseMenu)
+            value *= pauseModeVolume;
+        else if (GameManager.ModeManager.currentGameMode == global::ModeManager.GameMode.MainMenu)
+            value *= mainMenuModeVolume;
 
         return value;
     }

@@ -250,8 +250,8 @@ public class Character : MonoBehaviour, IBounce
 
     void Awake()
     {
-        // Set self in static
-        if (!GameManager.PlayerManager.SetCharacter(this)) DestroyImmediate(gameObject);
+        // There can only be 2 characters
+        if (isPlayerOne && this != GameManager.PlayerManager.character1 || !isPlayerOne && this != GameManager.PlayerManager.character2) DestroyImmediate(gameObject);
 
         // Find component references
         if (!rigidbodyComp)
@@ -267,7 +267,7 @@ public class Character : MonoBehaviour, IBounce
     void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
-        GameManager.InputManager.SetupCharacterInput(this);
+        GameManager.InputManager.SubscribeCharacterEvents(this);
 
         // Setup dash timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard, () => GetPartner().FlipYankFlag(true));
@@ -302,6 +302,9 @@ public class Character : MonoBehaviour, IBounce
     {
         // Dispose of FMOD instances
         audioData.Dispose();
+
+        // Unsubscribe this character from events
+        GameManager.InputManager.UnsubscribeCharacterEvents(this);
     }
 
     void OnCollisionEnter(Collision col)
@@ -473,15 +476,19 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void Pause(bool isPressed)
-    {
-        // Reloads the level for now
-        if(isPlayerOne && isPressed) TimerPlus.Create(0.25f, () => Application.LoadLevel(Application.loadedLevel));
-    }
-
     public void Sprint(bool isPressed)
     {
         isSprinting = isPressed;
+    }
+
+    public void Pause(bool isPressed)
+    {
+        if (isPressed) GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.PauseMenu, false, 0.1f);
+    }
+
+    public void Unpause(bool isPressed)
+    {
+        if (isPressed) GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.InGame, false, 0.1f);
     }
 
     #endregion
