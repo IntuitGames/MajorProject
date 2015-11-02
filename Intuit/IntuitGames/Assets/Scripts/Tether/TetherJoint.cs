@@ -1,18 +1,24 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
 /// Custom joint accompanied with the TetherManager script.
-/// </summary>[RequireComponent(typeof(Rigidbody))]public class TetherJoint : MonoBehaviour{
-    [ReadOnly]
-    public bool isColliding;
-    public List<Collider> collisionList = new List<Collider>();
+/// </summary>[RequireComponent(typeof(Rigidbody), typeof(CollisionMonitor))]public class TetherJoint : MonoBehaviour{
+    [HideInInspector]
     public Collider colliderComp;
+    [HideInInspector]
     public Rigidbody rigidbodyComp;
+    [HideInInspector]
+    public CollisionMonitor collisionMonitorComp;
+    [HideInInspector]
+    public Renderer rendererComp;
 
     public bool showDebugColour = true;
     public Color debugColour = Color.red;
     private Color normalColour;
+    private bool wasColliding;
     [ReadOnly]	public bool passingThroughWeakSpot = false;
     [ReadOnly]
-    public bool disconnectedEnd;
+    public bool disconnectedEnd;
+    [ReadOnly]
+    public float angle;
     public int index
     {
         get
@@ -66,38 +72,38 @@
     private TetherJoint prevJointCache;
     private TetherJoint nextJointCache;
 
+    public bool isColliding { get { return collisionMonitorComp.isColliding; } }
+
+    // Find component references
+    void Awake()
+    {
+        if (!colliderComp)
+            colliderComp = GetComponent<Collider>();
+        if (!rigidbodyComp)
+            rigidbodyComp = GetComponent<Rigidbody>();
+        if (!collisionMonitorComp)
+            collisionMonitorComp = GetComponent<CollisionMonitor>();
+        if (!rendererComp)
+            rendererComp = GetComponent<Renderer>();
+    }
+
     void Start()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer) normalColour = renderer.material.color;
+        collisionMonitorComp.OnCollisionCountChange += UpdateCollisionInfo;
+
+        if (rendererComp) normalColour = rendererComp.material.color;
     }
 
-    void OnCollisionEnter(Collision col)
+    private void UpdateCollisionInfo(int newCount)
     {
-        if(!collisionList.Any(x => x.gameObject == col.gameObject))
-        {
-            if (collisionList.Count <= 0)
-                SetIsColliding(true);
-
-            collisionList.Add(col.collider);
-        }
-    }
-
-    void OnCollisionExit(Collision col)
-    {
-        collisionList.Remove(col.collider);
-
-        if (collisionList.Count <= 0)
-            SetIsColliding(false);
+        SetIsColliding(newCount > 0);
     }    private void SetIsColliding(bool value)
     {
-        if (GameManager.TetherManager.experimentalWrapping && isColliding && !value)
+        if (GameManager.TetherManager.experimentalWrapping && wasColliding && !value)
         {
             rigidbodyComp.velocity = Vector3.zero;
             rigidbodyComp.angularVelocity = Vector3.zero;
         }
-
-        isColliding = value;
 
         if (showDebugColour)
         {
@@ -105,8 +111,11 @@
             if (renderer) renderer.material.color = value ? debugColour : normalColour;
         }
 
-        if (isColliding)
-            GameManager.TetherManager.collidingJointCount++;
-        else
+        if (wasColliding && !value)
             GameManager.TetherManager.collidingJointCount--;
-    }	public void DisconnectAtThisJoint()		{				if (GameManager.TetherManager.disconnected) return;						int thisIndex = GameManager.TetherManager.joints.IndexOf(this);				if(thisIndex > 0) GameManager.TetherManager.Disconnect(this);		}	public bool IsSevered()		{				if(GameManager.TetherManager.disconnected) return true; else return false;		}}
+        else if (!wasColliding && value)
+            GameManager.TetherManager.collidingJointCount++;
+
+        wasColliding = value;
+    }	public void DisconnectAtThisJoint()		{					        GameManager.TetherManager.Disconnect(this);		}	public bool IsSevered()		{
+        return GameManager.TetherManager.disconnected;		}}

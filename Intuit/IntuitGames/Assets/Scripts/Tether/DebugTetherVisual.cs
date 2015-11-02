@@ -26,13 +26,15 @@ public class DebugTetherVisual : MonoBehaviour
     [ReadOnly]
     public float distanceBetweenObjects;
 
-    private Renderer rendererComp;
+    [HideInInspector]
+    public Renderer rendererComp;
     private Vector3 lastA;
     private Vector3 lastB;
 
     void Start()
     {
-        rendererComp = GetComponent<Renderer>();
+        if (!rendererComp)
+            rendererComp = GetComponent<Renderer>();
     }
 
     void Update()

@@ -43,7 +43,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     #region METHODS
 
     // Initializes components and sound clips
-    void Start()
+    void Awake()
     {
         if (!character)
             character = GetComponent<Character>();

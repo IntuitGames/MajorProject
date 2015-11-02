@@ -13,6 +13,7 @@ GameObject:
   - 23: {fileID: 2365404}
   - 54: {fileID: 5413088}
   - 114: {fileID: 11415784}
+  - 114: {fileID: 11478308}
   m_Layer: 10
   m_Name: Tether Joint
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 132532}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 123.489685, y: 4.44999981, z: -4.77359009}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,14 +90,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cd7546bc2092034987253de597930c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isColliding: 0
-  collisionList: []
   colliderComp: {fileID: 13537208}
   rigidbodyComp: {fileID: 5413088}
+  collisionMonitorComp: {fileID: 0}
+  rendererComp: {fileID: 0}
   showDebugColour: 0
   debugColour: {r: 1, g: 0, b: 0, a: .156862751}
   passingThroughWeakSpot: 0
   disconnectedEnd: 0
+  angle: 0
+--- !u!114 &11478308
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 132532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ae01a77a974c74084897b0d43a4e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isColliding: 0
+  _collisionCount: 0
+  collisionObjects: []
 --- !u!135 &13537208
 SphereCollider:
   m_ObjectHideFlags: 1

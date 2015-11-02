@@ -161,6 +161,7 @@ public class Character : MonoBehaviour, IBounce
     private float jumpTime;                             // How long the jump button has been held in for.
     private bool jumpFlag;                              // Is the character ready to jump again?
     public bool yankFlag = true;                        // Is the character able to be yanked
+    private float lastRecoredY;                         // The last recorded position Y Value.
 
     // PROPERTIES
     public bool isPlayerOne
@@ -214,7 +215,7 @@ public class Character : MonoBehaviour, IBounce
     {
         get
         {
-            return !isGrounded && targetVelocity.y < 0;
+            return !isGrounded && transform.position.y < lastRecoredY;
         }
     }
     public bool isWeakened
@@ -370,6 +371,9 @@ public class Character : MonoBehaviour, IBounce
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
         animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
+
+        // Updates last recorded Y value
+        lastRecoredY = transform.position.y;
     }
 
     public void Movement(float forward, float right)
@@ -388,8 +392,10 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void Jump(bool isPressed)
+    public void Jump(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
         if (!canJump) return;
 
         jumpTime += GameManager.InputManager.jumpDelta;
@@ -411,8 +417,10 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void JumpToggle(bool isPressed)
+    public void JumpToggle(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
         if (isPressed && isGrounded)
         {
             jumpFlag = true;
@@ -434,8 +442,10 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void Dash(bool isPressed)
+    public void Dash(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
         if (isPressed && canDash)
         {
             isDashing = true;
@@ -446,8 +456,10 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void Heavy(bool isPressed)
+    public void Heavy(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
         if (isPressed == isHeavy) return;
 
         if (isPressed && canHeavy)
@@ -476,18 +488,26 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
-    public void Sprint(bool isPressed)
+    public void Sprint(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
         isSprinting = isPressed;
     }
 
-    public void Pause(bool isPressed)
+    public void Pause(bool p1, bool isPressed)
     {
+        if (p1 != isPlayerOne) return;
+
+        // Request Pause mode
         if (isPressed) GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.PauseMenu, false, 0.1f);
     }
 
-    public void Unpause(bool isPressed)
+    public void Unpause(bool player1, bool isPressed)
     {
+        if (player1 != isPlayerOne) return;
+
+        // Request In-Game mode
         if (isPressed) GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.InGame, false, 0.1f);
     }
 
@@ -555,7 +575,7 @@ public class Character : MonoBehaviour, IBounce
         else if (isDashing && length >= freeMovementLength)
         {
             if (!GetPartner().isHeavy || length > maxDistanceLength)
-                rigidbodyComp.MovePosition(transform.position + movement);
+                    rigidbodyComp.MovePosition(transform.position + movement);
             else
                 isDashing = false;
 

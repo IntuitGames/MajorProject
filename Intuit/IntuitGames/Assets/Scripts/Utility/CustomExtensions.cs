@@ -386,8 +386,27 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             return Timer.ElapsedMilliseconds;
         }
 
+        /// <summary>
+        /// Easily allows for the modification of a color's alpha value.
+        /// </summary>
         public static Color SetAlpha(this Color Source, float Alpha)
         {
             return new Color(Source.r, Source.g, Source.b, Alpha);
+        }
+
+        /// <summary>
+        /// Determines the angle between 2 Vector3s
+        /// </summary>
+        public static float AngleBetweenTwoPoints(this Vector3 VecA, Vector3 VecB)
+        {
+            return Mathf.Acos(Vector3.Dot(VecA, VecB) / (VecA.magnitude * VecB.magnitude));
+        }
+
+        /// <summary>
+        /// Determines the angle between 3 Vector3s
+        /// </summary>
+        public static float AngleBetweenThreePoints(this Vector3 VecA, Vector3 VecB, Vector3 VecC)
+        {
+            return AngleBetweenTwoPoints(VecA - VecC, VecB - VecC);
         }
     }}

@@ -39,5 +39,17 @@ using System.Reflection;[CustomEditor(typeof(TetherManager))]public class Tet
             {
                 Target.Reconnect();
             }
+
+            GUI.enabled = !Target.disconnected;
+            if (GUILayout.Button("Stabilize"))
+            {
+                for (int i = 0; i < Target.joints.Count; i++)
+                {
+                    Target.joints[i].transform.position = Target.GetJointMovePosition(Target.joints[i], i, true);
+                    Target.joints[i].rigidbodyComp.velocity = Vector3.zero;
+                    Target.joints[i].rigidbodyComp.angularVelocity = Vector3.zero;
+                }
+            }
+            GUI.enabled = true;
         }
     }}

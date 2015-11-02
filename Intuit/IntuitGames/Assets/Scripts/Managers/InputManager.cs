@@ -35,59 +35,24 @@ public class InputManager : Manager
     [System.NonSerialized] public InputData unpauseData = new InputData(unpauseStr);
     [System.NonSerialized] public InputData sprintData = new InputData(sprintStr);
 
-    [System.Serializable]
-    public struct InputData
-    {
-        public readonly string actionStr;
-
-        public bool p1Down, p2Down;
-        public bool p1Hold, p2Hold;
-        public bool p1Up, p2Up;
-
-        public InputData(string inputStr)
-        {
-            actionStr = inputStr;
-            p1Down = false; p2Down = false;
-            p1Hold = false; p2Hold = false;
-            p1Up = false; p2Up = false;
-        }
-
-        public void Update()
-        {
-            if (Input.GetButtonDown(actionStr + player1Str)) p1Down = true;
-            if (Input.GetButtonDown(actionStr + player2Str)) p2Down = true;
-            p1Hold = Input.GetButton(actionStr + player1Str);
-            p2Hold = Input.GetButton(actionStr + player2Str);
-            if (Input.GetButtonUp(actionStr + player1Str)) p1Up = true;
-            if (Input.GetButtonUp(actionStr + player2Str)) p2Up = true;
-        }
-    }
-
     // Events
     public event Action<float> PreUpdate = delegate { };
     public event Action<float> PostUpdate = delegate { };
     public event Action<float, float> MovementP1 = delegate { };
     public event Action<float, float> MovementP2 = delegate { };
-    public event Action<bool> JumpP1 = delegate { };
-    public event Action<bool> JumpP2 = delegate { };
-    public event Action<bool> JumpToggleP1 = delegate { };
-    public event Action<bool> JumpToggleP2 = delegate { };
-    public event Action<bool> DashP1 = delegate { };
-    public event Action<bool> DashP2 = delegate { };
-    public event Action<bool> DashToggleP1 = delegate { };
-    public event Action<bool> DashToggleP2 = delegate { };
-    public event Action<bool> HeavyP1 = delegate { };
-    public event Action<bool> HeavyP2 = delegate { };
-    public event Action<bool> HeavyToggleP1 = delegate { };
-    public event Action<bool> HeavyToggleP2 = delegate { };
-    public event Action<bool> Pause = delegate { };
-    public event Action<bool> Unpause = delegate { };
-    public event Action<bool> PauseToggle = delegate { };
-    public event Action<bool> UnpauseToggle = delegate { };
-    public event Action<bool> SprintP1 = delegate { };
-    public event Action<bool> SprintP2 = delegate { };
-    public event Action<bool> SprintToggleP1 = delegate { };
-    public event Action<bool> SprintToggleP2 = delegate { };
+    // 1st bool - isPlayerOne? | 2nd bool - is pressed?
+    public event Action<bool, bool> Jump = delegate { };
+    public event Action<bool, bool> JumpToggle = delegate { };
+    public event Action<bool, bool> Dash = delegate { };
+    public event Action<bool, bool> DashToggle = delegate { };
+    public event Action<bool, bool> Heavy = delegate { };
+    public event Action<bool, bool> HeavyToggle = delegate { };
+    public event Action<bool, bool> Sprint = delegate { };
+    public event Action<bool, bool> SprintToggle = delegate { };
+    public event Action<bool, bool> Pause = delegate { };
+    public event Action<bool, bool> Unpause = delegate { };
+    public event Action<bool, bool> PauseToggle = delegate { };
+    public event Action<bool, bool> UnpauseToggle = delegate { };
 
     // Settings
     public enum UpdateTypes { Update, FixedUpdate, LateUpdate };
@@ -137,8 +102,11 @@ public class InputManager : Manager
 
     #endregion
 
+    #region HANDLERS
+
     private void CheckForInput()
     {
+        // Updates all input data
         jumpData.Update();
         dashData.Update();
         heavyData.Update();
@@ -155,11 +123,25 @@ public class InputManager : Manager
         switch (ModeManager.currentGameMode)
         {
             case ModeManager.GameMode.PauseMenu:
-                if (type == pauseUpdates) HandlePauseMenuEvents();
+                if (type == pauseUpdates) unpauseData.RaiseEvent(Unpause, UnpauseToggle);
                 break;
 
             case ModeManager.GameMode.InGame:
-                HandleInGameEvents(type);
+                // Raise axis input events
+                if (type == movementUpdates)
+                {
+                    MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
+                    MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
+                }
+
+                // Raise action button event
+                if (type == jumpUpdates) jumpData.RaiseEvent(Jump, JumpToggle);
+                if (type == dashUpdates) dashData.RaiseEvent(Dash, DashToggle);
+                if (type == heavyUpdates) heavyData.RaiseEvent(Heavy, HeavyToggle);
+                if (type == sprintUpdates) sprintData.RaiseEvent(Sprint, SprintToggle);
+
+                // Pause check
+                if (type == pauseUpdates) pauseData.RaiseEvent(Pause, PauseToggle);
                 break;
 
             default:
@@ -167,185 +149,6 @@ public class InputManager : Manager
         }
 
         if (type == preAndPostUpdates) PostUpdate(delta);
-    }
-
-    #region IN-GAME
-
-    // Is called every frame if game is in a in-game state
-    private void HandleInGameEvents(UpdateTypes type)
-    {
-        // Raise axis input events
-        if (type == movementUpdates) HandleMovementEvents();
-
-        // Raise action button event
-        if (type == jumpUpdates) HandleJumpEvents();
-        if (type == dashUpdates) HandleDashEvents();
-        if (type == heavyUpdates) HandleHeavyEvents();
-        if (type == sprintUpdates) HandleSprintEvents();
-
-        // Pause and unpause check
-        if (type == pauseUpdates) HandlePauseEvents();
-    }
-
-    private void HandleMovementEvents()
-    {
-        MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
-        MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
-    }
-
-    private void HandleJumpEvents()
-    {
-        if (jumpData.p1Down)
-        {
-            JumpToggleP1(true);
-            jumpData.p1Down = false;
-        }
-        if (jumpData.p2Down)
-        {
-            JumpToggleP2(true);
-            jumpData.p2Down = false;
-        }
-
-        JumpP1(jumpData.p1Hold);
-        JumpP2(jumpData.p2Hold);
-
-        if (jumpData.p1Up)
-        {
-            JumpToggleP1(false);
-            jumpData.p1Up = false;
-        }
-        if (jumpData.p2Up)
-        {
-            JumpToggleP2(false);
-            jumpData.p2Up = false;
-        }
-    }
-
-    private void HandleDashEvents()
-    {
-        if (dashData.p1Down)
-        {
-            DashToggleP1(true);
-            dashData.p1Down = false;
-        }
-        if (dashData.p2Down)
-        {
-            DashToggleP2(true);
-            dashData.p2Down = false;
-        }
-
-        DashP1(dashData.p1Hold);
-        DashP2(dashData.p2Hold);
-
-        if (dashData.p1Up)
-        {
-            DashToggleP1(false);
-            dashData.p1Up = false;
-        }
-        if (dashData.p2Up)
-        {
-            DashToggleP2(false);
-            dashData.p2Up = false;
-        }
-    }
-
-    private void HandleHeavyEvents()
-    {
-        if (heavyData.p1Down)
-        {
-            HeavyToggleP1(true);
-            heavyData.p1Down = false;
-        }
-        if (heavyData.p2Down)
-        {
-            HeavyToggleP2(true);
-            heavyData.p2Down = false;
-        }
-
-        HeavyP1(heavyData.p1Hold);
-        HeavyP2(heavyData.p2Hold);
-
-        if (heavyData.p1Up)
-        {
-            HeavyToggleP1(false);
-            heavyData.p1Up = false;
-        }
-        if (heavyData.p2Up)
-        {
-            HeavyToggleP2(false);
-            heavyData.p2Up = false;
-        }
-    }
-
-    private void HandlePauseEvents()
-    {
-        if (pauseData.p1Down || pauseData.p2Down)
-        {
-            PauseToggle(true);
-            pauseData.p1Down = false;
-            pauseData.p2Down = false;
-        }
-
-        Pause(pauseData.p1Hold || pauseData.p2Hold);
-
-        if (pauseData.p1Up || pauseData.p2Up)
-        {
-            PauseToggle(false);
-            pauseData.p1Up = false;
-            pauseData.p2Up = false;
-        }
-    }
-
-    private void HandleSprintEvents()
-    {
-        if (sprintData.p1Down)
-        {
-            SprintToggleP1(true);
-            sprintData.p1Down = false;
-        }
-        if (sprintData.p2Down)
-        {
-            SprintToggleP2(true);
-            sprintData.p2Down = false;
-        }
-
-        SprintP1(sprintData.p1Hold);
-        SprintP2(sprintData.p2Hold);
-
-        if (sprintData.p1Up)
-        {
-            SprintToggleP1(false);
-            sprintData.p1Up = false;
-        }
-        if (sprintData.p2Up)
-        {
-            SprintToggleP2(false);
-            sprintData.p2Up = false;
-        }
-    }
-
-    #endregion
-
-    #region PAUSE MENU
-
-    // Is called every frame if the game is in a paused state
-    private void HandlePauseMenuEvents()
-    {
-        if (unpauseData.p1Down || unpauseData.p2Down)
-        {
-            UnpauseToggle(true);
-            unpauseData.p1Down = false;
-            unpauseData.p2Down = false;
-        }
-
-        Unpause(unpauseData.p1Hold || unpauseData.p2Hold);
-
-        if (unpauseData.p1Up || unpauseData.p2Up)
-        {
-            UnpauseToggle(false);
-            unpauseData.p1Up = false;
-            unpauseData.p2Up = false;
-        }
     }
 
     #endregion
@@ -365,21 +168,21 @@ public class InputManager : Manager
         {
             // Subscribe to player 1 events
             MovementP1 += characterObj.Movement;
-            JumpP1 += characterObj.Jump;
-            JumpToggleP1 += characterObj.JumpToggle;
-            DashToggleP1 += characterObj.Dash;
-            HeavyP1 += characterObj.Heavy;
-            SprintP1 += characterObj.Sprint;
+            Jump += characterObj.Jump;
+            JumpToggle += characterObj.JumpToggle;
+            DashToggle += characterObj.Dash;
+            Heavy += characterObj.Heavy;
+            Sprint += characterObj.Sprint;
         }
         else
         {
             // Subscribe to player 2 events
             MovementP2 += characterObj.Movement;
-            JumpP2 += characterObj.Jump;
-            JumpToggleP2 += characterObj.JumpToggle;
-            DashToggleP2 += characterObj.Dash;
-            HeavyP2 += characterObj.Heavy;
-            SprintP2 += characterObj.Sprint;
+            Jump += characterObj.Jump;
+            JumpToggle += characterObj.JumpToggle;
+            DashToggle += characterObj.Dash;
+            Heavy += characterObj.Heavy;
+            Sprint += characterObj.Sprint;
         }
     }
 
@@ -396,21 +199,21 @@ public class InputManager : Manager
         {
             // Subscribe to player 1 events
             MovementP1 -= characterObj.Movement;
-            JumpP1 -= characterObj.Jump;
-            JumpToggleP1 -= characterObj.JumpToggle;
-            DashToggleP1 -= characterObj.Dash;
-            HeavyP1 -= characterObj.Heavy;
-            SprintP1 -= characterObj.Sprint;
+            Jump -= characterObj.Jump;
+            JumpToggle -= characterObj.JumpToggle;
+            DashToggle -= characterObj.Dash;
+            Heavy -= characterObj.Heavy;
+            Sprint -= characterObj.Sprint;
         }
         else
         {
             // Subscribe to player 2 events
             MovementP2 -= characterObj.Movement;
-            JumpP2 -= characterObj.Jump;
-            JumpToggleP2 -= characterObj.JumpToggle;
-            DashToggleP2 -= characterObj.Dash;
-            HeavyP2 -= characterObj.Heavy;
-            SprintP2 -= characterObj.Sprint;
+            Jump -= characterObj.Jump;
+            JumpToggle -= characterObj.JumpToggle;
+            DashToggle -= characterObj.Dash;
+            Heavy -= characterObj.Heavy;
+            Sprint -= characterObj.Sprint;
         }
     }
 
@@ -426,6 +229,67 @@ public class InputManager : Manager
             return jumpData.p1Hold;
         else
             return jumpData.p2Hold;
+    }
+
+    #endregion
+
+    #region NESTED
+
+    [System.Serializable]
+    public struct InputData
+    {
+        public readonly string actionStr;
+
+        public bool p1Down, p2Down;
+        public bool p1Hold, p2Hold;
+        public bool p1Up, p2Up;
+
+        public InputData(string inputStr)
+        {
+            actionStr = inputStr;
+            p1Down = false; p2Down = false;
+            p1Hold = false; p2Hold = false;
+            p1Up = false; p2Up = false;
+        }
+
+        public void Update()
+        {
+            if (Input.GetButtonDown(actionStr + player1Str)) p1Down = true;
+            if (Input.GetButtonDown(actionStr + player2Str)) p2Down = true;
+            p1Hold = Input.GetButton(actionStr + player1Str);
+            p2Hold = Input.GetButton(actionStr + player2Str);
+            if (Input.GetButtonUp(actionStr + player1Str)) p1Up = true;
+            if (Input.GetButtonUp(actionStr + player2Str)) p2Up = true;
+        }
+
+        // Raise specified events based on input data
+        public void RaiseEvent(Action<bool, bool> action, Action<bool, bool> toggleAction)
+        {
+            if (p1Down)
+            {
+                toggleAction(true, true);
+                p1Down = false;
+            }
+            if (p2Down)
+            {
+                toggleAction(false, true);
+                p2Down = false;
+            }
+
+            action(true, p1Hold);
+            action(false, p2Hold);
+
+            if (p1Up)
+            {
+                toggleAction(true, false);
+                p1Up = false;
+            }
+            if (p2Up)
+            {
+                toggleAction(false, false);
+                p2Up = false;
+            }
+        }
     }
 
     #endregion

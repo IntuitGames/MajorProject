@@ -70,6 +70,11 @@ using CustomExtensions;/// <summary>
         GameManager.TetherManager.OnReconnected += Unweaken;
     }
 
+    public override void ManagerOnLevelLoad()
+    {
+        currentJelly = maxJelly;
+    }
+
     void Update()
     {
         if (isWeakened)
