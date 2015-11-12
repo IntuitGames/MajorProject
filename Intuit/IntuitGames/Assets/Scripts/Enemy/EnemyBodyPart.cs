@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
-public class EnemyBody : MonoBehaviour {
+public class EnemyBodyPart : MonoBehaviour {
 
 	Enemy enemy;
 	Rigidbody rigidBody;
