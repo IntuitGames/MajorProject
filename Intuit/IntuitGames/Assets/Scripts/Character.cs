@@ -61,18 +61,6 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, MEDIUM)]
     public float aerialRotationSpeed = 10;
 
-    // TETHER
-    [Header("Tether")]
-    public bool constrainMovement = true;
-    [Range(0, LOW)]
-    public float constrainingPower = 2;
-    [Range(0, MEDIUM)]
-    public float freeMovementLength = 8;
-    [Range(0, MEDIUM)]
-    public float maxDistanceLength = 15;
-    [Range(0, LOW)]
-    public float yankingDashForce = 2;
-
     // DASH
     [Header("Dash"), SerializeField]
     private bool _canDash = true;
@@ -366,7 +354,7 @@ public class Character : MonoBehaviour, IBounce
         rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
-        if(constrainMovement) ApplyConstrainForce();
+        if(GameManager.PlayerManager.constrainMovement) ApplyConstrainForce();
 
         // Send animator info
         animator.SetBool("IsAirborne", !isGrounded);
@@ -531,7 +519,7 @@ public class Character : MonoBehaviour, IBounce
     // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        audioData.PlayWalkAudio(isWalking && isGrounded);
+        audioData.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceTypes.None, isWalking && isGrounded);
     }
 
     //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below
@@ -539,11 +527,11 @@ public class Character : MonoBehaviour, IBounce
     {
         float length = GameManager.TetherManager.tetherLength;
 
-        if (GameManager.TetherManager.disconnected || length < freeMovementLength) return;
+        if (GameManager.TetherManager.disconnected || length < GameManager.PlayerManager.freeMovementLength) return;
 
         Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne);
-        float constrainMulti = length.Normalize(freeMovementLength, maxDistanceLength, 0, 1000);
-        rigidbodyComp.AddForce(direction * constrainMulti * constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
+        float constrainMulti = length.Normalize(GameManager.PlayerManager.freeMovementLength, GameManager.PlayerManager.maxDistanceLength, 0, 1000);
+        rigidbodyComp.AddForce(direction * constrainMulti * GameManager.PlayerManager.constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
     }
 
     // Rigidbody.AddForce() with constraining
@@ -551,7 +539,7 @@ public class Character : MonoBehaviour, IBounce
     {
         float length = GameManager.TetherManager.tetherLength;
 
-        if (!constrainMovement || length < freeMovementLength || GameManager.TetherManager.disconnected)
+        if (!GameManager.PlayerManager.constrainMovement || length < GameManager.PlayerManager.freeMovementLength || GameManager.TetherManager.disconnected)
         {
             rigidbodyComp.AddForce(movement, forceMode);
             return;
@@ -559,7 +547,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
         float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
-        rigidbodyComp.AddForce(movement * dotValue * constrainingPower, forceMode);
+        rigidbodyComp.AddForce(movement * dotValue * GameManager.PlayerManager.constrainingPower, forceMode);
     }
 
     // RigidBody.MovePosition with constraining
@@ -567,14 +555,14 @@ public class Character : MonoBehaviour, IBounce
     {
         float length = GameManager.TetherManager.tetherLength;
 
-        if (!constrainMovement || length < freeMovementLength || GameManager.TetherManager.disconnected)
+        if (!GameManager.PlayerManager.constrainMovement || length < GameManager.PlayerManager.freeMovementLength || GameManager.TetherManager.disconnected)
         {
             rigidbodyComp.MovePosition(transform.position + movement);
             return;
         }
-        else if (isDashing && length >= freeMovementLength)
+        else if (isDashing && length >= GameManager.PlayerManager.freeMovementLength)
         {
-            if (!GetPartner().isHeavy || length > maxDistanceLength)
+            if (!GetPartner().isHeavy || length > GameManager.PlayerManager.maxDistanceLength)
                     rigidbodyComp.MovePosition(transform.position + movement);
             else
                 isDashing = false;
@@ -586,7 +574,7 @@ public class Character : MonoBehaviour, IBounce
         // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
         float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
         Vector3 additiveVec = movement * dotValue.Normalize(-1, 1, -0.25f, 1);
-        rigidbodyComp.MovePosition(transform.position + Vector3.ClampMagnitude(additiveVec, length.Normalize(freeMovementLength, maxDistanceLength, additiveVec.magnitude, 0)));
+        rigidbodyComp.MovePosition(transform.position + Vector3.ClampMagnitude(additiveVec, length.Normalize(GameManager.PlayerManager.freeMovementLength, GameManager.PlayerManager.maxDistanceLength, additiveVec.magnitude, 0)));
     }
 
     public void Yank()
@@ -598,7 +586,7 @@ public class Character : MonoBehaviour, IBounce
             TimerPlus.Create(1, () => rigidbodyComp.drag = normalDrag);
             Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
             direction.y = direction.magnitude / 2;
-            AddConstrainedForce(direction * yankingDashForce, ForceMode.Impulse);
+            AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
         }
     }
 
@@ -616,7 +604,7 @@ public class Character : MonoBehaviour, IBounce
         float baseBouncePower, bounceMultiplier, minBouncePower, maxBouncePower;
 
         // Bouncing on a bouncy object
-        if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold && bouncyObj.isBouncy)
+        if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold)
         {
             // Do not bounce if other character is bouncing on this character
             if (bouncyObj.gameObject == GetPartner().gameObject && GetPartnerPosition().y > transform.position.y) return;

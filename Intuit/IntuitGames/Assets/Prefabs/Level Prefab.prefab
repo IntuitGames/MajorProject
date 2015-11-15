@@ -24325,14 +24325,38 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   rigidbodyComp: {fileID: 0}
   feetTransform: {fileID: 428330}
-  walk:
+  defaultFootstep:
     player: 2
     type: 0
-    group: 2
+    group: 0
     volume: 1
     pitch: 1
-    unityClip: {fileID: 8300000, guid: d5acfe6510261f142b114e4c4d1de0db, type: 3}
-    FMODAsset: {fileID: 11400000, guid: 4f6b6b0ca071f494eb30ce3347964546, type: 2}
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  grassFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  metalFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  stoneFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
   land:
     player: 2
     type: 0
@@ -25084,7 +25108,7 @@ MonoBehaviour:
   maxSpeed: 1000
   normalGravity: -9.80000019
   maxGravity: -50
-  gravityGrowthRate: 40
+  gravityGrowthRate: 70
   groundedLayers:
     serializedVersion: 2
     m_Bits: 769
@@ -25097,18 +25121,13 @@ MonoBehaviour:
     - time: 0
       value: 1.25
       inSlope: -8.45535469
-      outSlope: -.25
+      outSlope: -6.25
       tangentMode: 17
-    - time: 1
-      value: 1
-      inSlope: -.25
+    - time: .200000003
+      value: 0
+      inSlope: -6.25
       outSlope: 0
       tangentMode: 5
-    - time: 1.10000002
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 1
     m_PreInfinity: 2
     m_PostInfinity: 2
   jumpImpulse: 15
@@ -25118,11 +25137,6 @@ MonoBehaviour:
   sprintJumpMomentum: 5
   aerialControl: .75
   aerialRotationSpeed: 10
-  constrainMovement: 1
-  constrainingPower: 2
-  freeMovementLength: 15
-  maxDistanceLength: 17
-  yankingDashForce: 6
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
@@ -25826,14 +25840,38 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   rigidbodyComp: {fileID: 0}
   feetTransform: {fileID: 473234}
-  walk:
+  defaultFootstep:
     player: 2
     type: 0
-    group: 2
+    group: 0
     volume: 1
     pitch: 1
-    unityClip: {fileID: 8300000, guid: f4efc5ab8e24f1f42aa826d50d940c89, type: 3}
-    FMODAsset: {fileID: 11400000, guid: 0196e2072929eaf488b2e32de19200ff, type: 2}
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  grassFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  metalFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  stoneFootstep:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
   land:
     player: 2
     type: 0
@@ -27206,7 +27244,7 @@ MonoBehaviour:
   maxSpeed: 1000
   normalGravity: -9.80000019
   maxGravity: -50
-  gravityGrowthRate: 40
+  gravityGrowthRate: 70
   groundedLayers:
     serializedVersion: 2
     m_Bits: 769
@@ -27219,18 +27257,13 @@ MonoBehaviour:
     - time: 0
       value: 1.25
       inSlope: -8.45535469
-      outSlope: -.25
+      outSlope: -6.25
       tangentMode: 17
-    - time: 1
-      value: 1
-      inSlope: -.25
+    - time: .200000003
+      value: 0
+      inSlope: -6.25
       outSlope: 0
       tangentMode: 5
-    - time: 1.10000002
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 1
     m_PreInfinity: 2
     m_PostInfinity: 2
   jumpImpulse: 15
@@ -27240,11 +27273,6 @@ MonoBehaviour:
   sprintJumpMomentum: 5
   aerialControl: .75
   aerialRotationSpeed: 10
-  constrainMovement: 1
-  constrainingPower: 2
-  freeMovementLength: 15
-  maxDistanceLength: 17
-  yankingDashForce: 6
   _canDash: 1
   dashPower: 30
   dashLength: .200000003
@@ -27796,6 +27824,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _character1: {fileID: 0}
   _character2: {fileID: 0}
+  constrainMovement: 1
+  constrainingPower: 2
+  freeMovementLength: 15
+  maxDistanceLength: 17
+  yankingDashForce: 8
   isWeakened: 0
   canWeaken: 1
   weakenedMoveSpeedMulti: .5

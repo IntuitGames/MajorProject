@@ -32,6 +32,18 @@ using CustomExtensions;/// <summary>
         }
     }
 
+    // TETHER
+    [Header("Tether")]
+    public bool constrainMovement = true;
+    [Range(0, 10)]
+    public float constrainingPower = 2;
+    [Range(0, 100)]
+    public float freeMovementLength = 15;
+    [Range(0, 100)]
+    public float maxDistanceLength = 17;
+    [Range(0, 10)]
+    public float yankingDashForce = 8;
+
     // WEAKENED
     [Header("Weakened State"), ReadOnly]
     public bool isWeakened = false;

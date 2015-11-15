@@ -48,7 +48,7 @@
 
         // Add to list and make persistent
         persistList.Add(uniqueID, this.gameObject);
-        this.transform.SetParent(GetPersistentTrasform());
+        this.transform.SetParent(GetPersistentTransform());
         DontDestroyOnLoad(this.gameObject);
         return true;
     }
@@ -59,7 +59,7 @@
             persistList.Remove(persistList.First(x => x.Value == this.gameObject).Key);
     }
 
-    private Transform GetPersistentTrasform()
+    private Transform GetPersistentTransform()
     {
         if (persistentTransform) return persistentTransform;
 

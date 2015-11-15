@@ -23,7 +23,10 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     // SOUND EFFECTS
     [Header("Sound Effects")]
-    public SoundClip walk = new SoundClip();
+    public SoundClip defaultFootstep = new SoundClip();
+    public SoundClip grassFootstep = new SoundClip();
+    public SoundClip metalFootstep = new SoundClip();
+    public SoundClip stoneFootstep = new SoundClip();
     public SoundClip land = new SoundClip();
     public SoundClip jump = new SoundClip();
     public SoundClip dash = new SoundClip();
@@ -52,7 +55,10 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         if (!rigidbodyComp)
             rigidbodyComp = GetComponent<Rigidbody>();
 
-        walk.Initialize();
+        defaultFootstep.Initialize();
+        grassFootstep.Initialize();
+        metalFootstep.Initialize();
+        stoneFootstep.Initialize();
         land.Initialize();
         jump.Initialize();
         dash.Initialize();
@@ -62,11 +68,32 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         tetherConnect.Initialize();
     }
 
-    public void PlayWalkAudio(bool condition = true)
+    void Start() { }
+
+    public void PlayWalkAudio(Surface.SurfaceTypes surfaceType, bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        walk.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
+        switch (surfaceType)
+        {
+            case Surface.SurfaceTypes.Default:
+                defaultFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
+                break;
+            case Surface.SurfaceTypes.None:
+                break;
+            case Surface.SurfaceTypes.Grass:
+                grassFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
+                break;
+            case Surface.SurfaceTypes.Metal:
+                metalFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
+                break;
+            case Surface.SurfaceTypes.Stone:
+                stoneFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
+                break;
+            default:
+                Debug.Log("Unhandled surface type.");
+                break;
+        }
     }
 
     public void PlayLandAudio(float downwardVelocity, bool condition = true)
@@ -121,7 +148,10 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     // Dispose FMOD instances
     public void Dispose()
     {
-        walk.Dispose();
+        defaultFootstep.Dispose();
+        grassFootstep.Dispose();
+        metalFootstep.Dispose();
+        stoneFootstep.Dispose();
         land.Dispose();
         jump.Dispose();
         dash.Dispose();

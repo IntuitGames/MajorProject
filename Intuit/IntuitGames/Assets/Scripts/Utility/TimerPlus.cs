@@ -503,10 +503,10 @@ public class TimerPlus: IDisposable
 [System.Serializable]
 public class TimerPlus<T> : TimerPlus
 {
+    new public event Action<T> Elapsed = delegate { };
+
     // The object that gets passed into the generic action
     public T ActionParam;
-
-    public event Action<T> ElapsedGeneric = delegate { };
 
     #region Constructors
 
@@ -518,7 +518,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     /// <summary>
@@ -529,7 +529,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     /// <summary>
@@ -541,7 +541,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     /// <summary>
@@ -553,7 +553,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     /// <summary>
@@ -565,7 +565,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     /// <summary>
@@ -577,7 +577,7 @@ public class TimerPlus<T> : TimerPlus
         ActionParam = parameter;
 
         if (!action.IsNullOrEmpty())
-            ElapsedGeneric += action;
+            Elapsed += action;
     }
 
     #endregion
@@ -639,7 +639,7 @@ public class TimerPlus<T> : TimerPlus
     protected override void OnTimerElapsed(float LeftOver)
     {
         // Overridden to allow for the generic action invocation
-        ElapsedGeneric.Invoke(ActionParam);
+        Elapsed.Invoke(ActionParam);
 
         base.OnTimerElapsed(LeftOver);
     }
@@ -659,7 +659,7 @@ public class TimerPlus<T> : TimerPlus
         if(Disposing)
         {
             Handle.Dispose();
-            ElapsedGeneric = null;
+            Elapsed = null;
         }
 
         base.Dispose(Disposing);

@@ -395,7 +395,7 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
-        /// Determines the angle between 2 Vector3s
+        /// Determines the angle between 2 Vector3s.
         /// </summary>
         public static float AngleBetweenTwoPoints(this Vector3 VecA, Vector3 VecB)
         {
@@ -403,10 +403,23 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
-        /// Determines the angle between 3 Vector3s
+        /// Determines the angle between 3 Vector3s.
         /// </summary>
         public static float AngleBetweenThreePoints(this Vector3 VecA, Vector3 VecB, Vector3 VecC)
         {
             return AngleBetweenTwoPoints(VecA - VecC, VecB - VecC);
+        }
+
+        /// <summary>
+        /// Retrieves the surface type of given game object.
+        /// </summary>
+        public static Surface.SurfaceTypes GetSurfaceType(this GameObject Source)
+        {
+            Surface SurfaceComp = Source.GetComponent<Surface>();
+
+            if (SurfaceComp)
+                return SurfaceComp.type;
+            else
+                return Surface.SurfaceTypes.Default;
         }
     }}
