@@ -412,6 +412,14 @@ public class TimerPlus: IDisposable
         Value = NewValue;
     }
 
+    public void ModifyValue(float valueModification, bool allowOverload = false)
+    {
+        if (allowOverload)
+            Value += valueModification;
+        else
+            Value = Mathf.Clamp(Value + valueModification, 0, Length);
+    }
+
     #endregion
 
     #region Non-public

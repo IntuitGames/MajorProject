@@ -57,9 +57,10 @@ public class SoundClip : IDisposable
     // Returns if it was successful in playing the sound
     public bool PlayAttached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, params float[] parameters)
     {
+        if (!isInitialized) return false;
+
         // Initialization and volume checking
         float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
-        if (finalVolume <= 0 || !isInitialized) return false;
 
         // Play Unity Sound
         if (player == AudioManager.Player.Unity && audioSource)
@@ -87,9 +88,10 @@ public class SoundClip : IDisposable
     // Returns the new audio source if applicable
     public AudioSource PlayDetached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, Transform target, params float[] parameters)
     {
+        if (!isInitialized) return null;
+
         // Initialization and volume checking
         float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
-        if (finalVolume <= 0 || !isInitialized) return null;
 
         if (player == AudioManager.Player.Unity && audioSource) // Play Unity Sound
         {

@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 
 [RequireComponent(typeof(AudioSource))]
-public class BackgroundMusic : MonoBehaviour
+public class SoundSource : MonoBehaviour
 {
     private AudioSource audioSource;
 
+    public bool playOnStart = true;
     public SoundClip music = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.BackgroundMusic, AudioManager.Group.Game);
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         music.Initialize();
-        music.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
+        if (playOnStart) Play();
     }
 
     void Update()
@@ -25,5 +26,10 @@ public class BackgroundMusic : MonoBehaviour
     void OnDestroy()
     {
         music.Dispose();
+    }
+
+    public void Play()
+    {
+        music.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
     }
 }

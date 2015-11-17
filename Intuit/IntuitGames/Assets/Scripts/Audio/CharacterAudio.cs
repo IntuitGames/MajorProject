@@ -27,13 +27,15 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip grassFootstep = new SoundClip();
     public SoundClip metalFootstep = new SoundClip();
     public SoundClip stoneFootstep = new SoundClip();
+    public SoundClip dirtFootstep = new SoundClip();
+    public SoundClip gravelFootstep = new SoundClip();
+    public SoundClip waterFootstep = new SoundClip();
+    public SoundClip woodFootstep = new SoundClip();
     public SoundClip land = new SoundClip();
     public SoundClip jump = new SoundClip();
     public SoundClip dash = new SoundClip();
     public SoundClip startHeavy = new SoundClip();
     public SoundClip endHeavy = new SoundClip();
-    public SoundClip tetherDisconnect = new SoundClip();
-    public SoundClip tetherConnect = new SoundClip();
 
     // FMOD PARAMS
     private float playerMoveSpeed
@@ -59,13 +61,15 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         grassFootstep.Initialize();
         metalFootstep.Initialize();
         stoneFootstep.Initialize();
+        dirtFootstep.Initialize();
+        gravelFootstep.Initialize();
+        waterFootstep.Initialize();
+        woodFootstep.Initialize();
         land.Initialize();
         jump.Initialize();
         dash.Initialize();
         startHeavy.Initialize();
         endHeavy.Initialize();
-        tetherDisconnect.Initialize();
-        tetherConnect.Initialize();
     }
 
     void Start() { }
@@ -131,20 +135,6 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         endHeavy.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
-    public void PlayTetherDisconnectAudio(Transform jointTransform, bool condition = true)
-    {
-        if (!condition || !enabled || !jointTransform) return;
-
-        tetherDisconnect.PlayDetached(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume, jointTransform);
-    }
-
-    public void PlayTetherConnectAudio(Transform jointTransform, bool condition = true)
-    {
-        if (!condition || !enabled || !jointTransform) return;
-
-        tetherConnect.PlayDetached(audioSource, AudioManager.GetFMODAttribute(jointTransform, rigidbodyComp.velocity), volume, jointTransform);
-    }
-
     // Dispose FMOD instances
     public void Dispose()
     {
@@ -152,13 +142,15 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         grassFootstep.Dispose();
         metalFootstep.Dispose();
         stoneFootstep.Dispose();
+        dirtFootstep.Dispose();
+        gravelFootstep.Dispose();
+        waterFootstep.Dispose();
+        woodFootstep.Dispose();
         land.Dispose();
         jump.Dispose();
         dash.Dispose();
         startHeavy.Dispose();
         endHeavy.Dispose();
-        tetherDisconnect.Dispose();
-        tetherConnect.Dispose();
     }
 
     #endregion

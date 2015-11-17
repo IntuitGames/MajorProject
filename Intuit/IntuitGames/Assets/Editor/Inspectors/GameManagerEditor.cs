@@ -34,6 +34,11 @@ public class GameManagerEditor : Editor
             DrawManagerField<CameraManager>(GameManager.CameraManager, "Camera Manager");
             EditorGUI.indentLevel--;
         }
+
+        if (GUILayout.Button("Clear Player Prefs"))
+        {
+            PlayerPrefs.DeleteAll();
+        }
     }    public void DrawManagerField<T>(T manager, string label) where T: Manager
     {
         EditorGUILayout.BeginHorizontal();

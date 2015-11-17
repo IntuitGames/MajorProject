@@ -422,4 +422,13 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             else
                 return Surface.SurfaceTypes.Default;
         }
+
+        /// <summary>
+        /// Performs an action the next frame if used like a coroutine
+        /// </summary>
+        public static IEnumerator NextFrame(Action Action)
+        {
+            yield return new WaitForEndOfFrame();
+            Action();
+        }
     }}

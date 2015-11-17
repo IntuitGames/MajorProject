@@ -13,6 +13,9 @@ using CustomExtensions;/// <summary>
     public static PlayerManager PlayerManager;
     public static CameraManager CameraManager;
 
+    // Events
+    public static event System.Action OnApplicationExit = delegate { };
+
     #region MESSAGES
 
     void Awake()
@@ -113,9 +116,12 @@ using CustomExtensions;/// <summary>
 
     public static void ExitGame()
     {
+        OnApplicationExit();
+
 #if !UNITY_EDITOR
         Application.Quit();
 #else
+        PlayerPrefs.Save();
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }

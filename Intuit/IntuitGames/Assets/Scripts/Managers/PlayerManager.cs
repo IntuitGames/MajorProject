@@ -38,9 +38,11 @@ using CustomExtensions;/// <summary>
     [Range(0, 10)]
     public float constrainingPower = 2;
     [Range(0, 100)]
-    public float freeMovementLength = 15;
+    public float baseFreeRadius = 15;
     [Range(0, 100)]
-    public float maxDistanceLength = 17;
+    public float maxRadius = 20;
+    [Range(0, 10)]
+    public float sprintRadiusExtension = 2;
     [Range(0, 10)]
     public float yankingDashForce = 8;
 
@@ -67,6 +69,18 @@ using CustomExtensions;/// <summary>
     public float jellyPercentage
     {
         get { return currentJelly / maxJelly; }
+    }
+    public float freeRadius
+    {
+        get { return baseFreeRadius + (character1.isSprinting ? sprintRadiusExtension : 0) + (character2.isSprinting ? sprintRadiusExtension : 0); }
+    }
+    public Vector3 character1Pos
+    {
+        get { return character1.transform.position; }
+    }
+    public Vector3 character2Pos
+    {
+        get { return character2.transform.position; }
     }
 
     #endregion
@@ -105,10 +119,7 @@ using CustomExtensions;/// <summary>
         if (isWeakened) return;
 
         if (canWeaken)
-        {
             isWeakened = true;
-            character1.audioData.PlayTetherDisconnectAudio(brokenJoint.transform);
-        }
     }
 
     public void Unweaken(TetherJoint reconnectedJoint)
@@ -116,8 +127,6 @@ using CustomExtensions;/// <summary>
         if (!isWeakened) return;
 
         isWeakened = false;
-
-        character1.audioData.PlayTetherConnectAudio(reconnectedJoint.transform);
     }
 
     public void DeathAction()

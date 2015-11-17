@@ -8,7 +8,8 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public Image backgroundPanel;
     public Button resumeButton;
     public Button restartButton;
-    public Button exitButton;    void Awake()
+    public Button exitButton;
+    public Slider volumeSlider;    void Awake()
     {
         HidePauseMenu();
         GameManager.ModeManager.OnGameModeChanged += CheckForGameModeChange;
@@ -22,6 +23,9 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public void ShowPauseMenu()
     {
         backgroundPanel.gameObject.SetActive(true);
+
+        volumeSlider.value = GameManager.AudioManager.masterVolume;
+
         resumeButton.Select();
     }
 
@@ -51,6 +55,11 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public void Exit()
     {
         GameManager.ExitGame();
+    }
+
+    public void OnVolumeSliderChange()
+    {
+        GameManager.AudioManager.masterVolume = volumeSlider.value;
     }
 
     #endregion

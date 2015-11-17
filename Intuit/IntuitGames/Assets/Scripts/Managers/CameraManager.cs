@@ -5,7 +5,8 @@ using CustomExtensions;/// <summary>
     [Header("Components")]
     public Camera mainCamera;
     public SmoothCameraFollow followCamera;
-    public BackgroundMusic backgroundMusic;
+    public SoundSource backgroundMusic;
+    public AudioSource audioSourceComp;
 
     [Header("Tether Disconnection"), ReadOnly]
     public bool isUnhinged;
@@ -31,7 +32,8 @@ using CustomExtensions;/// <summary>
     {
         if (!mainCamera) mainCamera = Camera.main;
         if (!followCamera) followCamera = mainCamera.GetComponent<SmoothCameraFollow>();
-        if (!backgroundMusic) backgroundMusic = mainCamera.GetComponent<BackgroundMusic>();
+        if (!backgroundMusic) backgroundMusic = mainCamera.GetComponent<SoundSource>();
+        if (!audioSourceComp) audioSourceComp = mainCamera.GetComponent<AudioSource>();
     }    void Start()
     {
         // Subscribe to tether events

@@ -5,7 +5,7 @@ using System;/// <summary>
 /// </summary>public class AudioManager : Manager{
     // NESTED TYPES
     public enum Player { None, Unity, FMOD };
-    public enum Type { SoundEffect, BackgroundMusic };
+    public enum Type { SoundEffect, BackgroundMusic, Ambiance };
     public enum Group { Game, UI, Player, Enemy };
 
     // INSPECTOR
@@ -19,6 +19,8 @@ using System;/// <summary>
     public float soundEffectVolume = 1;
     [Range(0, 1)]
     public float backgroundMusicVolume = 1;
+    [Range(0, 1)]
+    public float ambianceVolume = 1;
     [Header("Groups"), Range(0, 1)]
     public float gameGroupVolume = 1;
     [Range(0, 1)]
@@ -34,7 +36,16 @@ using System;/// <summary>
     [Range(0, 1)]
     public float mainMenuModeVolume = 1;
 
-    void Start() { } // To show the enabled toggle box on inspector    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
+    void Start() { } // To show the enabled toggle box on inspector
+
+    public override void ManagerAwake()
+    {
+        // Load player preferences
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume", masterVolume);
+
+        // Save volume to player preferences on application exit
+        GameManager.OnApplicationExit += () => PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+    }    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
     {
         if(!enabled) return 0;
 
@@ -53,6 +64,8 @@ using System;/// <summary>
             value *= soundEffectVolume;
         else if (soundClip.type == Type.BackgroundMusic)
             value *= backgroundMusicVolume;
+        else if (soundClip.type == Type.Ambiance)
+            value *= ambianceVolume;
 
         if (soundClip.group == Group.Game)
             value *= gameGroupVolume;

@@ -66,6 +66,10 @@ public class TetherManager : Manager
     [Range(0, 200)]
     public int collisionBuffer = 30;
 
+    [Header("Audio")]
+    public SoundClip disconnectSound = new SoundClip();
+    public SoundClip reconnectSound = new SoundClip();
+
     [Header("Info")]
     [ReadOnly]
     public bool disconnected = false;
@@ -103,6 +107,17 @@ public class TetherManager : Manager
             joints.GetRange(0, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(startPoint.gameObject));
             joints.GetRange(joints.Count - collisionBuffer, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(endPoint.gameObject));
         }
+
+        // Initialize audio
+        disconnectSound.Initialize();
+        reconnectSound.Initialize();
+
+        // Subscribe audio events
+        OnDisconnected += (joint) => disconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, GameManager.PlayerManager
+            .character1.rigidbodyComp.velocity - GameManager.PlayerManager.character2.rigidbodyComp.velocity), 1, joint.transform);
+
+        OnReconnected += (joint) => reconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, GameManager.PlayerManager
+            .character1.rigidbodyComp.velocity - GameManager.PlayerManager.character2.rigidbodyComp.velocity), 1, joint.transform);
     }
 
     public override void ManagerOnLevelLoad()
@@ -209,6 +224,12 @@ public class TetherManager : Manager
 
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        disconnectSound.Dispose();
+        reconnectSound.Dispose();
     }
 
     // Re-creates the joints and puts them in their starting positions
