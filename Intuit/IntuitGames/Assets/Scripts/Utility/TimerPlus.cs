@@ -14,7 +14,7 @@ using CustomExtensions;
 public class TimerPlus: IDisposable
 {
     // Static reference to all timers (Timer's not in here do not function)
-    protected static List<TimerPlus> AllTimers = new List<TimerPlus>();
+    protected static List<TimerPlus> AllTimers = new List<TimerPlus>(50);
 
     // Instance fields
     public float Length;                            // How long will the timer take
@@ -412,10 +412,15 @@ public class TimerPlus: IDisposable
         Value = NewValue;
     }
 
+    /// <summary>
+    /// Changes the timers current value regardless of play state.
+    /// </summary>
+    /// <param name="valueModification">How much is added onto the current value.</param>
+    /// <param name="allowOverload">If the new value should be allowed to surpass max length.</param>
     public void ModifyValue(float valueModification, bool allowOverload = false)
     {
         if (allowOverload)
-            Value += valueModification;
+            Value = Mathf.Max(0, Value + valueModification);
         else
             Value = Mathf.Clamp(Value + valueModification, 0, Length);
     }

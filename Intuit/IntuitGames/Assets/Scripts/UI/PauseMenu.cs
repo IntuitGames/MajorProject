@@ -32,6 +32,8 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public void HidePauseMenu()
     {
         backgroundPanel.gameObject.SetActive(false);
+
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
     {
         if (newMode == ModeManager.GameMode.PauseMenu)

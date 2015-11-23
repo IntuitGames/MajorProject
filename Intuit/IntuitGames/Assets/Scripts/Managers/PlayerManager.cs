@@ -43,7 +43,7 @@ using CustomExtensions;/// <summary>
     public float maxRadius = 20;
     [Range(0, 10)]
     public float sprintRadiusExtension = 2;
-    [Range(0, 10)]
+    [Range(0, 50)]
     public float yankingDashForce = 8;
 
     // WEAKENED
@@ -53,8 +53,8 @@ using CustomExtensions;/// <summary>
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
     public bool reconnectOnTouch = true;
-    [Popup(new string[] { "Nothing", "Reload Level", "Exit Game" })]
-    public string actionOnDeath = "Reload Level";
+    [Popup(new string[] { "Nothing", "Game Over", "Reload Level", "Exit Game" })]
+    public string actionOnDeath = "Game Over";
     public float maxJelly = 10;
     public bool autoRecover = false;
     [Range(0, 1)]
@@ -137,6 +137,8 @@ using CustomExtensions;/// <summary>
             GameManager.ReloadLevel();
         else if (actionOnDeath == "Exit Game")
             GameManager.ExitGame();
+        else if (actionOnDeath == "Game Over")
+            ModeManager.RequestGameModeChange(global::ModeManager.GameMode.GameOver, true, 0);
     }
 
     public void AddJelly(float value)

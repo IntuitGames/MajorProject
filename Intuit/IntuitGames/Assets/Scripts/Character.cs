@@ -296,6 +296,13 @@ public class Character : MonoBehaviour, IBounce
 
     void OnDestroy()
     {
+        // Dispose persistent timers
+        dashTimer.Dispose();
+        dashCooldownTimer.Dispose();
+        heavyCooldownTimer.Dispose();
+        unheavyDurationTimer.Dispose();
+        exitHeavyDragTimer.Dispose();
+
         // Dispose of FMOD instances
         audioData.Dispose();
 
@@ -405,25 +412,16 @@ public class Character : MonoBehaviour, IBounce
 
         if (!canJump) return;
 
+        // Increment jump time
         jumpTime += GameManager.InputManager.jumpDelta;
 
-        if (isBouncing || !isPressed || jumpTime > jumpCurve.Duration() || jumpTime > 0.1f && isGrounded) ResetJumpFlag();
+        // Flag gate
+        if (isBouncing || isHeavy || !isPressed || jumpTime > jumpCurve.Duration() || jumpTime > 0.1f && isGrounded) ResetJumpFlag();
 
         if (!jumpFlag) return;
 
-        audioData.PlayJumpAudio(jumpTime <= GameManager.InputManager.jumpDelta);
-
-        if (!isHeavy)
-        {
-            // Standard jump
-            AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpForce / jumpCurve.Duration()) * GameManager.InputManager.jumpDelta, ForceMode.Force);
-        }
-        else if (isGrounded)
-        {
-            // Heavy jump
-            AddConstrainedForce(Vector3.up * heavyJumpPower * jumpImpulse, ForceMode.Impulse);
-            ResetJumpFlag();
-        }
+        // Standard jump
+        AddConstrainedForce(Vector3.up * jumpCurve.Evaluate(jumpTime) * (jumpForce / jumpCurve.Duration()) * GameManager.InputManager.jumpDelta, ForceMode.Force);
     }
 
     public void JumpToggle(bool p1, bool isPressed)
@@ -443,20 +441,31 @@ public class Character : MonoBehaviour, IBounce
         {
             jumpFlag = true;
 
-            if (isHeavy) return;
+            // Play sound
+            audioData.PlayJumpAudio();
 
-            if (!doJumpMomentum || targetVelocity.IgnoreY2() == Vector2.zero)
-                AddConstrainedForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
-            else
+            if (!isHeavy) // Standard jump impulse
             {
-                Vector3 jumpVector = targetVelocity.normalized * currentJumpMomentum;
-                jumpVector.y = 10;
-                AddConstrainedForce(jumpVector.normalized * jumpImpulse, ForceMode.Impulse);
+                rigidbodyComp.drag = normalDrag;
+
+                if (!doJumpMomentum || targetVelocity.IgnoreY2() == Vector2.zero)
+                    AddConstrainedForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+                else
+                {
+                    Vector3 jumpVector = targetVelocity.normalized * currentJumpMomentum;
+                    jumpVector.y = 10;
+                    AddConstrainedForce(jumpVector.normalized * jumpImpulse, ForceMode.Impulse);
+                }
+            }
+            else // Heavy jump impulse
+            {
+                AddConstrainedForce(Vector3.up * heavyJumpPower * jumpImpulse, ForceMode.Impulse);
+                ResetJumpFlag();
             }
         }
 
         // Cut jump short if input was let go while rising
-        if (!isPressed && !isFalling)
+        if (!isPressed && !isFalling && !isHeavy)
         {
             rigidbodyComp.velocity = new Vector3(rigidbodyComp.velocity.x, 0, rigidbodyComp.velocity.z);
         }
@@ -486,6 +495,7 @@ public class Character : MonoBehaviour, IBounce
         {
             isHeavy = true;
 
+            rigidbodyComp.drag = normalDrag;
             audioData.PlayStartHeavyAudio();
             unheavyDurationTimer.Restart();
 

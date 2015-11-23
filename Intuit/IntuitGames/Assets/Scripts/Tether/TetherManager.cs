@@ -113,11 +113,9 @@ public class TetherManager : Manager
         reconnectSound.Initialize();
 
         // Subscribe audio events
-        OnDisconnected += (joint) => disconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, GameManager.PlayerManager
-            .character1.rigidbodyComp.velocity - GameManager.PlayerManager.character2.rigidbodyComp.velocity), 1, joint.transform);
+        OnDisconnected += (joint) => disconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
 
-        OnReconnected += (joint) => reconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, GameManager.PlayerManager
-            .character1.rigidbodyComp.velocity - GameManager.PlayerManager.character2.rigidbodyComp.velocity), 1, joint.transform);
+        OnReconnected += (joint) => reconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
     }
 
     public override void ManagerOnLevelLoad()

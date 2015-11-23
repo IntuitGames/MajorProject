@@ -3,7 +3,7 @@ using System;
 using CustomExtensions;/// <summary>
 /// Manages the current mode of the game.
 /// </summary>public class ModeManager : Manager{
-    public enum GameMode { None, MainMenu, PauseMenu, InGame };
+    public enum GameMode { None, MainMenu, PauseMenu, InGame, GameOver };
 
     public GameMode initialGameMode = GameMode.InGame;
     [System.NonSerialized]
@@ -28,6 +28,8 @@ using CustomExtensions;/// <summary>
     public float normalTimeScale = 1;
     [Range(0, 1)]
     public float pauseTimeScale = 0;
+    [Range(0, 1)]
+    public float gameOverTimeScale = 0.5f;
     public float modeChangeCooldown = 0.1f;
 
     public event Action<GameMode, GameMode> OnGameModeChanged = delegate { };
@@ -65,6 +67,8 @@ using CustomExtensions;/// <summary>
     }    private void HandleTimeScale(GameMode newMode, GameMode oldMode)    {
         if (newMode == GameMode.PauseMenu)
             Time.timeScale = pauseTimeScale;
+        else if (newMode == GameMode.GameOver)
+            Time.timeScale = gameOverTimeScale;
         else
             Time.timeScale = normalTimeScale;
     }}

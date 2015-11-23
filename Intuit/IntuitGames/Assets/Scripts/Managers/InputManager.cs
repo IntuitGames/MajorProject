@@ -38,6 +38,7 @@ public class InputManager : Manager
     // Events
     public event Action<float> PreUpdate = delegate { };
     public event Action<float> PostUpdate = delegate { };
+    // 1st float - forward | 2nd float - right
     public event Action<float, float> MovementP1 = delegate { };
     public event Action<float, float> MovementP2 = delegate { };
     // 1st bool - isPlayerOne? | 2nd bool - is pressed?
@@ -65,6 +66,7 @@ public class InputManager : Manager
     public UpdateTypes sprintUpdates = UpdateTypes.Update;
 
     // Quick-access Properties
+    public float movementDelta { get { return GetDelta(movementUpdates); } }
     public float jumpDelta { get { return GetDelta(jumpUpdates); } }
     public float dashDelta { get { return GetDelta(dashUpdates); } }
     public float heavyDelta { get { return GetDelta(heavyUpdates); } }
@@ -142,6 +144,15 @@ public class InputManager : Manager
 
                 // Pause check
                 if (type == pauseUpdates) pauseData.RaiseEvent(Pause, PauseToggle);
+                break;
+
+            case ModeManager.GameMode.GameOver:
+                // Raise axis input events
+                if (type == movementUpdates)
+                {
+                    MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
+                    MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
+                }
                 break;
 
             default:

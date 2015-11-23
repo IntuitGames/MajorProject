@@ -5,7 +5,7 @@ using System;/// <summary>
 /// </summary>public class AudioManager : Manager{
     // NESTED TYPES
     public enum Player { None, Unity, FMOD };
-    public enum Type { SoundEffect, BackgroundMusic, Ambiance };
+    public enum Type { SoundEffect, BackgroundMusic, Ambiance, Dialogue };
     public enum Group { Game, UI, Player, Enemy };
 
     // INSPECTOR
@@ -21,6 +21,8 @@ using System;/// <summary>
     public float backgroundMusicVolume = 1;
     [Range(0, 1)]
     public float ambianceVolume = 1;
+    [Range(0, 1)]
+    public float dialogueVolume = 1;
     [Header("Groups"), Range(0, 1)]
     public float gameGroupVolume = 1;
     [Range(0, 1)]
@@ -35,6 +37,8 @@ using System;/// <summary>
     public float pauseModeVolume = 0.5f;
     [Range(0, 1)]
     public float mainMenuModeVolume = 1;
+    [Range(0, 1)]
+    public float gameOverModeVolume = 1;
 
     void Start() { } // To show the enabled toggle box on inspector
 
@@ -66,6 +70,8 @@ using System;/// <summary>
             value *= backgroundMusicVolume;
         else if (soundClip.type == Type.Ambiance)
             value *= ambianceVolume;
+        else if (soundClip.type == Type.Dialogue)
+            value *= dialogueVolume;
 
         if (soundClip.group == Group.Game)
             value *= gameGroupVolume;
@@ -82,6 +88,8 @@ using System;/// <summary>
             value *= pauseModeVolume;
         else if (GameManager.ModeManager.currentGameMode == global::ModeManager.GameMode.MainMenu)
             value *= mainMenuModeVolume;
+        else if (GameManager.ModeManager.currentGameMode == global::ModeManager.GameMode.GameOver)
+            value *= gameOverModeVolume;
 
         return value;
     }
