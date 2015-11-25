@@ -3,6 +3,7 @@ using CustomExtensions;/// <summary>
 /// Basic player pickups that trigger when touched.
 /// </summary>public class Pickup : Trigger{
     public float jellyValue = 1;
+    public float scoreValue = 0;
     public bool allowPickupOnMaxJelly = true;
     [Range(0, 50)]
     public float drawRadius = 5;
@@ -24,6 +25,7 @@ using CustomExtensions;/// <summary>
     protected override void OnTrigger(GameObject triggerObject)
     {
         GameManager.PlayerManager.AddJelly(jellyValue);
+        GameManager.PlayerManager.collectibleScore += scoreValue;
         soundEffect.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
         gameObject.SetActive(false);
         Destroy(gameObject, 5);

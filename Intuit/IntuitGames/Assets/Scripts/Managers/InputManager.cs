@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine.EventSystems;
+using CustomExtensions;
 
 /// <summary>
 /// Handles all input related elements.
@@ -67,6 +68,7 @@ public class InputManager : Manager
 
     // Quick-access Properties
     public float movementDelta { get { return GetDelta(movementUpdates); } }
+    public float unscaledMovementDelta { get { return GetDelta(movementUpdates, false); } }
     public float jumpDelta { get { return GetDelta(jumpUpdates); } }
     public float dashDelta { get { return GetDelta(dashUpdates); } }
     public float heavyDelta { get { return GetDelta(heavyUpdates); } }
@@ -83,6 +85,16 @@ public class InputManager : Manager
             eventSystem = GameObject.FindObjectOfType<EventSystem>();
 
         eventSystem.enabled = true;
+
+        // While in game over mode switch movement updates to Update
+        UpdateTypes cachedMovementUpdate = movementUpdates;
+        ModeManager.OnGameModeChanged += (n, o) =>
+            {
+                if (n.EqualToAny(global::ModeManager.GameMode.GameOver, global::ModeManager.GameMode.MainMenu))
+                    movementUpdates = UpdateTypes.Update;
+                else if (o == global::ModeManager.GameMode.GameOver)
+                    movementUpdates = cachedMovementUpdate;
+            };
     }
 
     void Update()
@@ -150,9 +162,19 @@ public class InputManager : Manager
                 // Raise axis input events
                 if (type == movementUpdates)
                 {
+                    MovementP1(Input.GetAxisRaw(forwardStr + player1Str), Input.GetAxisRaw(rightStr + player1Str));
+                    MovementP2(Input.GetAxisRaw(forwardStr + player2Str), Input.GetAxisRaw(rightStr + player2Str));
+                }
+                break;
+
+            case global::ModeManager.GameMode.MainMenu:
+                // Raise axis input events
+                if (type == movementUpdates)
+                {
                     MovementP1(Input.GetAxis(forwardStr + player1Str), Input.GetAxis(rightStr + player1Str));
                     MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
                 }
+                break;
                 break;
 
             default:
@@ -228,9 +250,10 @@ public class InputManager : Manager
         }
     }
 
-    private float GetDelta(UpdateTypes type)
+    private float GetDelta(UpdateTypes type, bool scaled = true)
     {
-        return type == UpdateTypes.FixedUpdate ? Time.fixedDeltaTime : Time.deltaTime;
+        return scaled ? (type == UpdateTypes.FixedUpdate ? Time.fixedDeltaTime : Time.deltaTime) :
+            (type == UpdateTypes.FixedUpdate ? Time.fixedDeltaTime : Time.unscaledDeltaTime);
     }
 
     // Is a player currently requesting a jump?

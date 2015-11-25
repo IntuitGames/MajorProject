@@ -16,6 +16,9 @@ using CustomExtensions;/// <summary>
     // Events
     public static event System.Action OnApplicationExit = delegate { };
 
+    // Levels
+    public static string[] levels = { "Main Menu", "Level 1", "Level 2", "Test" };
+
     #region MESSAGES
 
     void Awake()
@@ -129,6 +132,16 @@ using CustomExtensions;/// <summary>
     public static void ReloadLevel()
     {
         Application.LoadLevel(Application.loadedLevel);
+    }
+
+    public static void LoadLevel(int number)
+    {
+        Application.LoadLevel(number);
+    }
+
+    public static void LoadMainMenu()
+    {
+        Application.LoadLevel(0);
     }
 
     #endregion

@@ -35,6 +35,7 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
     private float minLength1, maxLength1, minLength2, maxLength2;
     private float minHeight, maxHeight;
     private float holdTimer;
+    private bool initialized;
 
     void Awake()
     {
@@ -45,26 +46,13 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         if (!armRect)
             armRect = GetComponentInChildren<RectTransform>();
 
-        // Set length definitions
-        minLength1 = armRect.offsetMin.x;
-        maxLength1 = minLength1 * lengthMulti;
-
-        minLength2 = armRect.offsetMax.x;
-        maxLength2 = minLength2 * lengthMulti;
-
-        maxHeight = armRect.offsetMin.y;
-        minHeight = maxHeight / heightMulti;
-    }
-
-    void Start()
-    {
-        SetActive(true);
+        SetDefinitions();
     }
 
     void Update()
     {
         if (percentage > acceptanceThreshold)
-            holdTimer += Time.deltaTime;
+            holdTimer += Time.unscaledDeltaTime;
         else
             holdTimer = 0;
 
@@ -74,17 +62,26 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         // Update coop selector position
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject)
             parentRect.localPosition = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.localPosition;
+    }
+
+    void OnDestroy()
+    {
+        if (enabled)
+        {
+            GameManager.InputManager.MovementP1 -= Player1Movement;
+            GameManager.InputManager.MovementP2 -= Player2Movement;
+        }
     }    private void Player1Movement(float forward, float right)
     {
         float newValue;
         if (right < 0)
         {
-            newValue = Mathf.Clamp(armRect.offsetMin.x + (right * GameManager.InputManager.movementDelta * growthSpeed), maxLength1, minLength1);
+            newValue = Mathf.Clamp(armRect.offsetMin.x + (right * GameManager.InputManager.unscaledMovementDelta * growthSpeed), maxLength1, minLength1);
             armRect.offsetMin = new Vector2(newValue, currentHeight);
         }
         else
         {
-            newValue = Mathf.Clamp(armRect.offsetMin.x + (GameManager.InputManager.movementDelta * declineSpeed), maxLength1, minLength1);
+            newValue = Mathf.Clamp(armRect.offsetMin.x + (GameManager.InputManager.unscaledMovementDelta * declineSpeed), maxLength1, minLength1);
             armRect.offsetMin = new Vector2(newValue, currentHeight);
         }
     }
@@ -94,12 +91,12 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         float newValue;
         if (right > 0)
         {
-            newValue = Mathf.Clamp(armRect.offsetMax.x + (right * GameManager.InputManager.movementDelta * growthSpeed), minLength2, maxLength2);
+            newValue = Mathf.Clamp(armRect.offsetMax.x + (right * GameManager.InputManager.unscaledMovementDelta * growthSpeed), minLength2, maxLength2);
             armRect.offsetMax = new Vector2(newValue, currentHeight * -1);
         }
         else
         {
-            newValue = Mathf.Clamp(armRect.offsetMax.x - (GameManager.InputManager.movementDelta * declineSpeed), minLength2, maxLength2);
+            newValue = Mathf.Clamp(armRect.offsetMax.x - (GameManager.InputManager.unscaledMovementDelta * declineSpeed), minLength2, maxLength2);
             armRect.offsetMax = new Vector2(newValue, currentHeight * -1);
         }
     }    private void PerformAction()
@@ -113,6 +110,8 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         SetActive(false);
     }    public void SetActive(bool state)
     {
+        SetDefinitions();
+
         // Reset arm state
         holdTimer = 0;
         armRect.offsetMin = new Vector2(minLength1, maxHeight);
@@ -133,4 +132,19 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         // Disable / Enable game objects
         armRect.gameObject.SetActive(state);
         enabled = state;
+    }    private void SetDefinitions()
+    {
+        if (initialized) return;
+
+        // Set length definitions
+        minLength1 = armRect.offsetMin.x;
+        maxLength1 = minLength1 * lengthMulti;
+
+        minLength2 = armRect.offsetMax.x;
+        maxLength2 = minLength2 * lengthMulti;
+
+        maxHeight = armRect.offsetMin.y;
+        minHeight = maxHeight / heightMulti;
+
+        initialized = true;
     }}

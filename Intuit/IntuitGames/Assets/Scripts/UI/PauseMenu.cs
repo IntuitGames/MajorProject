@@ -8,6 +8,7 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public Image backgroundPanel;
     public Button resumeButton;
     public Button restartButton;
+    public Button mainMenuButton;
     public Button exitButton;
     public Slider volumeSlider;    void Awake()
     {
@@ -22,18 +23,23 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
 
     public void ShowPauseMenu()
     {
+        // Enable the parent back panel
         backgroundPanel.gameObject.SetActive(true);
 
         volumeSlider.value = GameManager.AudioManager.masterVolume;
 
+        // Select the default button
         resumeButton.Select();
     }
 
     public void HidePauseMenu()
     {
+        // Disable the parent back panel
         backgroundPanel.gameObject.SetActive(false);
 
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        // Deselect
+        if (UnityEngine.EventSystems.EventSystem.current)
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
     {
         if (newMode == ModeManager.GameMode.PauseMenu)
@@ -52,6 +58,11 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public void Restart()
     {
         GameManager.ReloadLevel();
+    }
+
+    public void MainMenu()
+    {
+        GameManager.LoadMainMenu();
     }
 
     public void Exit()

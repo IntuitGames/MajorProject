@@ -32,6 +32,7 @@ using CustomExtensions;/// <summary>
     public float gameOverTimeScale = 0.5f;
     public float modeChangeCooldown = 0.1f;
 
+    // NewMode, OldMode
     public event Action<GameMode, GameMode> OnGameModeChanged = delegate { };
 
     void Start() { }
