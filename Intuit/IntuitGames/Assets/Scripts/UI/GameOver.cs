@@ -52,7 +52,8 @@
         coopSelector.SetActive(false);
 
         // Deselect
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        if (UnityEngine.EventSystems.EventSystem.current)
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 
     private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)

@@ -32,6 +32,8 @@ using CustomExtensions;/// <summary>
         }
     }
 
+    public float collectibleScore;
+
     // TETHER
     [Header("Tether")]
     public bool constrainMovement = true;
@@ -98,6 +100,7 @@ using CustomExtensions;/// <summary>
 
     public override void ManagerOnLevelLoad()
     {
+        collectibleScore = 0;
         currentJelly = maxJelly;
     }
 
