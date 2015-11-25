@@ -1,22 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour
 {
-    public EnemyBodyPart[] bodyParts;
-    public EnemyWeakSpot[] weakSpots;
-    public EnemyAggro aggroHandler;
+    //   public EnemyBodyPart[] bodyParts;
+    //   public EnemyWeakSpot[] weakSpots;
+    //   public EnemyAggro aggroHandler;
+    //public EnemyBodyBase[] baseParts;
+
+    [Header("Aggressive")]
+    public float knockbackForce;
 
     [Header("Death")]
-    public Rigidbody[] BodyParts;
     public float gibForce;
-	public float fadeTime;
+    public float fadeTime;
+    [HideInInspector]
+    public bool isDead;
 
-	public void Death()
-	{
+    protected virtual void Start()
+    {
 
-	}
+    }
 
+    public void OnDeath()
+    {
+        EnemyBodyBase[] parts = GetComponentsInChildren<EnemyBodyBase>();
+        foreach (EnemyBodyBase part in parts)
+        {
+            part.Death();
+        }
+    }
 
+    public abstract void SendAggroMessage(bool becomeAggro);
+    
 }
 

@@ -17,7 +17,7 @@ public class EnemyAggroExit : MonoBehaviour
     //This allows the enemy to stay aggro'd to the players as long as theres something within its range
     void OnTriggerEnter(Collider other)
     {
-        if (!enemyAggro.enemy.isDead && enemyAggro.enemy.isAggro)
+        if (!enemyAggro.enemy.isDead)
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {

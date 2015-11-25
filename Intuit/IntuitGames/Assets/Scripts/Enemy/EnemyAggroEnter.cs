@@ -13,7 +13,7 @@ public class EnemyAggroEnter : MonoBehaviour {
 	//Whenever a player or tether piece enters the aggro trigger, set the enemy to the aggro state and add to the count of how many tethers/players have entered 
     void OnTriggerEnter(Collider other)
     {
-        if (!enemyAggro.enemy.isDead && !enemyAggro.enemy.isAggro)
+        if (!enemyAggro.enemy.isDead)
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {

@@ -1,36 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyBodyBase : MonoBehaviour {
-	
-	protected Enemy parentEnemy;
-	private Renderer renderer;
+public abstract class EnemyBodyBase : MonoBehaviour {
+
+    public EnemyBase parentEnemy;
+    protected Renderer render;
+	protected Rigidbody rigidyBody;
+
 
 	// Use this for initialization
-	void Start () {
-		this.parentEnemy = GetComponentInParent<Enemy> ();
-		this.renderer = GetComponent<Renderer> ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	protected virtual void Start () {
+        this.parentEnemy = GetComponentInParent<EnemyBase>();
+        this.render = GetComponent<Renderer> ();
+		this.rigidyBody = GetComponent<Rigidbody> ();
 	}
 
 	public void Death()
 	{
-		StartCoroutine (DeathFade (parentEnemy.fadeTime));
-	}
+        Debug.Log("Death Called on " + this.gameObject.name);
+        StartCoroutine(DeathFade(this.render.material.color, parentEnemy.fadeTime));
+        rigidyBody.isKinematic = false;
+        rigidyBody.AddForce(Random.insideUnitSphere * parentEnemy.gibForce);
+    }
 
-	IEnumerator DeathFade(float fadeTime){
+	IEnumerator DeathFade(Color start, float fadeTime){
 
-		while (this.renderer.material.color.a <= 0f) 
-		{
-			Color current = this.renderer.material.color;
-			this.renderer.material.color = new Color(current.r, current.g, current.b, (current.a - (fadeTime * Time.deltaTime)));
+		Color targetColor = new Color (start.r, start.g, start.b, 0f);
+
+		for (float t = 0; t < fadeTime; t+=Time.deltaTime) {
+		
+			this.render.material.color = Color.Lerp(start, targetColor, t/fadeTime);
 			yield return null;
 		}
-
-
 	}
 }

@@ -9,28 +9,28 @@ public class EnemyAggro : MonoBehaviour
     public EnemyAggroEnter enterZone;
     public EnemyAggroExit exitZone;
 
-    public Enemy enemy;
+    public EnemyBase enemy;
 
     [ReadOnly]
     public int playerObsInRange = 0;
 
     void Start()
     {
-        if(enemy == null) enemy = transform.parent.gameObject.GetComponent<Enemy>();
+        if (enemy == null) enemy = GetComponentInParent<EnemyBase>();
     }
 
     public void ObjectEnteredRange()
     {
-        if (!enemy.isAggro) enemy.isAggro = true;
+        enemy.SendAggroMessage(true);
         playerObsInRange++;
     }
 
     public void ObjectLeftRange()
     {
         playerObsInRange--;
-        if (playerObsInRange <= 0 && enemy.isAggro)
+        if (playerObsInRange <= 0)
         {
-            enemy.isAggro = false;
+            enemy.SendAggroMessage(false);
         }
     }
 

@@ -1,48 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 
-public class FSM<T> {
+// When inheriting from FSM, T is intended to be the type of State being used
+// Ideally, would be defined as something along the lines of:
+//      where T:FSMState
+// 
+public abstract class FSM<T, U> {
+    protected U fsmOwner;
+    protected Stack<T> stack = new Stack<T>();
 
-	T fsmOwner;
+    public FSM (U owner)
+    {
+        fsmOwner = owner;
+    }
 
-	private Stack<FSMState<T>> stack = new Stack<FSMState<T>>();
+    public FSM(T startState, U owner)
+    {
+        fsmOwner = owner;
+        stack.Push(startState);
+    }
 
-	public FSM (T owner)
-	{
-		fsmOwner = owner;
-	}
-
-	public FSM(T owner, FSMState<T> startState)
-	{
-		fsmOwner = owner;
-
-		stack.Push (startState);
-	}
-
-	public void Update()
-	{
-		if(getCurrentState() != null)
-		{
-			getCurrentState().Update(fsmOwner);
-		}
-	}
-
-	public FSMState<T> popState()
-	{
-		getCurrentState ().End (fsmOwner);
-		return stack.Pop();
-	}
-
-	public void pushState(FSMState<T> state)
-	{
-        if (stack.Count > 0) getCurrentState().End(fsmOwner);
-		stack.Push( state );
-		getCurrentState ().Begin (fsmOwner);
-	}
-
-	private FSMState<T> getCurrentState()
-	{
-		return stack.Count > 0 ? stack.Peek() : null;
-	}
+    public abstract void Update();
+    public abstract void popState();
+    public abstract void pushState(T state);
+    protected abstract T getCurrentState();
 }

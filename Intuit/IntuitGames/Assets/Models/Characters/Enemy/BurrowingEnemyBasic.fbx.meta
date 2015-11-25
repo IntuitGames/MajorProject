@@ -1,0 +1,120 @@
+fileFormatVersion: 2
+guid: 16acdbd9b08f30d4e949ee92bdf61656
+timeCreated: 1448171404
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: BurrowingEnemy_EyeLeft
+    100002: BurrowingEnemy_EyeRight
+    100004: BurrowingEnemy_FullModel
+    100006: BurrowingEnemy_Guts
+    100008: BurrowingEnemy_Head
+    100010: BurrowingEnemy_WeakSpot
+    100012: //RootNode
+    100014: BurrowingEnemyHeart
+    100016: BurrowingEnemyIntestines
+    100018: BurrowingEnemyLungs
+    100020: BurrowingEnemyStomach
+    100022: pasted__Guts
+    100024: transform1
+    400000: BurrowingEnemy_EyeLeft
+    400002: BurrowingEnemy_EyeRight
+    400004: BurrowingEnemy_FullModel
+    400006: BurrowingEnemy_Guts
+    400008: BurrowingEnemy_Head
+    400010: BurrowingEnemy_WeakSpot
+    400012: //RootNode
+    400014: BurrowingEnemyHeart
+    400016: BurrowingEnemyIntestines
+    400018: BurrowingEnemyLungs
+    400020: BurrowingEnemyStomach
+    400022: pasted__Guts
+    400024: transform1
+    2300000: BurrowingEnemy_EyeLeft
+    2300002: BurrowingEnemy_EyeRight
+    2300004: BurrowingEnemy_Head
+    2300006: BurrowingEnemy_WeakSpot
+    2300008: BurrowingEnemyHeart
+    2300010: BurrowingEnemyIntestines
+    2300012: BurrowingEnemyLungs
+    2300014: BurrowingEnemyStomach
+    3300000: BurrowingEnemy_EyeLeft
+    3300002: BurrowingEnemy_EyeRight
+    3300004: BurrowingEnemy_Head
+    3300006: BurrowingEnemy_WeakSpot
+    3300008: BurrowingEnemyHeart
+    3300010: BurrowingEnemyIntestines
+    3300012: BurrowingEnemyLungs
+    3300014: BurrowingEnemyStomach
+    4300000: BurrowingEnemy_Head
+    4300002: BurrowingEnemy_WeakSpot
+    4300004: BurrowingEnemy_EyeRight
+    4300006: BurrowingEnemy_EyeLeft
+    4300008: BurrowingEnemyLungs
+    4300010: BurrowingEnemyHeart
+    4300012: BurrowingEnemyStomach
+    4300014: BurrowingEnemyIntestines
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 20
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

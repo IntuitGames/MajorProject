@@ -1,0 +1,126 @@
+fileFormatVersion: 2
+guid: 9a748845620cdad40b190836ead45521
+timeCreated: 1448171408
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: group
+    100002: group1
+    100004: pasted__Full_Model
+    100006: pasted__Guts
+    100008: pasted__polySurface3
+    100010: pasted__polySurface4
+    100012: pasted__TotemLungs
+    100014: pasted__TotemTail
+    100016: pPipe2
+    100018: ProjectileEnemy_Body
+    100020: ProjectileEnemy_EyeLeft
+    100022: ProjectileEnemy_EyeRight
+    100024: ProjectileEnemy_TeethLower
+    100026: ProjectileEnemy_TeethUpper
+    100028: ProjectileEnemy_WeakSpot
+    100030: //RootNode
+    400000: group
+    400002: group1
+    400004: pasted__Full_Model
+    400006: pasted__Guts
+    400008: pasted__polySurface3
+    400010: pasted__polySurface4
+    400012: pasted__TotemLungs
+    400014: pasted__TotemTail
+    400016: pPipe2
+    400018: ProjectileEnemy_Body
+    400020: ProjectileEnemy_EyeLeft
+    400022: ProjectileEnemy_EyeRight
+    400024: ProjectileEnemy_TeethLower
+    400026: ProjectileEnemy_TeethUpper
+    400028: ProjectileEnemy_WeakSpot
+    400030: //RootNode
+    2300000: pasted__TotemLungs
+    2300002: pasted__TotemTail
+    2300004: ProjectileEnemy_Body
+    2300006: ProjectileEnemy_EyeLeft
+    2300008: ProjectileEnemy_EyeRight
+    2300010: ProjectileEnemy_TeethLower
+    2300012: ProjectileEnemy_TeethUpper
+    2300014: ProjectileEnemy_WeakSpot
+    3300000: pasted__TotemLungs
+    3300002: pasted__TotemTail
+    3300004: ProjectileEnemy_Body
+    3300006: ProjectileEnemy_EyeLeft
+    3300008: ProjectileEnemy_EyeRight
+    3300010: ProjectileEnemy_TeethLower
+    3300012: ProjectileEnemy_TeethUpper
+    3300014: ProjectileEnemy_WeakSpot
+    4300000: pasted__TotemLungs
+    4300002: pasted__TotemTail
+    4300004: ProjectileEnemy_Body
+    4300006: ProjectileEnemy_EyeRight
+    4300008: ProjectileEnemy_TeethLower
+    4300010: ProjectileEnemy_TeethUpper
+    4300012: ProjectileEnemy_WeakSpot
+    4300014: ProjectileEnemy_EyeLeft
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 20
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
