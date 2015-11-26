@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // Ideally, would be defined as something along the lines of:
 //      where T:FSMState
 // 
-public abstract class FSM<T, U> {
+public class FSM<T, U> where T : FSMState<U> {
     protected U fsmOwner;
     protected Stack<T> stack = new Stack<T>();
 
@@ -20,8 +20,24 @@ public abstract class FSM<T, U> {
         stack.Push(startState);
     }
 
-    public abstract void Update();
-    public abstract void popState();
-    public abstract void pushState(T state);
-    protected abstract T getCurrentState();
+    public virtual void Update()
+	{
+		getCurrentState().Update(fsmOwner);
+	}
+    public virtual void popState()
+	{
+		stack.Pop().End( fsmOwner );
+		getCurrentState().Begin(fsmOwner);
+	}
+	public virtual void pushState(T state)
+	{
+		if (stack.Count > 0) getCurrentState().End(fsmOwner);
+		stack.Push(state);
+		getCurrentState().Begin(fsmOwner);	
+
+	}
+    protected virtual T getCurrentState()
+	{
+		return stack.Count > 0 ? stack.Peek() : null;
+	}
 }

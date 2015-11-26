@@ -8,7 +8,8 @@ public class weStateChase : EnemyCoreState<WanderingEnemy>
 
     public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
-
+		if (!becomeAggressive)
+			owner.fsm.pushState (new weStateWander (ownerFSM));
     }
 
     public override void Begin(WanderingEnemy obj)
