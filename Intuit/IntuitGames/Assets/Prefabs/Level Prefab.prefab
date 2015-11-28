@@ -6734,7 +6734,6 @@ GameObject:
   - 82: {fileID: 8244056}
   - 114: {fileID: 11441712}
   - 114: {fileID: 11414714}
-  - 114: {fileID: 11496764}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -24925,7 +24924,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: b28a63e29f302774988f15099994782b, type: 2}
   startHeavy:
     player: 2
     type: 0
@@ -25386,19 +25385,19 @@ MonoBehaviour:
   disconnectSound:
     player: 2
     type: 0
-    group: 0
+    group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 8fc20d990b2d4434695a2c98f3995655, type: 2}
   reconnectSound:
     player: 2
     type: 0
-    group: 0
+    group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 36fbdedf459d15e4b8d69076cd75b3ed, type: 2}
   disconnected: 0
   directLength: 10
   tetherLength: 10
@@ -25782,18 +25781,16 @@ MonoBehaviour:
   exitHeavyDragDuration: .5
   minHeavyDuration: 1
   heavyCooldown: 0
-  canBounce: 1
-  momentumRetention: .5
+  _canBounce: 1
+  canGroundBounce: 1
+  groundBounceThreshold: 23
+  velocityBounceThreshold: 25
   bouncePower: 1
   minBouncePower: 0
   maxBouncePower: 50
+  jumpBounceMulti: 1.5
+  groundBounceMulti: .5
   partnerBouncePower: 5
-  jumpBouncePower: 1.5
-  canGroundBounce: 1
-  groundBounceThreshold: 23
-  groundBouncePower: .200000003
-  minGroundBounceMagnitude: 7.5
-  maxGroundBounceMagnitude: 15
 --- !u!114 &11411672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25966,8 +25963,8 @@ MonoBehaviour:
   pauseTimeScale: 0
   gameOverTimeScale: 0
   modeChangeCooldown: .100000001
-  ingameTimeTotal: 0
-  ingameTimeLevel: 0
+  inGameTimeTotal: 0
+  inGameTimeLevel: 0
 --- !u!114 &11412780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26209,13 +26206,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playOnStart: 1
   music:
-    player: 1
+    player: 2
     type: 1
     group: 0
-    volume: .5
+    volume: 1
     pitch: 1
     unityClip: {fileID: 8300000, guid: 8649a30ba6833ab4bb8c82228c3d75c1, type: 3}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 6bb428f7795d0004292a32c453365d9d, type: 2}
 --- !u!114 &11414918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26524,7 +26521,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: b28a63e29f302774988f15099994782b, type: 2}
   startHeavy:
     player: 2
     type: 0
@@ -28523,18 +28520,16 @@ MonoBehaviour:
   exitHeavyDragDuration: .5
   minHeavyDuration: 1
   heavyCooldown: 0
-  canBounce: 1
-  momentumRetention: .5
+  _canBounce: 1
+  canGroundBounce: 1
+  groundBounceThreshold: 23
+  velocityBounceThreshold: 25
   bouncePower: 1
   minBouncePower: 0
   maxBouncePower: 50
+  jumpBounceMulti: 1.5
+  groundBounceMulti: .5
   partnerBouncePower: 5
-  jumpBouncePower: 1.5
-  canGroundBounce: 1
-  groundBounceThreshold: 23
-  groundBouncePower: .200000003
-  minGroundBounceMagnitude: 7.5
-  maxGroundBounceMagnitude: 15
 --- !u!114 &11434190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29125,7 +29120,7 @@ MonoBehaviour:
   canWeaken: 1
   weakenedMoveSpeedMulti: .5
   reconnectOnTouch: 1
-  actionOnDeath: Game Over
+  actionOnDeath: Nothing
   maxJelly: 10
   autoRecover: 0
   recoveryRate: .5
@@ -34697,26 +34692,6 @@ MonoBehaviour:
   passingThroughWeakSpot: 0
   disconnectedEnd: 0
   angle: 0
---- !u!114 &11496764
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 189392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dba93dac6f5ce684692c7f6f4352c4e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playOnStart: 1
-  music:
-    player: 2
-    type: 2
-    group: 0
-    volume: 1
-    pitch: 1
-    unityClip: {fileID: 0}
-    FMODAsset: {fileID: 11400000, guid: 902c80d8372caeb4b97e4ac67ed14d9f, type: 2}
 --- !u!114 &11496888
 MonoBehaviour:
   m_ObjectHideFlags: 1

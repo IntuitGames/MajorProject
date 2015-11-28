@@ -32,8 +32,10 @@ using CustomExtensions;/// <summary>
     public float gameOverTimeScale = 0.5f;
     public float modeChangeCooldown = 0.1f;
 
-    public float ingameTimeTotal;
-    public float ingameTimeLevel;
+    [ReadOnly]
+    public float inGameTimeTotal;
+    [ReadOnly]
+    public float inGameTimeLevel;
 
     // NewMode, OldMode
     public event Action<GameMode, GameMode> OnGameModeChanged = delegate { };
@@ -45,8 +47,8 @@ using CustomExtensions;/// <summary>
         // Counts time spent in-game
         if (currentGameMode == GameMode.InGame)
         {
-            ingameTimeLevel += Time.deltaTime;
-            ingameTimeTotal += Time.deltaTime;
+            inGameTimeLevel += Time.deltaTime;
+            inGameTimeTotal += Time.deltaTime;
         }
     }
 
@@ -66,7 +68,7 @@ using CustomExtensions;/// <summary>
     public override void ManagerOnLevelLoad()
     {
         // Reset in-game timer
-        ingameTimeLevel = 0;
+        inGameTimeLevel = 0;
     }    public void RequestGameModeChange(GameMode newMode, bool force, float delay)
     {
         if (canChangeMode && newMode != currentGameMode && enabled || force && newMode != currentGameMode)

@@ -40,7 +40,14 @@ public class SoundClip : IDisposable
 
             // Find all its parameters
             int paramCount;
-            FMODEvent.getParameterCount(out paramCount);
+            try
+            {
+                FMODEvent.getParameterCount(out paramCount);
+            }
+            catch
+            {
+                paramCount = 0;
+            }
 
             for (int i = 0; i < paramCount; i++)
             {

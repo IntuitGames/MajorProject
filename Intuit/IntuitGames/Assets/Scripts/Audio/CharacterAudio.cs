@@ -39,6 +39,8 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     private bool increaseWeakenedValue = false;
 
+    private float[] parameters;
+
     #endregion
 
     #region METHODS
@@ -73,7 +75,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     {
         if (!condition || !enabled || (int)surfaceType < 0) return;
 
-        float[] parameters = { 0, (int)surfaceType, weakenedState };
+        parameters = new float[] { 0, (int)surfaceType, weakenedState };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
@@ -81,7 +83,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     {
         if (!condition || !enabled) return;
 
-        float[] parameters = { 0, downwardVelocity.Normalize(2, 30, 0, 1), weakenedState };
+        parameters = new float[] { 0, downwardVelocity.Normalize(2, 30, 0, 1), weakenedState };
         land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
@@ -89,7 +91,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     {
         if (!condition || !enabled) return;
 
-        float[] parameters = { weakenedState };
+        parameters = new float[] { 0, weakenedState };
         jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
@@ -97,7 +99,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     {
         if (!condition || !enabled) return;
 
-        float[] parameters = { weakenedState };
+        parameters = new float[] { 0, weakenedState };
         dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 

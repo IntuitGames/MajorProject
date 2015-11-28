@@ -113,10 +113,6 @@ public class TetherManager : Manager
             joints.GetRange(joints.Count - collisionBuffer, collisionBuffer).ForEach(x => x.gameObject.IgnoreCollision(endPoint.gameObject));
         }
 
-        // Initialize audio
-        disconnectSound.Initialize();
-        reconnectSound.Initialize();
-
         // Subscribe audio events
         OnDisconnected += (joint) => disconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
         OnReconnected += (joint) => reconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
@@ -150,6 +146,13 @@ public class TetherManager : Manager
 
         if (disconnected)
             Reconnect();
+    }
+
+    void Start()
+    {
+        // Initialize audio
+        disconnectSound.Initialize();
+        reconnectSound.Initialize();
     }
 
     void Update()
