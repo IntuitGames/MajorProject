@@ -55,7 +55,7 @@ public class SoundClip : IDisposable
 
     // Plays the sound clip on specified audio source
     // Returns if it was successful in playing the sound
-    public bool PlayAttached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, params float[] parameters)
+    public bool PlayAttached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, float[] parameters = null)
     {
         if (!isInitialized) return false;
 
@@ -72,10 +72,11 @@ public class SoundClip : IDisposable
         else if (player == AudioManager.Player.FMOD && FMODEvent != null) // Play FMOD Sound
         {
             // Set the FMOD parameters
-            for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
-            {
-                FMODParameters[i].setValue(parameters[i]);
-            }
+            if (parameters != null)
+                for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
+                {
+                    FMODParameters[i].setValue(parameters[i]);
+                }
             FMODEvent.setPitch(pitch);
             FMODEvent.set3DAttributes(attributes);
             FMODEvent.setVolume(finalVolume);
@@ -86,7 +87,7 @@ public class SoundClip : IDisposable
 
     // Plays the sound clip on a detached clone audio source
     // Returns the new audio source if applicable
-    public AudioSource PlayDetached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, Transform target, params float[] parameters)
+    public AudioSource PlayDetached(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, Transform target, float[] parameters = null)
     {
         if (!isInitialized) return null;
 
@@ -103,10 +104,11 @@ public class SoundClip : IDisposable
         else if (player == AudioManager.Player.FMOD && FMODEvent != null)
         {
             // Set the FMOD parameters
-            for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
-            {
-                FMODParameters[i].setValue(parameters[i]);
-            }
+            if (parameters != null)
+                for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
+                {
+                    FMODParameters[i].setValue(parameters[i]);
+                }
             FMODEvent.setPitch(pitch);
             FMODEvent.set3DAttributes(attributes);
             FMODEvent.setVolume(finalVolume);
@@ -117,7 +119,7 @@ public class SoundClip : IDisposable
 
     // Applies sound clip values to the audio source if able
     // Returns if it was successful in updating settings
-    public bool Update(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, params float[] parameters)
+    public bool Update(AudioSource audioSource, ATTRIBUTES_3D attributes, float volumeMulti, float[] parameters = null)
     {
         float finalVolume = GameManager.AudioManager.GetFinalVolume(this, volumeMulti);
 
@@ -133,10 +135,11 @@ public class SoundClip : IDisposable
             FMODEvent.getPlaybackState(out playState);
             if (playState == PLAYBACK_STATE.STOPPED) return false;
 
-            for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
-            {
-                FMODParameters[i].setValue(parameters[i]);
-            }
+            if (parameters != null)
+                for (int i = 0; i < parameters.Length && i < FMODParameters.Count; i++)
+                {
+                    FMODParameters[i].setValue(parameters[i]);
+                }
             FMODEvent.set3DAttributes(attributes);
             FMODEvent.setVolume(finalVolume);
             FMODEvent.setPitch(pitch);

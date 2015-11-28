@@ -11,14 +11,13 @@ public class Character : MonoBehaviour, IBounce
     #region VARIABLES
 
     // COMPONENTS
-    [HideInInspector]
+    [Header("Components")] // Visible because I want valid values before Awake()
     public Rigidbody rigidbodyComp;
-    [HideInInspector]
-    public CapsuleCollider capsuleCollider;
-    [HideInInspector]
-    public Animator animator;
-    [HideInInspector]
-    public CharacterAudio audioData;
+    public CapsuleCollider colliderComp;
+    public Animator animatorComp;
+    public CharacterAudio audioDataComp;
+    public SkinnedMeshRenderer bodyRendererComp;
+    public MeshRenderer maskRendererComp;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -128,20 +127,25 @@ public class Character : MonoBehaviour, IBounce
     }
 
     // BOUNCE
-    [Header("Bounce")]
-    public bool canBounce = true;
-    [Range(0, 1)]
-    public float momentumRetention = 0.8f;
-    [Range(0, 10)]
-    public float bouncePower = 1;
-    [Range(0, 10)]
-    public float jumpBouncePower = 1.5f;
+    [Header("Bounce"), SerializeField]
+    private bool _canBounce = true;
     public bool canGroundBounce = true;
-    public float groundBounceThreshold = 10;
-    [Range(0, 10)]
-    public float groundBouncePower = 0.5f;
-    public float minGroundBounceMagnitude = 5;
-    public float maxGroundBounceMagnitude = 10;
+    public float groundBounceThreshold = 23;
+    public float velocityBounceThreshold = 25;
+    [Range(0, 50)]
+    public float bouncePower = 10;
+    public float minBouncePower = 5;
+    public float maxBouncePower = 50;
+    [Range(0, 5)]
+    public float jumpBounceMulti = 1.5f;
+    [Range(0, 5)]
+    public float groundBounceMulti = 0.5f;
+    public float partnerBouncePower = 5;
+    public bool canBounce
+    {
+        get { return _canBounce && !bounceTimer.IsPlaying; }
+    }
+    private TimerPlus bounceTimer;
 
     // PRIVATES
     private float normalDrag;                           // Normal rigidbody drag.
@@ -245,12 +249,12 @@ public class Character : MonoBehaviour, IBounce
         // Find component references
         if (!rigidbodyComp)
             rigidbodyComp = GetComponent<Rigidbody>();
-        if (!capsuleCollider)
-            capsuleCollider = GetComponent<CapsuleCollider>();
-        if (!animator)
-            animator = GetComponentInChildren<Animator>();
-        if (!audioData)
-            audioData = GetComponent<CharacterAudio>();
+        if (!colliderComp)
+            colliderComp = GetComponent<CapsuleCollider>();
+        if (!animatorComp)
+            animatorComp = GetComponentInChildren<Animator>();
+        if (!audioDataComp)
+            audioDataComp = GetComponent<CharacterAudio>();
     }
 
     void Start()
@@ -271,6 +275,7 @@ public class Character : MonoBehaviour, IBounce
         heavyCooldownTimer = TimerPlus.Create(heavyCooldown, TimerPlus.Presets.Standard);
         unheavyDurationTimer = TimerPlus.Create(minHeavyDuration, TimerPlus.Presets.Standard);
         exitHeavyDragTimer = TimerPlus.Create(exitHeavyDragDuration, TimerPlus.Presets.Standard, () => rigidbodyComp.drag = normalDrag);
+        bounceTimer = TimerPlus.Create(0.2f, TimerPlus.Presets.Standard);
 
         // Set debug heavy colours
         normalColour = GetComponentInChildren<Renderer>().material.color;
@@ -302,9 +307,10 @@ public class Character : MonoBehaviour, IBounce
         heavyCooldownTimer.Dispose();
         unheavyDurationTimer.Dispose();
         exitHeavyDragTimer.Dispose();
+        bounceTimer.Dispose();
 
         // Dispose of FMOD instances
-        audioData.Dispose();
+        audioDataComp.Dispose();
 
         // Unsubscribe this character from events
         GameManager.InputManager.UnsubscribeCharacterEvents(this);
@@ -312,7 +318,7 @@ public class Character : MonoBehaviour, IBounce
 
     void OnCollisionEnter(Collision col)
     {
-        audioData.PlayLandAudio(Mathf.Abs(col.relativeVelocity.y), col.relativeVelocity.magnitude > 2);
+        audioDataComp.PlayLandAudio(Mathf.Abs(col.relativeVelocity.y), col.relativeVelocity.magnitude > 2);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
@@ -349,7 +355,7 @@ public class Character : MonoBehaviour, IBounce
         if (!isBouncing && onObject.collider && onObject.collider.GetComponent<Bouncy>()) Bounce(Vector3.one, onObject.collider.gameObject);
 
         // Apply heavy downward force and physics materials
-        capsuleCollider.material = isHeavy ? heavyMaterial : normalMaterial;
+        colliderComp.material = isHeavy ? heavyMaterial : normalMaterial;
         if (isHeavy) AddConstrainedForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
     }
 
@@ -375,8 +381,8 @@ public class Character : MonoBehaviour, IBounce
         if(GameManager.PlayerManager.constrainMovement) ApplyConstrainForce();
 
         // Send animator info
-        animator.SetBool("IsAirborne", !isGrounded);
-        animator.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
+        animatorComp.SetBool("IsAirborne", !isGrounded);
+        animatorComp.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
 
         // Updates last recorded Y value
         lastRecoredY = transform.position.y;
@@ -442,7 +448,7 @@ public class Character : MonoBehaviour, IBounce
             jumpFlag = true;
 
             // Play sound
-            audioData.PlayJumpAudio();
+            audioDataComp.PlayJumpAudio();
 
             if (!isHeavy) // Standard jump impulse
             {
@@ -481,7 +487,7 @@ public class Character : MonoBehaviour, IBounce
 
             if (isGrounded) targetVelocity.y += dashHeight;
 
-            audioData.PlayDashAudio();
+            audioDataComp.PlayDashAudio();
         }
     }
 
@@ -496,7 +502,7 @@ public class Character : MonoBehaviour, IBounce
             isHeavy = true;
 
             rigidbodyComp.drag = normalDrag;
-            audioData.PlayStartHeavyAudio();
+            audioDataComp.PlayStartHeavyAudio();
             unheavyDurationTimer.Restart();
 
             // Colour changing for debug purposes
@@ -506,7 +512,7 @@ public class Character : MonoBehaviour, IBounce
         {
             isHeavy = false;
 
-            audioData.PlayEndHeavyAudio();
+            audioDataComp.PlayEndHeavyAudio();
             heavyCooldownTimer.Restart();
 
             if (isGrounded) // Reduce sliding down slopes while not heavy
@@ -556,14 +562,15 @@ public class Character : MonoBehaviour, IBounce
         else
         {
             isBouncing = true;
-            AddConstrainedForce(direction * magnitude, ForceMode.Impulse);
+            bounceTimer.Restart();
+            AddConstrainedForce(direction.normalized * magnitude, ForceMode.Impulse);
         }
     }
 
     // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        audioData.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceTypes.None, isWalking && isGrounded);
+        audioDataComp.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceTypes.None, isWalking && isGrounded);
     }
 
     //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below
@@ -650,30 +657,63 @@ public class Character : MonoBehaviour, IBounce
 
         // Bounce direction is currently always up due to some issues with side-collisions not acting properly.
         Vector3 bounceDirection = Vector3.up;
+        float finalBouncePower = bouncePower;
 
-        float baseBouncePower, bounceMultiplier, minBouncePower, maxBouncePower;
-
-        // Bouncing on a bouncy object
-        if (bouncyObj && relativeVelocity.magnitude > bouncyObj.velocityThreshold)
+        // Bouncing off player
+        if (bouncyObj && bouncyObj.enabled && bouncyObj.GetComponent<Character>())
         {
-            // Do not bounce if other character is bouncing on this character
-            if (bouncyObj.gameObject == GetPartner().gameObject && GetPartnerPosition().y > transform.position.y) return;
-            baseBouncePower = bouncePower;
-            bounceMultiplier = bouncyObj.bounceMultiplier * (relativeVelocity.magnitude * momentumRetention);
-            minBouncePower = bouncyObj.minBounceMagnitude * (GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBouncePower : 1);
-            maxBouncePower = bouncyObj.maxBounceMagnitude;
-            PerformBounce(bounceDirection, Mathf.Clamp(baseBouncePower * bounceMultiplier, minBouncePower, maxBouncePower));
+            float yDifference = transform.position.y - GetPartnerPosition().y;
+            if (yDifference > colliderComp.height / 2f) // Above
+            {
+                // Increase bounce if holding jump
+                finalBouncePower *= GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBounceMulti : 1;
+
+                // Assist the player in bounce on partner
+                bounceDirection = (GetPartnerPosition() + new Vector3(0, bouncePower, 0)) - transform.position;
+            }
+            else if (yDifference > -(colliderComp.height / 2f)) // Equal
+            {
+                // Preset small bounce
+                finalBouncePower = partnerBouncePower;
+                bounceDirection = transform.position - GetPartnerPosition();
+                bounceDirection.y = bounceDirection.magnitude;
+                PerformBounce(bounceDirection, finalBouncePower); // Bypass minimum
+                return;
+            }
+            else // Below
+            {
+                isBouncing = false;
+                return;
+            }
+        }
+        // Bouncing on a bouncy object
+        else if (bouncyObj && bouncyObj.enabled)
+        {
+            // Increase bounce if holding jump
+            finalBouncePower *= GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBounceMulti : 1;
+
+            // Apply relative velocity bounce multi
+            if (!isBouncing && relativeVelocity.magnitude > velocityBounceThreshold)
+                finalBouncePower *= relativeVelocity.magnitude.Normalize(velocityBounceThreshold, maxBouncePower, 1, 2);
         }
         // Bouncing on the ground
         else if (canGroundBounce && relativeVelocity.magnitude > groundBounceThreshold)
         {
-            baseBouncePower = groundBouncePower;
-            bounceMultiplier = (relativeVelocity.magnitude * momentumRetention);
-            minBouncePower = minGroundBounceMagnitude; maxBouncePower = maxGroundBounceMagnitude;
-            PerformBounce(bounceDirection, Mathf.Clamp(groundBouncePower * (relativeVelocity.magnitude * momentumRetention), minGroundBounceMagnitude, maxGroundBounceMagnitude));
+            // Decrease bounce power because ground
+            finalBouncePower *= groundBounceMulti;
+
+            // Apply relative velocity bounce multi
+            if (!isBouncing && relativeVelocity.magnitude > velocityBounceThreshold)
+                finalBouncePower *= relativeVelocity.magnitude.Normalize(velocityBounceThreshold, maxBouncePower, 1, 2);
         }
         else
+        {
             isBouncing = false;
+            return;
+        }
+
+        //if (isPlayerOne) Debug.Log(finalBouncePower);
+        PerformBounce(bounceDirection, Mathf.Clamp(finalBouncePower, minBouncePower, maxBouncePower));
     }
 
     GameObject IUnityInterface.gameObject
@@ -690,7 +730,7 @@ public class Character : MonoBehaviour, IBounce
     {
         Ray ray = new Ray(origin, direction);
 
-        bool newResult = Physics.SphereCast(ray, capsuleCollider.radius, out groundObject, (capsuleCollider.height / 2) + offset, groundedLayers);
+        bool newResult = Physics.SphereCast(ray, colliderComp.radius, out groundObject, (colliderComp.height / 2) + offset, groundedLayers);
 
         return newResult;
     }

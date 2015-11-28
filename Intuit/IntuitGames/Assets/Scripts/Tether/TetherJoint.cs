@@ -74,8 +74,20 @@
 
     public bool isColliding { get { return collisionMonitorComp.isColliding; } }
 
-    // Find component references
     void Awake()
+    {
+        SetComponentReferences();
+    }
+
+    void Start()
+    {
+        collisionMonitorComp.OnCollisionCountChange += UpdateCollisionInfo;
+
+        if (rendererComp) normalColour = rendererComp.material.color;
+    }
+
+    // Find component references
+    public void SetComponentReferences()
     {
         if (!colliderComp)
             colliderComp = GetComponent<Collider>();
@@ -85,13 +97,6 @@
             collisionMonitorComp = GetComponent<CollisionMonitor>();
         if (!rendererComp)
             rendererComp = GetComponent<Renderer>();
-    }
-
-    void Start()
-    {
-        collisionMonitorComp.OnCollisionCountChange += UpdateCollisionInfo;
-
-        if (rendererComp) normalColour = rendererComp.material.color;
     }
 
     private void UpdateCollisionInfo(int newCount)

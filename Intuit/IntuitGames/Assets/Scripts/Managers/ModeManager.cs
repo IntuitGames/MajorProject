@@ -3,7 +3,7 @@ using System;
 using CustomExtensions;/// <summary>
 /// Manages the current mode of the game.
 /// </summary>public class ModeManager : Manager{
-    public enum GameMode { None, MainMenu, PauseMenu, InGame, GameOver };
+    public enum GameMode { None = 0, MainMenu = 1 << 1, PauseMenu = 1 << 2, InGame = 1 << 3, GameOver = 1 << 4 };
 
     public GameMode initialGameMode = GameMode.InGame;
     [System.NonSerialized]
@@ -32,10 +32,23 @@ using CustomExtensions;/// <summary>
     public float gameOverTimeScale = 0.5f;
     public float modeChangeCooldown = 0.1f;
 
+    public float ingameTimeTotal;
+    public float ingameTimeLevel;
+
     // NewMode, OldMode
     public event Action<GameMode, GameMode> OnGameModeChanged = delegate { };
 
     void Start() { }
+
+    void Update()
+    {
+        // Counts time spent in-game
+        if (currentGameMode == GameMode.InGame)
+        {
+            ingameTimeLevel += Time.deltaTime;
+            ingameTimeTotal += Time.deltaTime;
+        }
+    }
 
     void OnDestroy()
     {
@@ -48,6 +61,12 @@ using CustomExtensions;/// <summary>
         OnGameModeChanged += HandleTimeScale;
         RequestGameModeChange(initialGameMode, true, 0);
         canChangeMode = true;
+    }
+
+    public override void ManagerOnLevelLoad()
+    {
+        // Reset in-game timer
+        ingameTimeLevel = 0;
     }    public void RequestGameModeChange(GameMode newMode, bool force, float delay)
     {
         if (canChangeMode && newMode != currentGameMode && enabled || force && newMode != currentGameMode)

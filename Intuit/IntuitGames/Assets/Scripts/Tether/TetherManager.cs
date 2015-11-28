@@ -34,6 +34,10 @@ public class TetherManager : Manager
     public KeyCode reconnectInput = KeyCode.N;
     public bool instantReconnection = true;
     public DynamicThickness dynamicThickness = new DynamicThickness();
+    [SerializeField]
+    private bool blendColour = true;
+    [SerializeField]
+    private bool includeOriginal = true;
 
     [System.Serializable]
     public class DynamicThickness
@@ -93,13 +97,14 @@ public class TetherManager : Manager
     private int relativeIndex, relativeCount;
     private TetherJoint startTempJoint, endTempJoint, tempJoint;
     private List<TetherJoint> tempTetherList;
-    private Vector3 orignalJointScale;
+    private Vector3 originalJointScale;
+    private Color originalColour, startColour, endColour;
 
     public override void ManagerAwake()
     {
         if (!Application.isPlaying) return;
 
-        orignalJointScale = joints.SafeGet(0).transform.localScale;
+        originalJointScale = joints.SafeGet(0).transform.localScale;
 
         // Setup collision buffer at the start of the game
         if (experimentalCollision)
@@ -114,8 +119,26 @@ public class TetherManager : Manager
 
         // Subscribe audio events
         OnDisconnected += (joint) => disconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
-
         OnReconnected += (joint) => reconnectSound.PlayDetached(GameManager.CameraManager.audioSourceComp, AudioManager.GetFMODAttribute(joint.transform, joint.rigidbodyComp.velocity), 1, joint.transform);
+
+        // Fetch colours
+        originalColour = joints.SafeGet(0).rendererComp.material.color;
+        startColour = startPoint.GetComponent<Character>().bodyRendererComp.material.color.SetAlpha(originalColour.a);
+        endColour = endPoint.GetComponent<Character>().bodyRendererComp.material.color.SetAlpha(originalColour.a);
+
+        // Blend colours
+        if (blendColour)
+        {
+            for (int i = 0; i < joints.Count; i++)
+            {
+                if (!includeOriginal)
+                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, endColour, ((float)i).Normalize(0, jointCount, 0, 1));
+                else if (i < jointCount / 2)
+                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, startColour, Mathf.Abs(((float)i - (jointCount / 2f))).Normalize(0, jointCount / 2f, 0, 1.5f));
+                else
+                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, endColour, Mathf.Abs(((float)i - (jointCount / 2f))).Normalize(0, jointCount / 2f, 0, 1.5f));
+            }
+        }
     }
 
     public override void ManagerOnLevelLoad()
@@ -179,10 +202,10 @@ public class TetherManager : Manager
                 float newScale = !disconnected ? Mathf.Abs(i - (jointCount / 2f)).Normalize(0, (jointCount / 2f),
                     tetherLength.Normalize(dynamicThickness.minLengthThreshold, dynamicThickness.maxLengthThreshold, dynamicThickness.maxScale, dynamicThickness.minScale), dynamicThickness.maxScale)
                     : Mathf.Abs(i - (jointCount / 2f)).Normalize(0, (jointCount / 2f), dynamicThickness.minScale, dynamicThickness.maxScale);
-                joints[i].transform.localScale = new Vector3(newScale * orignalJointScale.x, newScale * orignalJointScale.y, newScale * orignalJointScale.z);
+                joints[i].transform.localScale = new Vector3(newScale * originalJointScale.x, newScale * originalJointScale.y, newScale * originalJointScale.z);
             }
             else
-                joints[i].transform.localScale = orignalJointScale;
+                joints[i].transform.localScale = originalJointScale;
         }
 
         tetherLength = distance;
@@ -243,6 +266,8 @@ public class TetherManager : Manager
         // Provides initial positioning for the joints
         for (int i = 0; i < joints.Count; i++)
         {
+            // Set component references
+            joints[i].SetComponentReferences();
             joints[i].transform.position = GetJointMovePosition(joints[i], i, true);
         }
 

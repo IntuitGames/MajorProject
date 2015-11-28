@@ -175,7 +175,6 @@ public class InputManager : Manager
                     MovementP2(Input.GetAxis(forwardStr + player2Str), Input.GetAxis(rightStr + player2Str));
                 }
                 break;
-                break;
 
             default:
                 break;

@@ -23,14 +23,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     // SOUND EFFECTS
     [Header("Sound Effects")]
-    public SoundClip defaultFootstep = new SoundClip();
-    public SoundClip grassFootstep = new SoundClip();
-    public SoundClip metalFootstep = new SoundClip();
-    public SoundClip stoneFootstep = new SoundClip();
-    public SoundClip dirtFootstep = new SoundClip();
-    public SoundClip gravelFootstep = new SoundClip();
-    public SoundClip waterFootstep = new SoundClip();
-    public SoundClip woodFootstep = new SoundClip();
+    public SoundClip footstep = new SoundClip();
     public SoundClip land = new SoundClip();
     public SoundClip jump = new SoundClip();
     public SoundClip dash = new SoundClip();
@@ -42,6 +35,9 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     {
         get { return Mathf.Lerp(0, 1, character.currentMoveSpeed / character.sprintMoveSpeed); }
     }
+    private float weakenedState = 0;
+
+    private bool increaseWeakenedValue = false;
 
     #endregion
 
@@ -57,68 +53,52 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         if (!rigidbodyComp)
             rigidbodyComp = GetComponent<Rigidbody>();
 
-        defaultFootstep.Initialize();
-        grassFootstep.Initialize();
-        metalFootstep.Initialize();
-        stoneFootstep.Initialize();
-        dirtFootstep.Initialize();
-        gravelFootstep.Initialize();
-        waterFootstep.Initialize();
-        woodFootstep.Initialize();
+        footstep.Initialize();
         land.Initialize();
         jump.Initialize();
         dash.Initialize();
         startHeavy.Initialize();
         endHeavy.Initialize();
+
+        GameManager.TetherManager.OnDisconnected += StartWeakened;
+        GameManager.TetherManager.OnReconnected += StopWeakened;
     }
 
-    void Start() { }
+    void Update()
+    {
+        weakenedState = Mathf.Clamp(weakenedState + (increaseWeakenedValue ? Time.deltaTime : -Time.deltaTime), 0, 1);
+    }
 
     public void PlayWalkAudio(Surface.SurfaceTypes surfaceType, bool condition = true)
     {
-        if (!condition || !enabled) return;
+        if (!condition || !enabled || (int)surfaceType < 0) return;
 
-        switch (surfaceType)
-        {
-            case Surface.SurfaceTypes.Default:
-                defaultFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
-                break;
-            case Surface.SurfaceTypes.None:
-                break;
-            case Surface.SurfaceTypes.Grass:
-                grassFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
-                break;
-            case Surface.SurfaceTypes.Metal:
-                metalFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
-                break;
-            case Surface.SurfaceTypes.Stone:
-                stoneFootstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, playerMoveSpeed, 0);
-                break;
-            default:
-                Debug.Log("Unhandled surface type.");
-                break;
-        }
+        float[] parameters = { 0, (int)surfaceType, weakenedState };
+        footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayLandAudio(float downwardVelocity, bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, 0, downwardVelocity.Normalize(2, 30, 0, 1));
+        float[] parameters = { 0, downwardVelocity.Normalize(2, 30, 0, 1), weakenedState };
+        land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayJumpAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        float[] parameters = { weakenedState };
+        jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayDashAudio(bool condition = true)
     {
         if (!condition || !enabled) return;
 
-        dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
+        float[] parameters = { weakenedState };
+        dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayStartHeavyAudio(bool condition = true)
@@ -135,22 +115,29 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         endHeavy.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume);
     }
 
-    // Dispose FMOD instances
     public void Dispose()
     {
-        defaultFootstep.Dispose();
-        grassFootstep.Dispose();
-        metalFootstep.Dispose();
-        stoneFootstep.Dispose();
-        dirtFootstep.Dispose();
-        gravelFootstep.Dispose();
-        waterFootstep.Dispose();
-        woodFootstep.Dispose();
+        // Dispose FMOD instances
+        footstep.Dispose();
         land.Dispose();
         jump.Dispose();
         dash.Dispose();
         startHeavy.Dispose();
         endHeavy.Dispose();
+
+        // Unsubscribe
+        GameManager.TetherManager.OnDisconnected -= StartWeakened;
+        GameManager.TetherManager.OnReconnected -= StopWeakened;
+    }
+
+    private void StartWeakened(TetherJoint joint)
+    {
+        increaseWeakenedValue = true;
+    }
+
+    private void StopWeakened(TetherJoint joint)
+    {
+        increaseWeakenedValue = false;
     }
 
     #endregion

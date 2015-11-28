@@ -1,7 +1,8 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
 using System;
 using System.Reflection;
-using System.Diagnostics;namespace CustomExtensions{    /// <summary>
+using System.Diagnostics;
+using System.Text;namespace CustomExtensions{    /// <summary>
     /// Extension methods that may be used everywhere.
     /// </summary>    public static partial class General    {        /// <summary>
         /// Determines if target object is null OR empty (as an ICollection)
@@ -164,6 +165,65 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Adds spaces before capital letter characters in a string.
+        /// </summary>
+        public static string AddSpaces(this string Source, bool PreserveAcronyms = true)
+        {
+            if (string.IsNullOrEmpty(Source))
+                return string.Empty;
+
+            StringBuilder newText = new StringBuilder(Source.Length * 2);
+            newText.Append(Source[0]);
+
+            for (int i = 1; i < Source.Length; i++)
+            {
+                if (char.IsUpper(Source[i]))
+                    if ((Source[i - 1] != ' ' && !char.IsUpper(Source[i - 1])) ||
+                        (PreserveAcronyms && char.IsUpper(Source[i - 1]) &&
+                         i < Source.Length - 1 && !char.IsUpper(Source[i + 1])))
+                        newText.Append(' ');
+                newText.Append(Source[i]);
+            }
+
+            return newText.ToString();
+        }        public static bool HasFlags(this Enum Source, Enum Comparer)
+        {
+            // Check whether the flag was given
+            if (Comparer == null)
+            {
+                throw new ArgumentNullException("Flag Comparer is Null");
+            }
+
+            // Compare the types of both enumerations
+            if (Source.GetType() != (Comparer.GetType()))
+            {
+                throw new ArgumentException(string.Format(
+                    "The type of the given flag is not of type {0}", Source.GetType()),
+                    "Comparer");
+            }
+
+            // Get the type code of the enumeration
+            var typeCode = Source.GetTypeCode();
+
+            // If the underlying type of the flag is signed
+            if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 ||
+                typeCode == TypeCode.Int64)
+            {
+                return (Convert.ToInt64(Source) & Convert.ToInt64(Comparer)) != 0;
+            }
+
+            // If the underlying type of the flag is unsigned
+            if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 ||
+                typeCode == TypeCode.UInt64)
+            {
+                return (Convert.ToUInt64(Source) & Convert.ToUInt64(Comparer)) != 0;
+            }
+
+            // Unsupported flag type
+            throw new Exception(string.Format("The comparison of the type {0} is not implemented.", Source.GetType().Name));
         }    }    /// <summary>
     /// Unity specific extension methods.
     /// </summary>    public static partial class Unity
@@ -430,5 +490,27 @@ using System.Diagnostics;namespace CustomExtensions{    /// <summary>
         {
             yield return new WaitForEndOfFrame();
             Action();
+        }
+
+        /// <summary>
+        /// Shakes the camera in a basic way changing its local position every frame.
+        /// </summary>
+        public static IEnumerator Shake(this Camera Source, float Strength, float Duration)
+        {
+            float StartTime = Time.time;
+
+            while (Time.time < StartTime + Duration)
+            {
+                Vector3 Offset = new Vector3(
+                    UnityEngine.Random.Range(-Strength, Strength),
+                    UnityEngine.Random.Range(-Strength, Strength),
+                    UnityEngine.Random.Range(-Strength, Strength));
+
+                Source.transform.localPosition += Offset;
+
+                yield return new WaitForEndOfFrame();
+
+                Source.transform.localPosition -= Offset;
+            }
         }
     }}

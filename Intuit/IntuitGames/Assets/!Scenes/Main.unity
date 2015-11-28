@@ -13167,9 +13167,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMultiplier: 1
-  velocityThreshold: 0
-  minBounceMagnitude: 11
-  maxBounceMagnitude: 25
 --- !u!23 &245900777
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18426,80 +18423,6 @@ MeshCollider:
 Transform:
   m_PrefabParentObject: {fileID: 400520, guid: 31a2a30003af58d498fadd60df9b63f9, type: 3}
   m_PrefabInternal: {fileID: 420226207}
---- !u!1001 &556535567
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 22496620, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22496620, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22465966, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22465966, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 130994, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &569619828
 Prefab:
   m_ObjectHideFlags: 0
@@ -18807,9 +18730,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMultiplier: 1
-  velocityThreshold: 0
-  minBounceMagnitude: 11
-  maxBounceMagnitude: 25
 --- !u!23 &645687232
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -24336,9 +24256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMultiplier: 1
-  velocityThreshold: 0
-  minBounceMagnitude: 11
-  maxBounceMagnitude: 25
 --- !u!23 &1597501009
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30037,9 +29954,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMultiplier: 1
-  velocityThreshold: 0
-  minBounceMagnitude: 11
-  maxBounceMagnitude: 25
 --- !u!1 &1713144043
 GameObject:
   m_ObjectHideFlags: 0
@@ -43208,6 +43122,84 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 68e2e035e1e44354c9f65adc5bd84211, type: 3}
   m_IsPrefabParent: 0
+--- !u!1001 &1923646719
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 494334, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496620, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496620, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451384, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22465966, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22465966, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11496764, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11414714, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+  m_IsPrefabParent: 0
 --- !u!4 &1952843579 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 25d9c778da1375b4c85054ba4697fbc3, type: 3}
@@ -43293,6 +43285,7 @@ GameObject:
   - 33: {fileID: 1958167782}
   - 64: {fileID: 1958167781}
   - 23: {fileID: 1958167780}
+  - 114: {fileID: 1958167784}
   m_Layer: 8
   m_Name: Plane
   m_TagString: Ground
@@ -43355,6 +43348,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1429829679}
   m_RootOrder: 0
+--- !u!114 &1958167784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1958167779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dad3c3316551c7448bea5345e2ac136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 1
 --- !u!1 &1961270812
 GameObject:
   m_ObjectHideFlags: 0
@@ -43653,9 +43658,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMultiplier: 1.39999998
-  velocityThreshold: 0
-  minBounceMagnitude: 15
-  maxBounceMagnitude: 25
 --- !u!1 &2024895478
 GameObject:
   m_ObjectHideFlags: 0

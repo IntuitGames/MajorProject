@@ -19,6 +19,9 @@ using CustomExtensions;/// <summary>
     public float minCamProximity = 3;
     [Range(0, 50)]
     public float maxCamProximity = 20;
+    public bool shakeCamera = true;
+    public float shakeTime = 0.25f;
+    public float shakeStrength = 0.75f;
 
     public override void ManagerAwake()
     {
@@ -53,6 +56,9 @@ using CustomExtensions;/// <summary>
     {
         if (canUnhinge)
             isUnhinged = true;
+
+        if (shakeCamera)
+            StartCoroutine(mainCamera.Shake(shakeStrength, shakeTime));
     }    public void StabalizeCamera(TetherJoint reconnectedJoint)
     {
         isUnhinged = false;

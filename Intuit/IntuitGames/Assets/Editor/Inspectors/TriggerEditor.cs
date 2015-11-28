@@ -93,7 +93,7 @@ using CustomExtensions;[CustomEditor(typeof(Trigger), true)]public class Trig
         // Draw child fields
         // Iterate through properties and draw them like it normally would
         EditorGUILayout.Separator();
-        EditorGUILayout.LabelField(Target.GetType().Name + " Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField(Target.GetType().Name.AddSpaces() + " Settings", EditorStyles.boldLabel);
 
         property.Reset();
         property.Next(true);
