@@ -260,7 +260,10 @@ public class Character : MonoBehaviour, IBounce
     void Start()
     {
         // Setup up character input depending on whether this is character 1 or 2
-        GameManager.InputManager.SubscribeCharacterEvents(this);
+        if (GameManager.ModeManager.currentGameMode == ModeManager.GameMode.InGame)
+            GameManager.InputManager.SubscribeCharacterEvents(this);
+
+        GameManager.ModeManager.OnGameModeChanged += this.OnGameModeChange;
 
         // Setup action timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard, () => 
@@ -314,6 +317,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Unsubscribe this character from events
         GameManager.InputManager.UnsubscribeCharacterEvents(this);
+        GameManager.ModeManager.OnGameModeChanged -= this.OnGameModeChange;
     }
 
     void OnCollisionEnter(Collision col)
@@ -657,6 +661,15 @@ public class Character : MonoBehaviour, IBounce
             direction.y = direction.magnitude / 2;
             AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
         }
+    }
+
+    // Called when the game mode is changed
+    private void OnGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
+    {
+        if (newMode == ModeManager.GameMode.InGame)
+            GameManager.InputManager.SubscribeCharacterEvents(this);
+        else if (oldMode == ModeManager.GameMode.InGame)
+            GameManager.InputManager.UnsubscribeCharacterEvents(this);
     }
 
     #endregion
