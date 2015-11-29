@@ -12,7 +12,7 @@ GameObject:
   - 23: {fileID: 2307624}
   - 114: {fileID: 11419112}
   - 135: {fileID: 13544554}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Jelly Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,6 +150,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -318,20 +318,24 @@ public class Character : MonoBehaviour, IBounce
 
     void OnCollisionEnter(Collision col)
     {
+        // Determine if something is in front
+        RaycastHit forwardHit;
+        bool forwardObject = Physics.SphereCast(transform.position, 0.3f, transform.forward, out forwardHit, 1.5f, groundedLayers);
+
         // Collision audio
         // Try to play land sound if not, try the collide sound
         if (!audioDataComp.ConditionalAudio(() => audioDataComp.PlayLandAudio(col.relativeVelocity.y), col.relativeVelocity.y > 2))
             audioDataComp.ConditionalAudio(() => audioDataComp.PlayCollideAudio(),
                 col.gameObject == GetPartner().gameObject && isPlayerOne
                 || col.relativeVelocity.magnitude > baseMoveSpeed
-                || isGrounded && currentMoveSpeed > baseMoveSpeed
+                || isGrounded && currentMoveSpeed > baseMoveSpeed && forwardObject
                 || isDashing);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
 
         // Stop dash on collision 
-        if (stopDashOnCollision && col.contacts[0].normal.z != 0)
+        if (stopDashOnCollision && forwardObject)
         {
             isDashing = false;
             isDashJumping = false;
