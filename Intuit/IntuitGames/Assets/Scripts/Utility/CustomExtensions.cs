@@ -484,6 +484,19 @@ using System.Text;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
+        /// Determines if a gameobject is wet or not.
+        /// </summary>
+        public static bool GetSurfaceWetness(this GameObject Source)
+        {
+            Surface SurfaceComp = Source.GetComponent<Surface>();
+
+            if (SurfaceComp)
+                return SurfaceComp.isWet;
+            else
+                return false;
+        }
+
+        /// <summary>
         /// Performs an action the next frame if used like a coroutine
         /// </summary>
         public static IEnumerator NextFrame(Action Action)

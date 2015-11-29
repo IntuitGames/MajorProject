@@ -575,7 +575,8 @@ public class Character : MonoBehaviour, IBounce
     // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        audioDataComp.ConditionalAudio(() => audioDataComp.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceType.None), isWalking && isGrounded);
+        audioDataComp.ConditionalAudio(() => audioDataComp.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceType.None,
+            onObject.transform ? onObject.transform.gameObject.GetSurfaceWetness() : false), isWalking && isGrounded);
     }
 
     //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below

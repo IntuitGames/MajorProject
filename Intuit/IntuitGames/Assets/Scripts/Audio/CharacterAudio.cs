@@ -68,7 +68,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         weakenedStateParam = Mathf.Clamp(weakenedStateParam + (increaseWeakenedValue ? Time.deltaTime : -Time.deltaTime), 0, 1);
 
         // Update weakened params
-        footstep.UpdateParameter(2, weakenedStateParam);
+        footstep.UpdateParameter(3, weakenedStateParam);
         land.UpdateParameter(2, weakenedStateParam);
         jump.UpdateParameter(1, weakenedStateParam);
         dash.UpdateParameter(1, weakenedStateParam);
@@ -82,9 +82,9 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         return true;
     }
 
-    public void PlayWalkAudio(Surface.SurfaceType surfaceType)
+    public void PlayWalkAudio(Surface.SurfaceType surfaceType, bool isWet)
     {
-        parameters = new float[] { 0, (int)surfaceType, weakenedStateParam };
+        parameters = new float[] { 0, isWet ? 0.7f : 0, (int)surfaceType, weakenedStateParam };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
