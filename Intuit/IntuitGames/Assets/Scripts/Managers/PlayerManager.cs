@@ -32,6 +32,7 @@ using CustomExtensions;/// <summary>
         }
     }
 
+    [ReadOnly]
     public float collectibleScore;
 
     // TETHER

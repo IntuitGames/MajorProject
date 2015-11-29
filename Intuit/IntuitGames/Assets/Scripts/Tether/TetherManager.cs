@@ -83,6 +83,8 @@ public class TetherManager : Manager
     public float tetherLength;
     [ReadOnly]
     public float collidingJointCount;
+    [System.NonSerialized]
+    public float weakenedParam;
 
     // EVENTS
     public event System.Action<TetherJoint> OnDisconnected = delegate { };
@@ -159,6 +161,7 @@ public class TetherManager : Manager
 
     void Update()
     {
+
         // Basic info
         if (startPoint && endPoint) directLength = Vector3.Distance(startPoint.position, endPoint.position);
         else directLength = default(float);
@@ -220,6 +223,11 @@ public class TetherManager : Manager
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Tether"), !experimentalCollision);
 
         if (!Application.isPlaying) return;
+
+        // Update weakened FMOD param
+        if (disconnected) weakenedParam += Time.deltaTime;
+        else weakenedParam -= Time.deltaTime;
+        weakenedParam = Mathf.Clamp(weakenedParam, 0, 1);
 
         // Handle debug input
         if (Input.GetKeyDown(disconnectInput))

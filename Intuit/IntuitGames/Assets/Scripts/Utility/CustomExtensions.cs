@@ -484,7 +484,7 @@ using System.Text;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
-        /// Determines if a gameobject is wet or not.
+        /// Determines if a game object is wet or not.
         /// </summary>
         public static bool GetSurfaceWetness(this GameObject Source)
         {
@@ -508,7 +508,7 @@ using System.Text;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Shakes the camera in a basic way changing its local position every frame.
         /// </summary>
-        public static IEnumerator Shake(this Camera Source, float Strength, float Duration)
+        public static IEnumerator Shake(this Camera Source, float Strength, float Duration, float Frequency)
         {
             float StartTime = Time.time;
 
@@ -521,7 +521,10 @@ using System.Text;namespace CustomExtensions{    /// <summary>
 
                 Source.transform.localPosition += Offset;
 
-                yield return new WaitForEndOfFrame();
+                if (Frequency < Time.deltaTime)
+                    yield return new WaitForEndOfFrame();
+                else
+                    yield return new WaitForSeconds(Frequency);
 
                 Source.transform.localPosition -= Offset;
             }

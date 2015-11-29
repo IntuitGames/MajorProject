@@ -8,20 +8,30 @@ using CustomExtensions;/// <summary>
     public SoundSource backgroundMusic;
     public AudioSource audioSourceComp;
 
-    [Header("Tether Disconnection"), ReadOnly]
-    public bool isUnhinged;
-    public bool canUnhinge = true;
+    [Header("Dynamic Zoom"), ReadOnly]
+    public bool isDynamic;
+    public bool dynamicZoom = true;
     [Range(0, 50)]
-    public float minCamZoomDistance = 5;
+    public float minCamZoomDistance = 3;
     [Range(0, 50)]
-    public float maxCamZoomDistance = 20;
+    public float maxCamZoomDistance = 25;
     [Range(0, 50)]
     public float minCamProximity = 3;
     [Range(0, 50)]
-    public float maxCamProximity = 20;
+    public float maxCamProximity = 50;
+
+    [Header("Dynamic FOV")]
+    public bool dynamicFOV = true;
+    [Range(0, 120)]
+    public float minCamFOV = 60;
+    [Range(0, 120)]
+    public float maxCamFOV = 110;
+
+    [Header("Camera Shake")]
     public bool shakeCamera = true;
-    public float shakeTime = 0.25f;
-    public float shakeStrength = 0.75f;
+    public float shakeTime = 1;
+    public float shakeStrength = 0.5f;
+    public float shakeFrequency = 0.1f;
 
     public override void ManagerAwake()
     {
@@ -46,23 +56,30 @@ using CustomExtensions;/// <summary>
 
     void Update()
     {
-        // Update unhinged camera zoom (Still need camera shake)
-        if (isUnhinged)
+        // Update unhinged camera zoom
+        if (isDynamic && dynamicZoom)
             followCamera.distance = GameManager.PlayerManager.distanceBetweenCharacters
                 .Normalize(minCamProximity, maxCamProximity, minCamZoomDistance, maxCamZoomDistance);
+
+        if (isDynamic && dynamicFOV)
+            followCamera.targetFOV = GameManager.PlayerManager.distanceBetweenCharacters
+                .Normalize(minCamProximity, maxCamProximity, minCamFOV, maxCamFOV);
     }
 
     public void UnhingeCamera(TetherJoint brokenJoint)
     {
-        if (canUnhinge)
-            isUnhinged = true;
+        if (dynamicZoom || dynamicFOV)
+            isDynamic = true;
 
         if (shakeCamera)
-            StartCoroutine(mainCamera.Shake(shakeStrength, shakeTime));
+            StartCoroutine(mainCamera.Shake(shakeStrength, shakeTime, shakeFrequency));
     }    public void StabalizeCamera(TetherJoint reconnectedJoint)
     {
-        isUnhinged = false;
+        isDynamic = false;
 
         // Reset camera zoom
         followCamera.distance = followCamera.initialDistance;
+
+        // Reset camera FOV
+        followCamera.targetFOV = followCamera.initialFOV;
     }}

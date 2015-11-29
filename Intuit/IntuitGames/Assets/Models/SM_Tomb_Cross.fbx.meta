@@ -28,6 +28,7 @@ ModelImporter:
     2300000: pasted__pasted__pCube5
     3300000: pasted__pasted__pCube5
     4300000: pasted__pasted__pCube5
+    6400000: pasted__pasted__pCube5
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -38,6 +39,10 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -50,7 +55,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0

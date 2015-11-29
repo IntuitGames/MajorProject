@@ -30,14 +30,11 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip collide = new SoundClip();
 
     // FMOD PARAMS
+    private float[] parameters;
     private float playerMoveSpeed
     {
         get { return Mathf.Lerp(0, 1, character.currentMoveSpeed / character.sprintMoveSpeed); }
     }
-    private float weakenedStateParam = 0;
-    private bool increaseWeakenedValue = false;
-
-    private float[] parameters;
 
     #endregion
 
@@ -58,21 +55,16 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         jump.Initialize();
         dash.Initialize();
         collide.Initialize();
-
-        GameManager.TetherManager.OnDisconnected += StartWeakened;
-        GameManager.TetherManager.OnReconnected += StopWeakened;
     }
 
     void Update()
     {
-        weakenedStateParam = Mathf.Clamp(weakenedStateParam + (increaseWeakenedValue ? Time.deltaTime : -Time.deltaTime), 0, 1);
-
         // Update weakened params
-        footstep.UpdateParameter(3, weakenedStateParam);
-        land.UpdateParameter(2, weakenedStateParam);
-        jump.UpdateParameter(1, weakenedStateParam);
-        dash.UpdateParameter(1, weakenedStateParam);
-        collide.UpdateParameter(1, weakenedStateParam);
+        footstep.UpdateParameter(3, GameManager.TetherManager.weakenedParam);
+        land.UpdateParameter(2, GameManager.TetherManager.weakenedParam);
+        jump.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
+        dash.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
+        collide.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
     }
 
     public bool ConditionalAudio(System.Action method, bool condition)
@@ -84,31 +76,31 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     public void PlayWalkAudio(Surface.SurfaceType surfaceType, bool isWet)
     {
-        parameters = new float[] { 0, isWet ? 0.7f : 0, (int)surfaceType, weakenedStateParam };
+        parameters = new float[] { 0, isWet ? 0.7f : 0, (int)surfaceType, GameManager.TetherManager.weakenedParam };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayLandAudio(float downwardVelocity)
     {
-        parameters = new float[] { 0, downwardVelocity.Normalize(2, 30, 0, 1), weakenedStateParam };
+        parameters = new float[] { 0, downwardVelocity.Normalize(2, 30, 0, 1), GameManager.TetherManager.weakenedParam };
         land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayJumpAudio()
     {
-        parameters = new float[] { 0, weakenedStateParam };
+        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
         jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayDashAudio()
     {
-        parameters = new float[] { 0, weakenedStateParam };
+        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
         dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayCollideAudio()
     {
-        parameters = new float[] { 0, weakenedStateParam };
+        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
         collide.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
@@ -120,20 +112,6 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         jump.Dispose();
         dash.Dispose();
         collide.Dispose();
-
-        // Unsubscribe
-        GameManager.TetherManager.OnDisconnected -= StartWeakened;
-        GameManager.TetherManager.OnReconnected -= StopWeakened;
-    }
-
-    private void StartWeakened(TetherJoint joint)
-    {
-        increaseWeakenedValue = true;
-    }
-
-    private void StopWeakened(TetherJoint joint)
-    {
-        increaseWeakenedValue = false;
     }
 
     #endregion

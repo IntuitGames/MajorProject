@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;
 using CustomExtensions;public class HUD : MonoBehaviour{
+    [Header("Components")]
     public Slider weakenedSlider;
     public Text weakenedTextValue;
     public Text collectibleScoreLabel;
     public Text collectibleScoreTextValue;
+
+    [Header("Properties")]
+    public float collectibleSmoothTime = 0.3f;
+
+    private float collectibleScoreActual;
+    private float collectibleScoreSpeed;
 
     void Awake()
     {
@@ -28,7 +35,14 @@ using CustomExtensions;public class HUD : MonoBehaviour{
         else
             weakenedTextValue.text = Mathf.RoundToInt(GameManager.PlayerManager.currentJelly).ToString();
 
-        collectibleScoreTextValue.text = GameManager.PlayerManager.collectibleScore.ToString();
+        // Smooth collectible score value
+        collectibleScoreActual = Mathf.SmoothDamp(
+            collectibleScoreActual,
+            GameManager.PlayerManager.collectibleScore,
+            ref collectibleScoreSpeed,
+            collectibleSmoothTime);
+
+        collectibleScoreTextValue.text = Mathf.Round(collectibleScoreActual).ToString();
     }
 
     void OnDestroy()

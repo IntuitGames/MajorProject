@@ -10,6 +10,8 @@ using System.Linq;
 [RequireComponent(typeof(Camera))]
 public class SmoothCameraFollow : MonoBehaviour
 {
+    private Camera cameraComp;
+
     public Transform target;
     public float distance = 5;
     public float smoothTime = 0.3f;
@@ -18,15 +20,23 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private Vector3 newOffset;
     private Vector3 initialOffsetDirection;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 zoomVelocity;
+    private float FOVSpeed;
 
     [System.NonSerialized]
     public float initialDistance;
+    [System.NonSerialized]
+    public float initialFOV;
+    [System.NonSerialized]
+    public float targetFOV;
 
     void Awake()
     {
+        cameraComp = GetComponent<Camera>();
         initialOffsetDirection = (target.transform.position - transform.position).normalized;
         initialDistance = distance;
+        initialFOV = cameraComp.fieldOfView;
+        targetFOV = initialFOV;
     }
 
     void Update()
@@ -35,6 +45,8 @@ public class SmoothCameraFollow : MonoBehaviour
             target.transform.position + (overridenOffsetDirection.normalized * distance) :
             target.transform.position + (-initialOffsetDirection * distance);
 
-        transform.position = Vector3.SmoothDamp(transform.position, newOffset, ref velocity, smoothTime);
+        transform.position = Vector3.SmoothDamp(transform.position, newOffset, ref zoomVelocity, smoothTime);
+
+        cameraComp.fieldOfView = Mathf.SmoothDamp(cameraComp.fieldOfView, targetFOV, ref FOVSpeed, smoothTime);
     }
 }

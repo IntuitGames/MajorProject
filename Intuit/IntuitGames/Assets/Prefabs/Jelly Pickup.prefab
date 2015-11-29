@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3369380}
   - 23: {fileID: 2307624}
   - 114: {fileID: 11419112}
-  - 135: {fileID: 13517580}
+  - 135: {fileID: 13544554}
   m_Layer: 0
   m_Name: Jelly Pickup
   m_TagString: Untagged
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 119.990112, y: 2.68000007, z: 15.1800003}
+  m_LocalPosition: {x: -1.24636078, y: .415166855, z: 2.12368011}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73fcf724bd919fa458f63a06f74bcad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderComp: {fileID: 13517580}
+  colliderComp: {fileID: 13544554}
   proximityTimer:
     Length: 0
     IsPlaying: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   jellyValue: 1
+  scoreValue: 25
   allowPickupOnMaxJelly: 1
   drawRadius: 5
   drawSpeed: 10
@@ -111,7 +112,7 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 0}
---- !u!135 &13517580
+--- !u!135 &13544554
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -137,6 +138,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: volumeType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
