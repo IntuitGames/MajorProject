@@ -25778,10 +25778,10 @@ MonoBehaviour:
   canGroundBounce: 1
   groundBounceThreshold: 23
   velocityBounceThreshold: 15
-  bouncePower: 10
+  bouncePower: 14
   minBouncePower: 0
   maxBouncePower: 50
-  jumpBounceMulti: 1.5
+  jumpBounceMulti: 1.89999998
   groundBounceMulti: .5
   partnerBouncePower: 5
 --- !u!114 &11411672
@@ -28511,10 +28511,10 @@ MonoBehaviour:
   canGroundBounce: 1
   groundBounceThreshold: 23
   velocityBounceThreshold: 15
-  bouncePower: 10
+  bouncePower: 14
   minBouncePower: 0
   maxBouncePower: 50
-  jumpBounceMulti: 1.5
+  jumpBounceMulti: 1.89999998
   groundBounceMulti: .5
   partnerBouncePower: 5
 --- !u!114 &11434190

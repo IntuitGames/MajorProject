@@ -82,7 +82,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         return true;
     }
 
-    public void PlayWalkAudio(Surface.SurfaceTypes surfaceType)
+    public void PlayWalkAudio(Surface.SurfaceType surfaceType)
     {
         parameters = new float[] { 0, (int)surfaceType, weakenedStateParam };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);

@@ -247,7 +247,9 @@ public class TetherManager : Manager
             }
             else // Disconnected movement
             {
-
+                if (joints[i].rigidbodyComp.velocity.magnitude > 40)
+                    joints[i].rigidbodyComp.velocity = Vector3.ClampMagnitude(joints[i].rigidbodyComp.velocity,
+                        Mathf.Min(joints[i].rigidbodyComp.velocity.magnitude / 2, 80));
             }
         }
     }

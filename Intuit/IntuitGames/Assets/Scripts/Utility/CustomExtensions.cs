@@ -473,14 +473,14 @@ using System.Text;namespace CustomExtensions{    /// <summary>
         /// <summary>
         /// Retrieves the surface type of given game object.
         /// </summary>
-        public static Surface.SurfaceTypes GetSurfaceType(this GameObject Source)
+        public static Surface.SurfaceType GetSurfaceType(this GameObject Source)
         {
             Surface SurfaceComp = Source.GetComponent<Surface>();
 
             if (SurfaceComp)
                 return SurfaceComp.type;
             else
-                return Surface.SurfaceTypes.Default;
+                return Surface.SurfaceType.Dirt;
         }
 
         /// <summary>
