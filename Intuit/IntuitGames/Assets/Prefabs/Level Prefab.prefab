@@ -6734,6 +6734,7 @@ GameObject:
   - 82: {fileID: 8244056}
   - 114: {fileID: 11441712}
   - 114: {fileID: 11414714}
+  - 114: {fileID: 11439526}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -24925,22 +24926,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: b28a63e29f302774988f15099994782b, type: 2}
-  startHeavy:
+  collide:
     player: 2
     type: 0
     group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
-  endHeavy:
-    player: 2
-    type: 0
-    group: 2
-    volume: 1
-    pitch: 1
-    unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: fbf83cdf92a657a4a8b061d012f6d503, type: 2}
 --- !u!114 &11408028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25784,8 +25777,8 @@ MonoBehaviour:
   _canBounce: 1
   canGroundBounce: 1
   groundBounceThreshold: 23
-  velocityBounceThreshold: 25
-  bouncePower: 1
+  velocityBounceThreshold: 15
+  bouncePower: 10
   minBouncePower: 0
   maxBouncePower: 50
   jumpBounceMulti: 1.5
@@ -26213,6 +26206,8 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 8300000, guid: 8649a30ba6833ab4bb8c82228c3d75c1, type: 3}
     FMODAsset: {fileID: 11400000, guid: 6bb428f7795d0004292a32c453365d9d, type: 2}
+  enableWeakenedParameter: 1
+  weakenedParameterIndex: 0
 --- !u!114 &11414918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26522,22 +26517,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: b28a63e29f302774988f15099994782b, type: 2}
-  startHeavy:
+  collide:
     player: 2
     type: 0
     group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
-  endHeavy:
-    player: 2
-    type: 0
-    group: 2
-    volume: 1
-    pitch: 1
-    unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: fbf83cdf92a657a4a8b061d012f6d503, type: 2}
 --- !u!114 &11418546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27130,8 +27117,8 @@ MonoBehaviour:
   minCamProximity: 3
   maxCamProximity: 20
   shakeCamera: 1
-  shakeTime: .25
-  shakeStrength: .75
+  shakeTime: 1
+  shakeStrength: .200000003
 --- !u!114 &11423108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28523,8 +28510,8 @@ MonoBehaviour:
   _canBounce: 1
   canGroundBounce: 1
   groundBounceThreshold: 23
-  velocityBounceThreshold: 25
-  bouncePower: 1
+  velocityBounceThreshold: 15
+  bouncePower: 10
   minBouncePower: 0
   maxBouncePower: 50
   jumpBounceMulti: 1.5
@@ -29062,6 +29049,28 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11439526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dba93dac6f5ce684692c7f6f4352c4e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnStart: 1
+  music:
+    player: 2
+    type: 2
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 902c80d8372caeb4b97e4ac67ed14d9f, type: 2}
+  enableWeakenedParameter: 1
+  weakenedParameterIndex: 1
 --- !u!114 &11439928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33292,8 +33301,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 489712}
-  distance: 20
-  smoothTime: .100000001
+  distance: 18
+  smoothTime: .400000006
   overrideOffset: 1
   overridenOffsetDirection: {x: 0, y: .5, z: -1}
 --- !u!114 &11485000

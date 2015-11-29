@@ -150,6 +150,8 @@ public class TetherManager : Manager
 
     void Start()
     {
+        if (!Application.isPlaying) return;
+
         // Initialize audio
         disconnectSound.Initialize();
         reconnectSound.Initialize();

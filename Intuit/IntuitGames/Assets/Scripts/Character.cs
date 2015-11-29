@@ -318,7 +318,14 @@ public class Character : MonoBehaviour, IBounce
 
     void OnCollisionEnter(Collision col)
     {
-        audioDataComp.PlayLandAudio(Mathf.Abs(col.relativeVelocity.y), col.relativeVelocity.magnitude > 2);
+        // Collision audio
+        // Try to play land sound if not, try the collide sound
+        if (!audioDataComp.ConditionalAudio(() => audioDataComp.PlayLandAudio(col.relativeVelocity.y), col.relativeVelocity.y > 2))
+            audioDataComp.ConditionalAudio(() => audioDataComp.PlayCollideAudio(),
+                col.gameObject == GetPartner().gameObject && isPlayerOne
+                || col.relativeVelocity.magnitude > baseMoveSpeed
+                || isGrounded && currentMoveSpeed > baseMoveSpeed
+                || isDashing);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
@@ -502,7 +509,6 @@ public class Character : MonoBehaviour, IBounce
             isHeavy = true;
 
             rigidbodyComp.drag = normalDrag;
-            audioDataComp.PlayStartHeavyAudio();
             unheavyDurationTimer.Restart();
 
             // Colour changing for debug purposes
@@ -512,7 +518,6 @@ public class Character : MonoBehaviour, IBounce
         {
             isHeavy = false;
 
-            audioDataComp.PlayEndHeavyAudio();
             heavyCooldownTimer.Restart();
 
             if (isGrounded) // Reduce sliding down slopes while not heavy
@@ -570,7 +575,7 @@ public class Character : MonoBehaviour, IBounce
     // Animation event call
     public void OnFootStep(int footIndex) // 1 left, 2 right
     {
-        audioDataComp.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceTypes.None, isWalking && isGrounded);
+        audioDataComp.ConditionalAudio(() => audioDataComp.PlayWalkAudio(onObject.transform ? onObject.transform.gameObject.GetSurfaceType() : Surface.SurfaceTypes.None), isWalking && isGrounded);
     }
 
     //[System.Obsolete] Soon to be obsolete once all constraining is moved to the two methods below
@@ -622,7 +627,8 @@ public class Character : MonoBehaviour, IBounce
         else if (isSprinting)
         {
             Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
-            direction.y = direction.magnitude / 4;
+            if (isGrounded)
+                direction.y = direction.magnitude / 10;
             AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
         }
         else
@@ -641,7 +647,8 @@ public class Character : MonoBehaviour, IBounce
             yankFlag = false;
             rigidbodyComp.drag = 0.25f;
             TimerPlus.Create(1, () => rigidbodyComp.drag = normalDrag);
-            Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
+            //Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
+            Vector3 direction = (GetPartnerPosition() - transform.position).normalized;
             direction.y = direction.magnitude / 2;
             AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
         }
