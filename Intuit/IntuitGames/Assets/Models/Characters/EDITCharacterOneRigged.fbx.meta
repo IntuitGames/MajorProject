@@ -1,0 +1,1434 @@
+fileFormatVersion: 2
+guid: 0db5346945d487048ba41d4ef803ceb9
+timeCreated: 1448852291
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Arm_L
+    100002: Arm_R
+    100004: back
+    100006: C_L_Eye
+    100008: C_R_Eye
+    100010: Centre
+    100012: curve1
+    100014: curve2
+    100016: //RootNode
+    100018: Foot_L
+    100020: Foot_R
+    100022: Hand_L
+    100024: Hand_R
+    100026: Head_Bottom
+    100028: Head_High
+    100030: Head_Low
+    100032: Head_Middle
+    100034: Head_Top
+    100036: Hip
+    100038: Leg_L
+    100040: Leg_R
+    100042: Mask_Locator
+    100044: polySurface3
+    100046: polySurface4
+    100048: polySurface5
+    100050: polySurface6
+    100052: Soul_Locator
+    400000: Arm_L
+    400002: Arm_R
+    400004: back
+    400006: C_L_Eye
+    400008: C_R_Eye
+    400010: Centre
+    400012: curve1
+    400014: curve2
+    400016: //RootNode
+    400018: Foot_L
+    400020: Foot_R
+    400022: Hand_L
+    400024: Hand_R
+    400026: Head_Bottom
+    400028: Head_High
+    400030: Head_Low
+    400032: Head_Middle
+    400034: Head_Top
+    400036: Hip
+    400038: Leg_L
+    400040: Leg_R
+    400042: Mask_Locator
+    400044: polySurface3
+    400046: polySurface4
+    400048: polySurface5
+    400050: polySurface6
+    400052: Soul_Locator
+    2300000: C_L_Eye
+    2300002: C_R_Eye
+    2300004: polySurface6
+    3300000: C_L_Eye
+    3300002: C_R_Eye
+    3300004: polySurface6
+    4300000: polySurface4
+    4300002: polySurface5
+    4300004: C_R_Eye
+    4300006: C_L_Eye
+    4300008: polySurface6
+    7400000: Run
+    7400002: Idle
+    7400004: Dash
+    7400006: Heavy State (Mid-air)
+    7400008: Heavy State (Impact)
+    7400010: Heavy State Crawl
+    7400012: High Jump
+    7400014: Weakened Walk
+    7400016: Knocked Back
+    7400018: Buddy Wave
+    7400020: Weakened Wave
+    7400022: Weakened Idle
+    7400024: Walk
+    7400026: Jump
+    7400028: All
+    7400030: Heavy Idle
+    9500000: //RootNode
+    13700000: polySurface4
+    13700002: polySurface5
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Run
+      takeName: Take 001
+      firstFrame: 275
+      lastFrame: 322
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 184
+      lastFrame: 274
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Dash
+      takeName: Take 001
+      firstFrame: 324
+      lastFrame: 348
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Heavy State (Mid-air)
+      takeName: Take 001
+      firstFrame: 349
+      lastFrame: 354
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Heavy State (Impact)
+      takeName: Take 001
+      firstFrame: 349
+      lastFrame: 376
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Heavy State Crawl
+      takeName: Take 001
+      firstFrame: 377
+      lastFrame: 423
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: High Jump
+      takeName: Take 001
+      firstFrame: 670
+      lastFrame: 701
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Weakened Walk
+      takeName: Take 001
+      firstFrame: 511
+      lastFrame: 559
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Knocked Back
+      takeName: Take 001
+      firstFrame: 702
+      lastFrame: 738
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Buddy Wave
+      takeName: Take 001
+      firstFrame: 609
+      lastFrame: 669
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Weakened Wave
+      takeName: Take 001
+      firstFrame: 560
+      lastFrame: 608
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Weakened Idle
+      takeName: Take 001
+      firstFrame: 462
+      lastFrame: 510
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Walk
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 96
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Jump
+      takeName: Take 001
+      firstFrame: 97
+      lastFrame: 182
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: All
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 738
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Heavy Idle
+      takeName: Take 001
+      firstFrame: 354
+      lastFrame: 355
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: back
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: curve2
+        weight: 1
+      - path: Hip
+        weight: 1
+      - path: Hip/Centre
+        weight: 1
+      - path: Hip/Centre/Arm_L
+        weight: 1
+      - path: Hip/Centre/Arm_L/Hand_L
+        weight: 1
+      - path: Hip/Centre/Arm_R
+        weight: 1
+      - path: Hip/Centre/Arm_R/Hand_R
+        weight: 1
+      - path: Hip/Centre/Head_Bottom
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High
+        weight: 1
+      - path: Hip/Centre/Head_Bottom/Head_Low/Head_Middle/Head_High/Head_Top
+        weight: 1
+      - path: Hip/Centre/Mask_Locator
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_L_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/C_R_Eye
+        weight: 1
+      - path: Hip/Centre/Mask_Locator/polySurface5
+        weight: 1
+      - path: Hip/Centre/Soul_Locator
+        weight: 1
+      - path: Hip/Centre/Soul_Locator/polySurface6
+        weight: 1
+      - path: Hip/Leg_L
+        weight: 1
+      - path: Hip/Leg_L/Foot_L
+        weight: 1
+      - path: Hip/Leg_R
+        weight: 1
+      - path: Hip/Leg_R/Foot_R
+        weight: 1
+      - path: polySurface3
+        weight: 1
+      - path: polySurface3/polySurface4
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 20
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: a2bb6174f6d13474f9365d4ce3898e1a,
+    type: 3}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

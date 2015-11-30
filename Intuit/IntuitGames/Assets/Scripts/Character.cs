@@ -17,7 +17,7 @@ public class Character : MonoBehaviour, IBounce
     public Animator animatorComp;
     public CharacterAudio audioDataComp;
     public SkinnedMeshRenderer bodyRendererComp;
-    public MeshRenderer maskRendererComp;
+    public SkinnedMeshRenderer maskRendererComp;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -333,7 +333,7 @@ public class Character : MonoBehaviour, IBounce
                 col.gameObject == GetPartner().gameObject && isPlayerOne
                 || col.relativeVelocity.magnitude > baseMoveSpeed
                 || isGrounded && currentMoveSpeed > baseMoveSpeed && forwardObject
-                || isDashing);
+                || isDashing && forwardObject);
 
         // Bounce off ground
         if (!col.collider.GetComponent<Bouncy>()) gameObject.GetInterface<IBounce>().Bounce(col.relativeVelocity, col.collider.gameObject);
@@ -398,6 +398,11 @@ public class Character : MonoBehaviour, IBounce
         // Send animator info
         animatorComp.SetBool("IsAirborne", !isGrounded);
         animatorComp.SetFloat("Speed", targetVelocity.IgnoreY2().normalized.magnitude * (currentMoveSpeed / baseMoveSpeed));
+        animatorComp.SetBool("IsRunning", isSprinting);
+        animatorComp.SetBool("IsWeakened", isWeakened);
+        animatorComp.SetBool("IsDashing", isDashing);
+        animatorComp.SetFloat("DashSpeed", Mathf.Pow(dashLength, -1));
+        animatorComp.SetBool("IsHeavy", isHeavy);
 
         // Updates last recorded Y value
         lastRecoredY = transform.position.y;
@@ -450,7 +455,7 @@ public class Character : MonoBehaviour, IBounce
         if (p1 != isPlayerOne) return;
 
         // Enter the dash jump state
-        if (isDashing && isPressed && isGrounded && !isDashJumping && canDashJump)
+        if (isDashing && isPressed && !isDashJumping && canDashJump)
         {
             isDashJumping = true;
             dashTimer.ModifyValue(dashJumpLength, true);
@@ -543,7 +548,14 @@ public class Character : MonoBehaviour, IBounce
     {
         if (p1 != isPlayerOne) return;
 
-        isSprinting = isPressed && targetVelocity.magnitude != 0;
+        isSprinting = isPressed && targetVelocity.magnitude != 0 && !isWeakened;
+    }
+
+    public void Wave(bool p1, bool isPressed)
+    {
+        if (p1 != isPlayerOne) return;
+
+        if (isPressed) animatorComp.SetTrigger("Wave");
     }
 
     public void Pause(bool p1, bool isPressed)

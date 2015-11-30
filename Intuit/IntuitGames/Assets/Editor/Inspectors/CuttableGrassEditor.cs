@@ -6,7 +6,7 @@ using UnityEditor;
 using CustomExtensions;
 
 [CustomEditor(typeof(CuttableGrass), true), CanEditMultipleObjects]
-public class CuttableGrassEditor : Editor
+public class CuttableGrassEditor : TriggerEditor
 {
     public override void OnInspectorGUI()
     {

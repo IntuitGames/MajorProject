@@ -27,6 +27,7 @@ public class InputManager : Manager
     private const string pauseStr = "Cancel_";
     private const string unpauseStr = "Cancel_";
     private const string sprintStr = "Sprint_";
+    private const string waveStr = "Wave_";
 
     // Input Booleans
     [System.NonSerialized] public InputData jumpData = new InputData(jumpStr);
@@ -35,6 +36,7 @@ public class InputManager : Manager
     [System.NonSerialized] public InputData pauseData = new InputData(pauseStr);
     [System.NonSerialized] public InputData unpauseData = new InputData(unpauseStr);
     [System.NonSerialized] public InputData sprintData = new InputData(sprintStr);
+    [System.NonSerialized] public InputData waveData = new InputData(waveStr);
 
     // Events
     public event Action<float> PreUpdate = delegate { };
@@ -55,6 +57,9 @@ public class InputManager : Manager
     public event Action<bool, bool> Unpause = delegate { };
     public event Action<bool, bool> PauseToggle = delegate { };
     public event Action<bool, bool> UnpauseToggle = delegate { };
+    public event Action<bool, bool> Wave = delegate { };
+    public event Action<bool, bool> WaveToggle = delegate { };
+
 
     // Settings
     public enum UpdateTypes { Update, FixedUpdate, LateUpdate };
@@ -65,6 +70,7 @@ public class InputManager : Manager
     public UpdateTypes heavyUpdates = UpdateTypes.Update;
     public UpdateTypes pauseUpdates = UpdateTypes.Update;
     public UpdateTypes sprintUpdates = UpdateTypes.Update;
+    public UpdateTypes waveUpdates = UpdateTypes.Update;
 
     // Quick-access Properties
     public float movementDelta { get { return GetDelta(movementUpdates); } }
@@ -74,6 +80,7 @@ public class InputManager : Manager
     public float heavyDelta { get { return GetDelta(heavyUpdates); } }
     public float pauseDelta { get { return GetDelta(pauseUpdates); } }
     public float sprintDelta { get { return GetDelta(sprintUpdates); } }
+    public float waveDelta { get { return GetDelta(waveUpdates); } }
 
     #endregion
 
@@ -127,6 +134,7 @@ public class InputManager : Manager
         pauseData.Update();
         unpauseData.Update();
         sprintData.Update();
+        waveData.Update();
     }
 
     private void HandleInput(UpdateTypes type, float delta)
@@ -153,6 +161,7 @@ public class InputManager : Manager
                 if (type == dashUpdates) dashData.RaiseEvent(Dash, DashToggle);
                 if (type == heavyUpdates) heavyData.RaiseEvent(Heavy, HeavyToggle);
                 if (type == sprintUpdates) sprintData.RaiseEvent(Sprint, SprintToggle);
+                if (type == waveUpdates) waveData.RaiseEvent(Wave, WaveToggle);
 
                 // Pause check
                 if (type == pauseUpdates) pauseData.RaiseEvent(Pause, PauseToggle);
@@ -196,26 +205,18 @@ public class InputManager : Manager
         PauseToggle += characterObj.Pause;
         UnpauseToggle += characterObj.Unpause;
 
+        Jump += characterObj.Jump;
+        JumpToggle += characterObj.JumpToggle;
+        DashToggle += characterObj.Dash;
+        Heavy += characterObj.Heavy;
+        Sprint += characterObj.Sprint;
+        WaveToggle += characterObj.Wave;
+
+        // Player specific events
         if (characterObj.isPlayerOne)
-        {
-            // Subscribe to player 1 events
             MovementP1 += characterObj.Movement;
-            Jump += characterObj.Jump;
-            JumpToggle += characterObj.JumpToggle;
-            DashToggle += characterObj.Dash;
-            Heavy += characterObj.Heavy;
-            Sprint += characterObj.Sprint;
-        }
         else
-        {
-            // Subscribe to player 2 events
             MovementP2 += characterObj.Movement;
-            Jump += characterObj.Jump;
-            JumpToggle += characterObj.JumpToggle;
-            DashToggle += characterObj.Dash;
-            Heavy += characterObj.Heavy;
-            Sprint += characterObj.Sprint;
-        }
     }
 
     // Should be called when characters get destroyed
@@ -227,26 +228,18 @@ public class InputManager : Manager
         PauseToggle -= characterObj.Pause;
         UnpauseToggle -= characterObj.Unpause;
 
+        Jump -= characterObj.Jump;
+        JumpToggle -= characterObj.JumpToggle;
+        DashToggle -= characterObj.Dash;
+        Heavy -= characterObj.Heavy;
+        Sprint -= characterObj.Sprint;
+        WaveToggle -= characterObj.Wave;
+
+        // Player specific events
         if (characterObj.isPlayerOne)
-        {
-            // Subscribe to player 1 events
             MovementP1 -= characterObj.Movement;
-            Jump -= characterObj.Jump;
-            JumpToggle -= characterObj.JumpToggle;
-            DashToggle -= characterObj.Dash;
-            Heavy -= characterObj.Heavy;
-            Sprint -= characterObj.Sprint;
-        }
         else
-        {
-            // Subscribe to player 2 events
             MovementP2 -= characterObj.Movement;
-            Jump -= characterObj.Jump;
-            JumpToggle -= characterObj.JumpToggle;
-            DashToggle -= characterObj.Dash;
-            Heavy -= characterObj.Heavy;
-            Sprint -= characterObj.Sprint;
-        }
     }
 
     private float GetDelta(UpdateTypes type, bool scaled = true)
