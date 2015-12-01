@@ -6,23 +6,39 @@ public class weStateAttack : EnemyCoreState<WanderingEnemy>
 
     public weStateAttack(EnemyFSM<EnemyCoreState<WanderingEnemy>, WanderingEnemy> owner) : base(owner) { }
 
+    private float biteTimer;
+
     public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
-
+        if(!becomeAggressive)
+        {
+            ownerFSM.popState();    //Pop the attacking state
+            ownerFSM.popState();    //Pop the chasing state, which must be below this as the only way to ever arrive at weStateAttack is through Chase
+            owner.animatorComp.SetBool("aggressive", false);
+        }
     }
 
     public override void Begin(WanderingEnemy obj)
     {
-
+        if (obj.showStateDebugs) Debug.Log(this.GetType().ToString() + " has begun!");
+        obj.agent.velocity = Vector3.zero;
+        obj.agent.Stop();
+        obj.animatorComp.SetBool("attacking", true);
+        obj.biteController.Bite(obj.biteEffectDuration, obj.biteHang);
+        biteTimer = (obj.biteEffectDuration * 2) + obj.biteHang; //the total duration of the biting process, should change this to instead respond to a message from the biteController but w/e haha
     }
     public override void Update(WanderingEnemy obj)
     {
-
+        Vector3 lookatpos = GameManager.TetherManager.joints[(GameManager.TetherManager.joints.Count / 2)].transform.position;
+        lookatpos.y = obj.transform.position.y;
+        obj.transform.LookAt(lookatpos);
+        if (biteTimer > 0) biteTimer -= Time.deltaTime;
+        else ownerFSM.popState();
     }
     public override void End(WanderingEnemy obj)
     {
-
+        obj.agent.Resume();
+        obj.animatorComp.SetBool("attacking", false);
     }
-
 }
 

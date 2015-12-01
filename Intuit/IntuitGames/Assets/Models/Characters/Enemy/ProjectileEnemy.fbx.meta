@@ -1,0 +1,516 @@
+fileFormatVersion: 2
+guid: b4dcabb54e95bae48a6af50b00fc3568
+timeCreated: 1448956744
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: BottomTeeth
+    100002: //RootNode
+    100004: EyesLungsAndTails
+    100006: P_IK_L_Leg
+    100008: P_IK_R_Leg
+    100010: P_L_Ankle
+    100012: P_L_Leg
+    100014: P_L_Shin
+    100016: P_L_Toe
+    100018: P_R_Ankle
+    100020: P_R_Leg
+    100022: P_R_Shin
+    100024: P_R_Toe
+    100026: P_Waist
+    100028: ProjectileEnemy_Body
+    100030: ProjectileEnemy_EyeLeft
+    100032: ProjectileEnemy_EyeRight
+    100034: ProjectileEnemy_FullModel
+    100036: ProjectileEnemy_Lung
+    100038: ProjectileEnemy_Tail
+    100040: ProjectileEnemy_TeethLower
+    100042: ProjectileEnemy_TeethUpper
+    100044: ProjectileEnemy_WeakSpot
+    100046: UpperTeeth
+    400000: BottomTeeth
+    400002: //RootNode
+    400004: EyesLungsAndTails
+    400006: P_IK_L_Leg
+    400008: P_IK_R_Leg
+    400010: P_L_Ankle
+    400012: P_L_Leg
+    400014: P_L_Shin
+    400016: P_L_Toe
+    400018: P_R_Ankle
+    400020: P_R_Leg
+    400022: P_R_Shin
+    400024: P_R_Toe
+    400026: P_Waist
+    400028: ProjectileEnemy_Body
+    400030: ProjectileEnemy_EyeLeft
+    400032: ProjectileEnemy_EyeRight
+    400034: ProjectileEnemy_FullModel
+    400036: ProjectileEnemy_Lung
+    400038: ProjectileEnemy_Tail
+    400040: ProjectileEnemy_TeethLower
+    400042: ProjectileEnemy_TeethUpper
+    400044: ProjectileEnemy_WeakSpot
+    400046: UpperTeeth
+    2300000: ProjectileEnemy_EyeLeft
+    2300002: ProjectileEnemy_EyeRight
+    2300004: ProjectileEnemy_Lung
+    2300006: ProjectileEnemy_Tail
+    2300008: ProjectileEnemy_TeethLower
+    2300010: ProjectileEnemy_TeethUpper
+    2300012: ProjectileEnemy_WeakSpot
+    3300000: ProjectileEnemy_EyeLeft
+    3300002: ProjectileEnemy_EyeRight
+    3300004: ProjectileEnemy_Lung
+    3300006: ProjectileEnemy_Tail
+    3300008: ProjectileEnemy_TeethLower
+    3300010: ProjectileEnemy_TeethUpper
+    3300012: ProjectileEnemy_WeakSpot
+    4300000: ProjectileEnemy_Body
+    4300002: ProjectileEnemy_EyeRight
+    4300004: ProjectileEnemy_WeakSpot
+    4300006: ProjectileEnemy_EyeLeft
+    4300008: ProjectileEnemy_Lung
+    4300010: ProjectileEnemy_Tail
+    4300012: ProjectileEnemy_TeethUpper
+    4300014: ProjectileEnemy_TeethLower
+    7400000: Projectile_idle
+    7400002: Projectile_shimmy
+    7400004: Projectile_attack
+    7400006: Projectile_death
+    7400008: Projectile_suprise
+    9500000: //RootNode
+    13700000: ProjectileEnemy_Body
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Projectile_idle
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 96
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: P_IK_L_Leg
+        weight: 1
+      - path: P_IK_R_Leg
+        weight: 1
+      - path: P_Waist
+        weight: 1
+      - path: P_Waist/BottomTeeth
+        weight: 1
+      - path: P_Waist/BottomTeeth/ProjectileEnemy_TeethLower
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeLeft
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeRight
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Lung
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Tail
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_WeakSpot
+        weight: 1
+      - path: P_Waist/P_L_Leg
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle/P_L_Toe
+        weight: 1
+      - path: P_Waist/P_R_Leg
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle/P_R_Toe
+        weight: 1
+      - path: P_Waist/UpperTeeth
+        weight: 1
+      - path: P_Waist/UpperTeeth/ProjectileEnemy_TeethUpper
+        weight: 1
+      - path: ProjectileEnemy_FullModel
+        weight: 1
+      - path: ProjectileEnemy_FullModel/ProjectileEnemy_Body
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Projectile_shimmy
+      takeName: Take 001
+      firstFrame: 97
+      lastFrame: 145
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: P_IK_L_Leg
+        weight: 1
+      - path: P_IK_R_Leg
+        weight: 1
+      - path: P_Waist
+        weight: 1
+      - path: P_Waist/BottomTeeth
+        weight: 1
+      - path: P_Waist/BottomTeeth/ProjectileEnemy_TeethLower
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeLeft
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeRight
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Lung
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Tail
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_WeakSpot
+        weight: 1
+      - path: P_Waist/P_L_Leg
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle/P_L_Toe
+        weight: 1
+      - path: P_Waist/P_R_Leg
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle/P_R_Toe
+        weight: 1
+      - path: P_Waist/UpperTeeth
+        weight: 1
+      - path: P_Waist/UpperTeeth/ProjectileEnemy_TeethUpper
+        weight: 1
+      - path: ProjectileEnemy_FullModel
+        weight: 1
+      - path: ProjectileEnemy_FullModel/ProjectileEnemy_Body
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Projectile_attack
+      takeName: Take 001
+      firstFrame: 146
+      lastFrame: 182
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: P_IK_L_Leg
+        weight: 1
+      - path: P_IK_R_Leg
+        weight: 1
+      - path: P_Waist
+        weight: 1
+      - path: P_Waist/BottomTeeth
+        weight: 1
+      - path: P_Waist/BottomTeeth/ProjectileEnemy_TeethLower
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeLeft
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeRight
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Lung
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Tail
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_WeakSpot
+        weight: 1
+      - path: P_Waist/P_L_Leg
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle/P_L_Toe
+        weight: 1
+      - path: P_Waist/P_R_Leg
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle/P_R_Toe
+        weight: 1
+      - path: P_Waist/UpperTeeth
+        weight: 1
+      - path: P_Waist/UpperTeeth/ProjectileEnemy_TeethUpper
+        weight: 1
+      - path: ProjectileEnemy_FullModel
+        weight: 1
+      - path: ProjectileEnemy_FullModel/ProjectileEnemy_Body
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Projectile_death
+      takeName: Take 001
+      firstFrame: 202
+      lastFrame: 214
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: P_IK_L_Leg
+        weight: 1
+      - path: P_IK_R_Leg
+        weight: 1
+      - path: P_Waist
+        weight: 1
+      - path: P_Waist/BottomTeeth
+        weight: 1
+      - path: P_Waist/BottomTeeth/ProjectileEnemy_TeethLower
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeLeft
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeRight
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Lung
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Tail
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_WeakSpot
+        weight: 1
+      - path: P_Waist/P_L_Leg
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle/P_L_Toe
+        weight: 1
+      - path: P_Waist/P_R_Leg
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle/P_R_Toe
+        weight: 1
+      - path: P_Waist/UpperTeeth
+        weight: 1
+      - path: P_Waist/UpperTeeth/ProjectileEnemy_TeethUpper
+        weight: 1
+      - path: ProjectileEnemy_FullModel
+        weight: 1
+      - path: ProjectileEnemy_FullModel/ProjectileEnemy_Body
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Projectile_suprise
+      takeName: Take 001
+      firstFrame: 183
+      lastFrame: 201
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: P_IK_L_Leg
+        weight: 1
+      - path: P_IK_R_Leg
+        weight: 1
+      - path: P_Waist
+        weight: 1
+      - path: P_Waist/BottomTeeth
+        weight: 1
+      - path: P_Waist/BottomTeeth/ProjectileEnemy_TeethLower
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeLeft
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_EyeRight
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Lung
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_Tail
+        weight: 1
+      - path: P_Waist/EyesLungsAndTails/ProjectileEnemy_WeakSpot
+        weight: 1
+      - path: P_Waist/P_L_Leg
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle
+        weight: 1
+      - path: P_Waist/P_L_Leg/P_L_Shin/P_L_Ankle/P_L_Toe
+        weight: 1
+      - path: P_Waist/P_R_Leg
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle
+        weight: 1
+      - path: P_Waist/P_R_Leg/P_R_Shin/P_R_Ankle/P_R_Toe
+        weight: 1
+      - path: P_Waist/UpperTeeth
+        weight: 1
+      - path: P_Waist/UpperTeeth/ProjectileEnemy_TeethUpper
+        weight: 1
+      - path: ProjectileEnemy_FullModel
+        weight: 1
+      - path: ProjectileEnemy_FullModel/ProjectileEnemy_Body
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

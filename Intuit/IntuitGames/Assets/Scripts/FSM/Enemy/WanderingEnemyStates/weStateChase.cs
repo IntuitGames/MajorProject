@@ -8,22 +8,34 @@ public class weStateChase : EnemyCoreState<WanderingEnemy>
 
     public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
-		if (!becomeAggressive)
-			owner.fsm.pushState (new weStateWander (ownerFSM));
+        if (!becomeAggressive)
+        {
+            owner.animatorComp.SetBool("aggressive", false);
+            ownerFSM.popState();
+        }
     }
 
     public override void Begin(WanderingEnemy obj)
     {
+        if (obj.showStateDebugs) Debug.Log(this.GetType().ToString() + " has begun!");
         obj.agent.speed = obj.chasingSpeed;
-        Debug.Log(this.GetType().ToString() + " has Begun");
     }
     public override void Update(WanderingEnemy obj)
     {
+        if(TetherManager.TetherManager.disconnected)
+        {
+            obj.animatorComp.SetBool("aggressive", false);
+            obj.aggroHandler.enteredObs.Clear();
+            ownerFSM.popState();
+        }
         obj.agent.SetDestination(GetCenterJointPos());
+        if (Vector3.Distance(obj.transform.position, obj.agent.destination) <= obj.chasingDistanceBuffer)
+        {
+            ownerFSM.pushState(new weStateAttack(ownerFSM));
+        }
     }
     public override void End(WanderingEnemy obj)
     {
-        Debug.Log(this.GetType().ToString() + " has Ended");
     }
 
     Vector3 GetCenterJointPos()

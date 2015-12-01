@@ -1,0 +1,378 @@
+fileFormatVersion: 2
+guid: 1f9399ca324bde54da036dd73e639854
+timeCreated: 1448967248
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: B_1
+    100002: B_2
+    100004: B_3
+    100006: B_Waist
+    100008: BurrowingEnemy_EyeLeft
+    100010: BurrowingEnemy_EyeRight
+    100012: BurrowingEnemy_FullModel
+    100014: BurrowingEnemy_Guts
+    100016: BurrowingEnemy_Head
+    100018: BurrowingEnemy_WeakSpot1
+    100020: BurrowingEnemyHeart
+    100022: BurrowingEnemyIntestines
+    100024: BurrowingEnemyLungs
+    100026: BurrowingEnemyStomach
+    100028: BurrowingEyes
+    100030: BurrowingGuts
+    100032: //RootNode
+    100034: pasted__Guts
+    400000: B_1
+    400002: B_2
+    400004: B_3
+    400006: B_Waist
+    400008: BurrowingEnemy_EyeLeft
+    400010: BurrowingEnemy_EyeRight
+    400012: BurrowingEnemy_FullModel
+    400014: BurrowingEnemy_Guts
+    400016: BurrowingEnemy_Head
+    400018: BurrowingEnemy_WeakSpot1
+    400020: BurrowingEnemyHeart
+    400022: BurrowingEnemyIntestines
+    400024: BurrowingEnemyLungs
+    400026: BurrowingEnemyStomach
+    400028: BurrowingEyes
+    400030: BurrowingGuts
+    400032: //RootNode
+    400034: pasted__Guts
+    2300000: BurrowingEnemyHeart
+    2300002: BurrowingEnemyIntestines
+    2300004: BurrowingEnemyLungs
+    2300006: BurrowingEnemyStomach
+    3300000: BurrowingEnemyHeart
+    3300002: BurrowingEnemyIntestines
+    3300004: BurrowingEnemyLungs
+    3300006: BurrowingEnemyStomach
+    4300000: BurrowingEnemy_Head
+    4300002: BurrowingEnemy_WeakSpot1
+    4300004: BurrowingEnemy_EyeRight
+    4300006: BurrowingEnemy_EyeLeft
+    4300008: BurrowingEnemyLungs
+    4300010: BurrowingEnemyHeart
+    4300012: BurrowingEnemyStomach
+    4300014: BurrowingEnemyIntestines
+    7400000: Burrower_run
+    7400002: Burrower_stunned
+    7400004: Burrower_die
+    7400006: Burrower_dizzy
+    9500000: //RootNode
+    13700000: BurrowingEnemy_EyeLeft
+    13700002: BurrowingEnemy_EyeRight
+    13700004: BurrowingEnemy_Head
+    13700006: BurrowingEnemy_WeakSpot1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Burrower_run
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 48
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_Waist
+        weight: 1
+      - path: B_Waist/B_1
+        weight: 1
+      - path: B_Waist/B_1/B_2
+        weight: 1
+      - path: B_Waist/B_1/B_2/B_3
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeLeft
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeRight
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyHeart
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyIntestines
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyLungs
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyStomach
+        weight: 1
+      - path: BurrowingEnemy_FullModel
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_Head
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_WeakSpot1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Burrower_stunned
+      takeName: Take 001
+      firstFrame: 49
+      lastFrame: 55
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_Waist
+        weight: 1
+      - path: B_Waist/B_1
+        weight: 1
+      - path: B_Waist/B_1/B_2
+        weight: 1
+      - path: B_Waist/B_1/B_2/B_3
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeLeft
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeRight
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyHeart
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyIntestines
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyLungs
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyStomach
+        weight: 1
+      - path: BurrowingEnemy_FullModel
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_Head
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_WeakSpot1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Burrower_die
+      takeName: Take 001
+      firstFrame: 111
+      lastFrame: 123
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_Waist
+        weight: 1
+      - path: B_Waist/B_1
+        weight: 1
+      - path: B_Waist/B_1/B_2
+        weight: 1
+      - path: B_Waist/B_1/B_2/B_3
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeLeft
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeRight
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyHeart
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyIntestines
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyLungs
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyStomach
+        weight: 1
+      - path: BurrowingEnemy_FullModel
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_Head
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_WeakSpot1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Burrower_dizzy
+      takeName: Take 001
+      firstFrame: 56
+      lastFrame: 110
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: B_Waist
+        weight: 1
+      - path: B_Waist/B_1
+        weight: 1
+      - path: B_Waist/B_1/B_2
+        weight: 1
+      - path: B_Waist/B_1/B_2/B_3
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeLeft
+        weight: 1
+      - path: B_Waist/B_1/B_2/BurrowingEyes/BurrowingEnemy_EyeRight
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyHeart
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyIntestines
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyLungs
+        weight: 1
+      - path: B_Waist/B_1/BurrowingGuts/BurrowingEnemy_Guts/pasted__Guts/BurrowingEnemyStomach
+        weight: 1
+      - path: BurrowingEnemy_FullModel
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_Head
+        weight: 1
+      - path: BurrowingEnemy_FullModel/BurrowingEnemy_WeakSpot1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

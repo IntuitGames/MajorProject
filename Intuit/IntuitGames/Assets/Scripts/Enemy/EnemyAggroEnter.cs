@@ -19,7 +19,7 @@ public class EnemyAggroEnter : MonoBehaviour {
             {
                 if (!other.GetComponent<Character>().isWeakened)
                 {
-                    enemyAggro.ObjectEnteredRange();
+                    enemyAggro.ObjectEnteredRange(other.gameObject);
                 }
             }
 
@@ -27,7 +27,7 @@ public class EnemyAggroEnter : MonoBehaviour {
             {
                 if (!other.GetComponent<TetherJoint>().IsSevered())
                 {
-                    enemyAggro.ObjectEnteredRange();
+                    enemyAggro.ObjectEnteredRange(other.gameObject);
                 }
             }
         }

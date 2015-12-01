@@ -11,6 +11,8 @@ public class EnemyAggro : MonoBehaviour
 
     public EnemyBase enemy;
 
+    public List<GameObject> enteredObs = new List<GameObject>();
+
     [ReadOnly]
     public int playerObsInRange = 0;
 
@@ -19,16 +21,17 @@ public class EnemyAggro : MonoBehaviour
         if (enemy == null) enemy = GetComponentInParent<EnemyBase>();
     }
 
-    public void ObjectEnteredRange()
+    public void ObjectEnteredRange(GameObject enteredOb)
     {
-        enemy.SendAggroMessage(true);
-        playerObsInRange++;
+        if(!enteredObs.Contains(enteredOb)) enteredObs.Add(enteredOb);
+        if (enteredObs.Count == 1)  //Once the first player-related object enters the radius, tell enemy to become aggro
+            enemy.SendAggroMessage(true);
     }
 
-    public void ObjectLeftRange()
+    public void ObjectLeftRange(GameObject enteredOb)
     {
-        playerObsInRange--;
-        if (playerObsInRange <= 0)
+        enteredObs.Remove(enteredOb);
+        if (enteredObs.Count == 0)
         {
             enemy.SendAggroMessage(false);
         }

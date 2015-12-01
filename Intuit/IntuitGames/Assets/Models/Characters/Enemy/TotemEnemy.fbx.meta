@@ -1,0 +1,753 @@
+fileFormatVersion: 2
+guid: 8216d5efd543f094b85d4828c889b445
+timeCreated: 1448967248
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Full_Model
+    100004: Guts
+    100006: IK_L
+    100008: IK_R
+    100010: T_1
+    100012: T_2
+    100014: T_3
+    100016: T_4
+    100018: T_5
+    100020: T_6
+    100022: T_L_Ankle
+    100024: T_L_Leg
+    100026: T_L_Shin
+    100028: T_L_Toe
+    100030: T_R_Ankle
+    100032: T_R_Leg
+    100034: T_R_Shin
+    100036: T_R_Toe
+    100038: T_Waist
+    100040: Totem_Face
+    100042: Totem_Guts
+    100044: Totem_Tail1
+    100046: TotemEyeLeft1
+    100048: TotemEyeLeft2
+    100050: TotemEyeRight1
+    100052: TotemHead
+    100054: TotemHeart
+    100056: TotemIntestines
+    100058: TotemLowerHalf
+    100060: TotemLungs
+    100062: TotemNose
+    100064: TotemStomach
+    100066: TotemTail
+    100068: TotemWeak
+    400000: //RootNode
+    400002: Full_Model
+    400004: Guts
+    400006: IK_L
+    400008: IK_R
+    400010: T_1
+    400012: T_2
+    400014: T_3
+    400016: T_4
+    400018: T_5
+    400020: T_6
+    400022: T_L_Ankle
+    400024: T_L_Leg
+    400026: T_L_Shin
+    400028: T_L_Toe
+    400030: T_R_Ankle
+    400032: T_R_Leg
+    400034: T_R_Shin
+    400036: T_R_Toe
+    400038: T_Waist
+    400040: Totem_Face
+    400042: Totem_Guts
+    400044: Totem_Tail1
+    400046: TotemEyeLeft1
+    400048: TotemEyeLeft2
+    400050: TotemEyeRight1
+    400052: TotemHead
+    400054: TotemHeart
+    400056: TotemIntestines
+    400058: TotemLowerHalf
+    400060: TotemLungs
+    400062: TotemNose
+    400064: TotemStomach
+    400066: TotemTail
+    400068: TotemWeak
+    2300000: TotemEyeLeft2
+    2300002: TotemHeart
+    2300004: TotemIntestines
+    2300006: TotemLungs
+    2300008: TotemNose
+    2300010: TotemStomach
+    2300012: TotemTail
+    3300000: TotemEyeLeft2
+    3300002: TotemHeart
+    3300004: TotemIntestines
+    3300006: TotemLungs
+    3300008: TotemNose
+    3300010: TotemStomach
+    3300012: TotemTail
+    4300000: TotemHead
+    4300002: TotemLowerHalf
+    4300004: TotemWeak
+    4300006: TotemNose
+    4300008: TotemEyeRight1
+    4300010: TotemEyeLeft1
+    4300012: TotemEyeLeft2
+    4300014: TotemLungs
+    4300016: TotemHeart
+    4300018: TotemStomach
+    4300020: TotemIntestines
+    4300022: TotemTail
+    7400000: Totem_idle
+    7400002: Totem_walk
+    7400004: Totem_run
+    7400006: Totem_attack
+    7400008: Totem_death
+    7400010: Totem_suprised
+    9500000: //RootNode
+    13700000: TotemEyeLeft1
+    13700002: TotemEyeRight1
+    13700004: TotemHead
+    13700006: TotemLowerHalf
+    13700008: TotemWeak
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Totem_idle
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 48
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Totem_walk
+      takeName: Take 001
+      firstFrame: 49
+      lastFrame: 97
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Totem_run
+      takeName: Take 001
+      firstFrame: 100
+      lastFrame: 146
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Totem_attack
+      takeName: Take 001
+      firstFrame: 147
+      lastFrame: 182
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Totem_death
+      takeName: Take 001
+      firstFrame: 183
+      lastFrame: 196
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Totem_suprised
+      takeName: Take 001
+      firstFrame: 200
+      lastFrame: 218
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Full_Model
+        weight: 1
+      - path: Full_Model/TotemHead
+        weight: 1
+      - path: Full_Model/TotemLowerHalf
+        weight: 1
+      - path: Full_Model/TotemWeak
+        weight: 1
+      - path: IK_L
+        weight: 1
+      - path: IK_R
+        weight: 1
+      - path: T_Waist
+        weight: 1
+      - path: T_Waist/T_1
+        weight: 1
+      - path: T_Waist/T_1/T_2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/T_6
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeLeft2
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemEyeRight1
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/T_4/T_5/Totem_Face/TotemNose
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemHeart
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemIntestines
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemLungs
+        weight: 1
+      - path: T_Waist/T_1/T_2/T_3/Totem_Guts/Guts/TotemStomach
+        weight: 1
+      - path: T_Waist/T_L_Leg
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle
+        weight: 1
+      - path: T_Waist/T_L_Leg/T_L_Shin/T_L_Ankle/T_L_Toe
+        weight: 1
+      - path: T_Waist/T_R_Leg
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle
+        weight: 1
+      - path: T_Waist/T_R_Leg/T_R_Shin/T_R_Ankle/T_R_Toe
+        weight: 1
+      - path: T_Waist/Totem_Tail1
+        weight: 1
+      - path: T_Waist/Totem_Tail1/TotemTail
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 20
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
