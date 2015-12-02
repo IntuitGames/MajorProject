@@ -1,37 +1,43 @@
-﻿using UnityEngine;using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;public class GameOver : MonoBehaviour{
+﻿using UnityEngine;using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;
+using UnityEngine.EventSystems;public class GameOver : BaseUI{
+    [Header("Components")]
     public CoopSelector coopSelector;
     public Image backgroundPanel;
     public Button restartButton;
+    public Button mainMenuButton;
     public Button exitButton;
 
+    [Header("Settings")]
     [ReadOnly(EditableInEditor = true)]
     public bool remainClickable = false;
+    public SoundClip onSelectedSFX = new SoundClip();
 
-    private Button.ButtonClickedEvent restartButtonEvent, exitButtonEvent;
+    private Button.ButtonClickedEvent restartButtonEvent, mainMenuEvent, exitButtonEvent;
 
-    void Awake()
+    protected override void Awake()
     {
-        HideGameOverMenu();
-        GameManager.ModeManager.OnGameModeChanged += CheckForGameModeChange;
+        base.Awake();
 
         // Cache event listeners
         restartButtonEvent = restartButton.onClick;
+        mainMenuEvent = mainMenuButton.onClick;
         exitButtonEvent = exitButton.onClick;
 
         // Remove event listeners if buttons can no longer be activated via clicking
         if (!remainClickable)
         {
             restartButton.onClick = new Button.ButtonClickedEvent();
+            mainMenuButton.onClick = new Button.ButtonClickedEvent();
             exitButton.onClick = new Button.ButtonClickedEvent();
         }
     }
 
-    void OnDestroy()
+    void Start()
     {
-        GameManager.ModeManager.OnGameModeChanged -= CheckForGameModeChange;
+        onSelectedSFX.Initialize();
     }
 
-    public void ShowGameOverMenu()
+    protected override void Show()
     {
         // Enable the parent back panel
         backgroundPanel.gameObject.SetActive(true);
@@ -43,7 +49,7 @@
         coopSelector.SetActive(true);
     }
 
-    public void HideGameOverMenu()
+    protected override void Hide()
     {
         // Disable the parent back panel
         backgroundPanel.gameObject.SetActive(false);
@@ -56,16 +62,6 @@
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 
-    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
-    {
-        if (newMode == ModeManager.GameMode.GameOver)
-            ShowGameOverMenu();
-        else if (oldMode == ModeManager.GameMode.GameOver)
-            HideGameOverMenu();
-    }
-
-    #region BUTTON BEHAVIOURS
-
     // Performs the onClick action for the selected UI
     public void SelectedButtonBehaviour()
     {
@@ -73,19 +69,21 @@
 
         if (selectedObject && selectedObject == restartButton.gameObject)
             restartButtonEvent.Invoke();
+        else if (selectedObject && selectedObject == mainMenuButton.gameObject)
+            mainMenuEvent.Invoke();
         else if (selectedObject && selectedObject == exitButton.gameObject)
             exitButtonEvent.Invoke();
     }
 
-    public void Restart()
+    public override void OnSelect(BaseEventData eventData)
     {
-        GameManager.ReloadLevel();
+        onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
     }
 
-    public void Exit()
+    protected override void OnDestroy()
     {
-        GameManager.ExitGame();
-    }
+        base.OnDestroy();
 
-    #endregion
+        onSelectedSFX.Dispose();
+    }
 }

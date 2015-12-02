@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using CustomExtensions;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
+using UnityEngine.Events;
+using UnityEngine.EventSystems;public class CoopSelector : MonoBehaviour, ISelectHandler{
     [Header("Components")]
     public RectTransform parentRect;
     public RectTransform armRect;
+    public Button defaultSelection;
 
     [Header("Properties")]
-    public float growthSpeed = 400;
-    public float declineSpeed = 600;
+    public float smoothTime = 0.2f;
+    public float maxSpeed = 1000;
     [Range(0, 5)]
     public float lengthMulti = 2;
     [Range(0, 5)]
@@ -33,7 +35,7 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
     }
 
     private float minLength1, maxLength1, minLength2, maxLength2;
-    private float minHeight, maxHeight;
+    private float minHeight, maxHeight, minOffsetSpeed, maxOffsetSpeed;
     private float holdTimer;
     private bool initialized;
 
@@ -49,6 +51,20 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         SetDefinitions();
     }
 
+    void Start()
+    {
+        // Set coop selector position
+        defaultSelection.Select();
+        parentRect.localPosition = defaultSelection.transform.localPosition;
+    }
+
+    void OnEnable()
+    {
+        // Set coop selector position
+        defaultSelection.Select();
+        parentRect.localPosition = defaultSelection.transform.localPosition;
+    }
+
     void Update()
     {
         if (percentage > acceptanceThreshold)
@@ -58,10 +74,6 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
 
         if (holdTimer > holdDuration)
             PerformAction();
-
-        // Update coop selector position
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject)
-            parentRect.localPosition = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.localPosition;
     }
 
     void OnDestroy()
@@ -73,32 +85,14 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         }
     }    private void Player1Movement(float forward, float right)
     {
-        float newValue;
-        if (right < 0)
-        {
-            newValue = Mathf.Clamp(armRect.offsetMin.x + (right * GameManager.InputManager.unscaledMovementDelta * growthSpeed), maxLength1, minLength1);
-            armRect.offsetMin = new Vector2(newValue, currentHeight);
-        }
-        else
-        {
-            newValue = Mathf.Clamp(armRect.offsetMin.x + (GameManager.InputManager.unscaledMovementDelta * declineSpeed), maxLength1, minLength1);
-            armRect.offsetMin = new Vector2(newValue, currentHeight);
-        }
+        float targetValue = right < 0 ? maxLength1 : minLength1;
+        armRect.offsetMin = new Vector2(Mathf.SmoothDamp(armRect.offsetMin.x, targetValue, ref minOffsetSpeed, smoothTime, maxSpeed, GameManager.InputManager.unscaledMovementDelta), currentHeight);
     }
 
     private void Player2Movement(float forward, float right)
     {
-        float newValue;
-        if (right > 0)
-        {
-            newValue = Mathf.Clamp(armRect.offsetMax.x + (right * GameManager.InputManager.unscaledMovementDelta * growthSpeed), minLength2, maxLength2);
-            armRect.offsetMax = new Vector2(newValue, currentHeight * -1);
-        }
-        else
-        {
-            newValue = Mathf.Clamp(armRect.offsetMax.x - (GameManager.InputManager.unscaledMovementDelta * declineSpeed), minLength2, maxLength2);
-            armRect.offsetMax = new Vector2(newValue, currentHeight * -1);
-        }
+        float targetValue = right > 0 ? maxLength2 : minLength2;
+        armRect.offsetMax = new Vector2(Mathf.SmoothDamp(armRect.offsetMax.x, targetValue, ref maxOffsetSpeed, smoothTime, maxSpeed, GameManager.InputManager.unscaledMovementDelta), currentHeight * -1);
     }    private void PerformAction()
     {
         if (OnCoopSelection != null)
@@ -147,4 +141,11 @@ using UnityEngine.Events;public class CoopSelector : MonoBehaviour{
         minHeight = maxHeight / heightMulti;
 
         initialized = true;
-    }}
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        // Set coop selector position
+        parentRect.localPosition = eventData.selectedObject.transform.localPosition;
+    }
+}

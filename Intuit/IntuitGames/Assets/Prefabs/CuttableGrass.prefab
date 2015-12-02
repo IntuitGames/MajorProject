@@ -425,9 +425,9 @@ MonoBehaviour:
   uncutGrassObject: {fileID: 115658}
   cutGrassObject: {fileID: 175546}
   grassJoint: {fileID: 129894}
-  particleSystems:
-  - {fileID: 19858456}
-  - {fileID: 19832254}
+  pickupDrop: {fileID: 11419112, guid: 19025b26a97b6b0419c0212ce99dd1ed, type: 2}
+  dropChance:
+    chance: .25
   requireBothToDash: 0
   scoreValue: 10
   cutSound:
@@ -2646,6 +2646,15 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: randomizeOnStart
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: pickupDrop
+      value: 
+      objectReference: {fileID: 11419112, guid: 19025b26a97b6b0419c0212ce99dd1ed,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: dropChance.chance
+      value: .25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

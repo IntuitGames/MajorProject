@@ -1,28 +1,21 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;public class HUD : MonoBehaviour{
+using CustomExtensions;public class HUD : BaseUI{
     [Header("Components")]
     public Slider weakenedSlider;
     public Text weakenedTextValue;
     public Text collectibleScoreLabel;
     public Text collectibleScoreTextValue;
 
-    [Header("Properties")]
-    public float collectibleSmoothTime = 0.3f;
+    [Header("Settings")]
+    public float collectibleSmoothTime = 0.2f;
 
     private float collectibleScoreActual;
     private float collectibleScoreSpeed;
-
-    void Awake()
+    protected override void Awake()
     {
-        if (GameManager.ModeManager.currentGameMode.EqualToAny(ModeManager.GameMode.InGame, ModeManager.GameMode.PauseMenu))
-            ShowHUD();
-        else
-            HideHUD();
+        base.Awake();
 
-        GameManager.ModeManager.OnGameModeChanged += CheckForGameModeChange;
-    }    void Start()
-    {
         weakenedSlider.maxValue = GameManager.PlayerManager.maxJelly;
     }    void Update()
     {
@@ -45,12 +38,7 @@ using CustomExtensions;public class HUD : MonoBehaviour{
         collectibleScoreTextValue.text = Mathf.Round(collectibleScoreActual).ToString();
     }
 
-    void OnDestroy()
-    {
-        GameManager.ModeManager.OnGameModeChanged -= CheckForGameModeChange;
-    }
-
-    public void ShowHUD()
+    protected override void Show()
     {
         weakenedSlider.gameObject.SetActive(true);
         weakenedTextValue.gameObject.SetActive(true);
@@ -58,19 +46,11 @@ using CustomExtensions;public class HUD : MonoBehaviour{
         collectibleScoreTextValue.gameObject.SetActive(true);
     }
 
-    public void HideHUD()
+    protected override void Hide()
     {
         weakenedSlider.gameObject.SetActive(false);
         weakenedTextValue.gameObject.SetActive(false);
         collectibleScoreLabel.gameObject.SetActive(false);
         collectibleScoreTextValue.gameObject.SetActive(false);
     }
-
-    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
-    {
-        if (newMode == ModeManager.GameMode.InGame || newMode == ModeManager.GameMode.PauseMenu)
-            ShowHUD();
-        else if (oldMode == ModeManager.GameMode.InGame || oldMode == ModeManager.GameMode.PauseMenu &&
-            newMode != ModeManager.GameMode.InGame || newMode != ModeManager.GameMode.PauseMenu)
-            HideHUD();
-    }}
+}

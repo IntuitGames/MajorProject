@@ -46,10 +46,10 @@ public class Character : MonoBehaviour, IBounce
     [Header("Jump"), SerializeField]
     public bool canJump = true;
     public AnimationCurve jumpCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
-    [Range(0, 100), Tooltip("The one-time force applied at the start of the jump.")]
-    public float jumpImpulse = 10;
-    [Range(0, 1000), Tooltip("The jump curve force multiplier applied mid jump.")]
-    public float jumpForce = 250;
+    [Range(0, 100), Tooltip("The one-time force applied at the start of the jump."), SerializeField]
+    private float _jumpImpulse = 17;
+    [Range(0, 1000), Tooltip("The jump curve force multiplier applied mid jump."), SerializeField]
+    private float _jumpForce = 300;
     public bool doJumpMomentum = true;
     [Range(0, 10), Tooltip("Movement before the jump will influence the impulse direction.")]
     public float jumpMomentum = 0.5f;
@@ -59,11 +59,20 @@ public class Character : MonoBehaviour, IBounce
     public float aerialControl = 0.75f;
     [Range(0, 100)]
     public float aerialRotationSpeed = 10;
+    public float jumpForce
+    {
+        get { return isWeakened ? _jumpForce * GameManager.PlayerManager.weakenedJumpForceMulti : _jumpForce; }
+    }
+    public float jumpImpulse
+    {
+        get { return isWeakened ? _jumpImpulse * GameManager.PlayerManager.weakenedJumpImpulseMulti : _jumpImpulse; }
+    }
 
     // DASH
     [Header("Dash"), SerializeField]
     private bool _canDash = true;
-    public float dashPower = 30;
+    [SerializeField]
+    private float _dashPower = 30;
     [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
     public float dashLength = 0.5f;
     [Range(0, 10)]
@@ -84,20 +93,37 @@ public class Character : MonoBehaviour, IBounce
                 dashCooldownTimer.Restart();
         }
     }
-    public bool canDashJump = true;
+    [SerializeField]
+    private bool _canDashJump = true;
     public float dashJumpPower = 20;
     [Range(0, 3)]
     public float dashJumpLength = 0.5f;
+    [SerializeField]
+    private bool _canSlide = true;
+    public float slideLength = 3;
+    public float dashPower
+    {
+        get { return isWeakened ? _dashPower * GameManager.PlayerManager.weakenedDashPowerMulti : _dashPower; }
+    }
+    public bool canDashJump
+    {
+        get { return _canDashJump && !jumpDashFlag; }
+    }
+    public bool canSlide
+    {
+        get { return _canSlide && !isSliding; }
+    }
 
     // HEAVY
     [Header("Heavy"), SerializeField]
     private bool _canHeavy = true;
     public float heavyMoveSpeed = 2;
-    public bool canUnheavyMidair = false;
     [Range(0, 100)]
     public float heavyJumpPower = 20;
     [Range(0, 1000)]
-    public float heavyDownwardForce = 100;
+    public float heavyDownwardForce = 1000;
+    [Range(0, 1000)]
+    public float heavyDownwardImpulse = 100;
     [Range(0, 90)]
     public float heavySlopeAngle = 0.2f;
     [Range(0, 100)]
@@ -106,24 +132,29 @@ public class Character : MonoBehaviour, IBounce
     [Range(0, 10)]
     public float heavyMass = 5;
     public bool canBounceWhileHeavy = false;
-    [Range(0, 10)]
-    public float exitHeavyDragMulti = 5;
-    public float exitHeavyDragDuration = 2;
-    private TimerPlus exitHeavyDragTimer;
-    [Range(0, 10)]
-    public float minHeavyDuration = 1;
-    [Range(0, 10)]
-    public float heavyCooldown = 0;
-    private TimerPlus heavyCooldownTimer;
+    public float heavyTransitionTime = 0.4f;
+    public bool freezeMidHighJump = true;
+    public float freezeMidHighJumpDuration = 0.4f;
+    private TimerPlus freezeMidHighJumpTimer;
+    private TimerPlus heavyTransitionTimer;
+    public bool isHeavyTransitioning
+    {
+        get { return heavyTransitionTimer.IsPlaying; }
+        set
+        {
+            if (value)
+                heavyTransitionTimer.Restart();
+            else
+                heavyTransitionTimer.End();
+        }
+    }
     public bool canHeavy
     {
-        get { return _canHeavy && !heavyCooldownTimer.IsPlaying; }
-        set { _canHeavy = value; }
+        get { return _canHeavy && !isHeavyTransitioning; }
     }
-    private TimerPlus unheavyDurationTimer;
     public bool canUnheavy
     {
-        get { return (canUnheavyMidair ? true : isGrounded) && !unheavyDurationTimer.IsPlaying; }
+        get { return !isHeavyTransitioning && isGrounded; }
     }
 
     // BOUNCE
@@ -150,12 +181,12 @@ public class Character : MonoBehaviour, IBounce
     // PRIVATES
     private float normalDrag;                           // Normal rigidbody drag.
     private Color normalColour;                         // Normal material full colour.
-    private Color heavyColor;                           // Heavy material full colour.
     private float gravity;                              // Current gravity on this character.
     private RaycastHit onObject;                        // Which object is currently under this character.
     private const float airborneRayOffset = -1.1f;      // How much additional height offset will the ray checks account for.
     private float jumpTime;                             // How long the jump button has been held in for.
     private bool jumpFlag;                              // Is the character ready to jump again?
+    private bool jumpDashFlag;                          // Has the character already jump dashed?
     private bool yankFlag = true;                       // Is the character able to be yanked
     private float lastRecoredY;                         // The last recorded position Y Value.
 
@@ -229,13 +260,27 @@ public class Character : MonoBehaviour, IBounce
                 canDash = false;
             }
             else
-                dashTimer.Stop();
+                dashTimer.End();
         }
     }
     public bool isHeavy { get; set; }
     public bool isBouncing { get; set; }
     public bool isSprinting { get; set; }
     public bool isDashJumping { get; set; }
+    public bool isHeavyHighJump { get; set; }
+    public bool isFreeze
+    {
+        get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying || isSuspended; }
+    }
+    public bool isKnockedBack { get; set; }
+    public bool isSuspended
+    {
+        get { return !isWeakened && !isGrounded && GetPartner().isGrounded && GameManager.TetherManager.tetherLength > GameManager.PlayerManager.maxRadius; }
+    }
+    public bool isSliding { get; set; }
+
+    // EVENTS
+    public event System.Action<bool> OnGrounded = delegate { };
 
     #endregion
 
@@ -268,38 +313,40 @@ public class Character : MonoBehaviour, IBounce
         // Setup action timers
         dashTimer = TimerPlus.Create(dashLength, TimerPlus.Presets.Standard, () => 
             {
-                // Reset dash jump state
+                // Reset dash flags
                 isDashJumping = false;
+                isSliding = false;
 
                 // Make partner yank-able after dash again
                 GetPartner().FlipYankFlag(true);
             });
         dashCooldownTimer = TimerPlus.Create(dashCooldown, TimerPlus.Presets.Standard);
-        heavyCooldownTimer = TimerPlus.Create(heavyCooldown, TimerPlus.Presets.Standard);
-        unheavyDurationTimer = TimerPlus.Create(minHeavyDuration, TimerPlus.Presets.Standard);
-        exitHeavyDragTimer = TimerPlus.Create(exitHeavyDragDuration, TimerPlus.Presets.Standard, () => rigidbodyComp.drag = normalDrag);
         bounceTimer = TimerPlus.Create(0.2f, TimerPlus.Presets.Standard);
+        heavyTransitionTimer = TimerPlus.Create(heavyTransitionTime, TimerPlus.Presets.Standard, () =>
+            StartCoroutine(Unity.NextFrame(() => { if (!isGrounded) AddConstrainedForce(Vector3.down * heavyDownwardImpulse, ForceMode.Impulse); })));
+        freezeMidHighJumpTimer = TimerPlus.Create(freezeMidHighJumpDuration, TimerPlus.Presets.Standard, () =>
+            StartCoroutine(Unity.NextFrame(() => AddConstrainedForce(Vector3.down * heavyDownwardImpulse, ForceMode.Impulse))));
 
-        // Set debug heavy colours
-        normalColour = GetComponentInChildren<Renderer>().material.color;
-        heavyColor = normalColour * 0.1f;
+        // Initialize starting vars
+        normalDrag = rigidbodyComp.drag;
+
+        // Reset the jump dash flag when grounded
+        OnGrounded += (grounded) => { if (grounded) jumpDashFlag = false; };
+        OnGrounded += (grounded) => { if (isGrounded) isHeavyHighJump = false; };
     }
 
     void Update()
     {
         // Check for airborne changes
+        bool oldGrounded = isGrounded;
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
+        if (isGrounded != oldGrounded) OnGrounded(isGrounded);
 
         // Apply any changes to timer lengths
         dashTimer.ModifyLength(dashLength);
         dashCooldownTimer.ModifyLength(dashCooldown);
-        heavyCooldownTimer.ModifyLength(heavyCooldown);
-        unheavyDurationTimer.ModifyLength(minHeavyDuration);
-        exitHeavyDragTimer.ModifyLength(exitHeavyDragDuration);
-
-        // Update drag value
-        if (!exitHeavyDragTimer.IsPlaying)
-            normalDrag = rigidbodyComp.drag;
+        heavyTransitionTimer.ModifyLength(heavyTransitionTime);
+        freezeMidHighJumpTimer.ModifyLength(freezeMidHighJumpDuration);
     }
 
     void OnDestroy()
@@ -307,10 +354,9 @@ public class Character : MonoBehaviour, IBounce
         // Dispose persistent timers
         dashTimer.Dispose();
         dashCooldownTimer.Dispose();
-        heavyCooldownTimer.Dispose();
-        unheavyDurationTimer.Dispose();
-        exitHeavyDragTimer.Dispose();
         bounceTimer.Dispose();
+        heavyTransitionTimer.Dispose();
+        freezeMidHighJumpTimer.Dispose();
 
         // Dispose of FMOD instances
         audioDataComp.Dispose();
@@ -342,7 +388,6 @@ public class Character : MonoBehaviour, IBounce
         if (stopDashOnCollision && forwardObject)
         {
             isDashing = false;
-            isDashJumping = false;
         }
 
         // Reconnect on touch
@@ -370,8 +415,16 @@ public class Character : MonoBehaviour, IBounce
         if (!isBouncing && onObject.collider && onObject.collider.GetComponent<Bouncy>()) Bounce(Vector3.one, onObject.collider.gameObject);
 
         // Apply heavy downward force and physics materials
-        colliderComp.material = isHeavy ? heavyMaterial : normalMaterial;
-        if (isHeavy) AddConstrainedForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
+        colliderComp.material = isHeavy && !isSliding ? heavyMaterial : normalMaterial;
+        if (isHeavy && !isSliding) AddConstrainedForce(Vector3.down * (heavyDownwardForce * 50) * delta, ForceMode.Force);
+
+        // Mid-air freeze
+        if (isHeavyHighJump && freezeMidHighJump && isFalling)
+        {
+            rigidbodyComp.velocity = Vector3.zero;
+            isHeavyHighJump = false;
+            freezeMidHighJumpTimer.Restart();
+        }
     }
 
     // Is called AFTER input is determined every frame
@@ -387,10 +440,12 @@ public class Character : MonoBehaviour, IBounce
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetVelocity.IgnoreY3(0)), delta * currentRotationSpeed);
 
         // Apply movement
-        AddConstrainedMovement(targetVelocity * delta);
+        if (!isFreeze)
+            AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
+        if (!isFreeze)
+            rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
         if(GameManager.PlayerManager.constrainMovement) ApplyConstrainForce();
@@ -406,6 +461,9 @@ public class Character : MonoBehaviour, IBounce
 
         // Updates last recorded Y value
         lastRecoredY = transform.position.y;
+
+        if (isFreeze)
+            rigidbodyComp.velocity = Vector3.zero;
     }
 
     public void Movement(float forward, float right)
@@ -417,6 +475,12 @@ public class Character : MonoBehaviour, IBounce
             // Apply standard movement
             targetVelocity.x = direction.x * currentMoveSpeed;
             targetVelocity.z = direction.y * currentMoveSpeed;
+            targetVelocity.y = 0;
+        }
+        else if (isSliding) // Gradually slowing down slide movement
+        {
+            targetVelocity.x = transform.forward.x * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1);
+            targetVelocity.z = transform.forward.z * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1);
             targetVelocity.y = 0;
         }
         else
@@ -452,11 +516,13 @@ public class Character : MonoBehaviour, IBounce
 
     public void JumpToggle(bool p1, bool isPressed)
     {
-        if (p1 != isPlayerOne) return;
+        if (p1 != isPlayerOne || isFreeze || isSliding) return;
 
         // Enter the dash jump state
         if (isDashing && isPressed && !isDashJumping && canDashJump)
         {
+            // Raise flag so this can only happen once until grounded
+            jumpDashFlag = true;
             isDashJumping = true;
             dashTimer.ModifyValue(dashJumpLength, true);
             return;
@@ -485,6 +551,8 @@ public class Character : MonoBehaviour, IBounce
             }
             else // Heavy jump impulse
             {
+                isHeavyHighJump = true;
+                animatorComp.SetTrigger("HeavyJump");
                 AddConstrainedForce(Vector3.up * heavyJumpPower * jumpImpulse, ForceMode.Impulse);
                 ResetJumpFlag();
             }
@@ -513,34 +581,27 @@ public class Character : MonoBehaviour, IBounce
 
     public void Heavy(bool p1, bool isPressed)
     {
-        if (p1 != isPlayerOne) return;
-
-        if (isPressed == isHeavy) return;
+        if (p1 != isPlayerOne || isPressed == isHeavy) return;
 
         if (isPressed && canHeavy)
         {
+            // Start heavy
+            audioDataComp.PlayHeavyAudio(true);
             isHeavy = true;
 
-            rigidbodyComp.drag = normalDrag;
-            unheavyDurationTimer.Restart();
-
-            // Colour changing for debug purposes
-            GetComponentInChildren<Renderer>().material.color = heavyColor;
+            // Start sliding
+            if (isDashing && canSlide)
+            {
+                isSliding = true;
+                dashTimer.ModifyValue(slideLength, true);
+            }
+            else
+                isHeavyTransitioning = true;
         }
         else if (!isPressed && canUnheavy)
         {
+            audioDataComp.PlayHeavyAudio(false);
             isHeavy = false;
-
-            heavyCooldownTimer.Restart();
-
-            if (isGrounded) // Reduce sliding down slopes while not heavy
-            {
-                rigidbodyComp.drag *= exitHeavyDragMulti;
-                exitHeavyDragTimer.Restart();
-            }
-
-            // Colour changing for debug purposes
-            GetComponentInChildren<Renderer>().material.color = normalColour;
         }
     }
 
@@ -614,6 +675,8 @@ public class Character : MonoBehaviour, IBounce
     // Rigidbody.AddForce() with constraining
     public void AddConstrainedForce(Vector3 movement, ForceMode forceMode)
     {
+        if (isFreeze) return;
+
         float length = GameManager.TetherManager.tetherLength;
 
         if (!GameManager.PlayerManager.constrainMovement || length < GameManager.PlayerManager.freeRadius || GameManager.TetherManager.disconnected)
@@ -630,6 +693,8 @@ public class Character : MonoBehaviour, IBounce
     // RigidBody.MovePosition with constraining
     public void AddConstrainedMovement(Vector3 movement)
     {
+        if (isFreeze) return;
+
         float length = GameManager.TetherManager.tetherLength;
 
         if (!GameManager.PlayerManager.constrainMovement || length < GameManager.PlayerManager.freeRadius || GameManager.TetherManager.disconnected)
@@ -639,7 +704,7 @@ public class Character : MonoBehaviour, IBounce
         else if (isDashing)
         {
             if (!GetPartner().isHeavy || length > GameManager.PlayerManager.maxRadius)
-                    rigidbodyComp.MovePosition(transform.position + movement);
+                rigidbodyComp.MovePosition(transform.position + movement);
             else
                 isDashing = false;
 
@@ -650,7 +715,7 @@ public class Character : MonoBehaviour, IBounce
             Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
             if (isGrounded)
                 direction.y = direction.magnitude / 10;
-            AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
+            AddConstrainedForce(direction * (GameManager.PlayerManager.yankingDashForce / 4), ForceMode.Impulse);
         }
         else
         {
@@ -668,10 +733,20 @@ public class Character : MonoBehaviour, IBounce
             yankFlag = false;
             rigidbodyComp.drag = 0.25f;
             TimerPlus.Create(1, () => rigidbodyComp.drag = normalDrag);
-            //Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
-            Vector3 direction = (GetPartnerPosition() - transform.position).normalized;
+            Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized;
             direction.y = direction.magnitude / 2;
             AddConstrainedForce(direction * GameManager.PlayerManager.yankingDashForce, ForceMode.Impulse);
+        }
+    }
+
+    public void Knockback(Vector3 direction)
+    {
+        if (!isKnockedBack)
+        {
+            isKnockedBack = true;
+            AddConstrainedForce(direction, ForceMode.Impulse);
+            animatorComp.SetTrigger("KnockBack");
+            TimerPlus.Create(0.3f, () => isKnockedBack = false);
         }
     }
 
@@ -705,8 +780,14 @@ public class Character : MonoBehaviour, IBounce
                 // Increase bounce if holding jump
                 finalBouncePower *= GameManager.InputManager.IsRequestingJump(isPlayerOne) ? jumpBounceMulti : 1;
 
-                // Assist the player in bounce on partner
-                bounceDirection = (GetPartnerPosition() + new Vector3(0, bouncePower, 0)) - transform.position;
+                // Stronger bounce if the partner is in heavy
+                if (GetPartner().isHeavy)
+                {
+                    finalBouncePower *= 2;
+                    bounceDirection = transform.TransformDirection(new Vector3(0, 1, 1));
+                }
+                else // Assist the player in bounce on partner
+                    bounceDirection = (GetPartnerPosition() + new Vector3(0, bouncePower, 0)) - transform.position;
             }
             else if (yDifference > -(colliderComp.height / 2f)) // Equal
             {

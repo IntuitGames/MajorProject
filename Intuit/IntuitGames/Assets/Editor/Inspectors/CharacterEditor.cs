@@ -49,14 +49,34 @@ using UnityEditor;[CustomEditor(typeof(Character)), CanEditMultipleObjects()]
             EditorGUILayout.Vector3Field("Real Velocity", Target.rigidbodyComp.velocity);
             EditorGUILayout.Slider("Move Speed", Mathf.Round(Target.rigidbodyComp.velocity.magnitude * 100) / 100, 0, Target.maxSpeed);
             EditorGUILayout.Slider("Slope", Target.slopeAngle, 0, 90);
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.Toggle("Weakened", Target.isWeakened);
             EditorGUILayout.Toggle("Walking", Target.isWalking);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.Toggle("Sprinting", Target.isSprinting);
             EditorGUILayout.Toggle("Grounded", Target.isGrounded);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.Toggle("Falling", Target.isFalling);
             EditorGUILayout.Toggle("Dashing", Target.isDashing);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.Toggle("Heavy", Target.isHeavy);
             EditorGUILayout.Toggle("Bouncing", Target.isBouncing);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.Toggle("Dash Jumping", Target.isDashJumping);
+            EditorGUILayout.Toggle("Heavy High Jump", Target.isHeavyHighJump);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.Toggle("Frozen", Target.isFreeze);
+            EditorGUILayout.Toggle("Knocked Back", Target.isKnockedBack);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.Toggle("Suspended", Target.isSuspended);
+            EditorGUILayout.Toggle("Sliding", Target.isSliding);
+            EditorGUILayout.EndHorizontal();
             GUI.enabled = true;
         }
 

@@ -3,7 +3,8 @@ using System;
 using CustomExtensions;/// <summary>
 /// Manages the current mode of the game.
 /// </summary>public class ModeManager : Manager{
-    public enum GameMode { None = 0, MainMenu = 1 << 1, PauseMenu = 1 << 2, InGame = 1 << 3, GameOver = 1 << 4 };
+    [System.Flags]
+    public enum GameMode { None = 1, MainMenu = 2, PauseMenu = 4, InGame = 8, GameOver = 16, LevelComplete = 32, Loading = 64 };
 
     public GameMode initialGameMode = GameMode.InGame;
     [System.NonSerialized]

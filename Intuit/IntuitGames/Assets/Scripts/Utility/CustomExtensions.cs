@@ -40,12 +40,26 @@ using System.Text;namespace CustomExtensions{    /// <summary>
                 if (Condition(Item))
                     Action(Item);
         }        /// <summary>
-        /// Retrives an element safely from a list. Checks for null and appropriate index.
+        /// Retrieves an element safely from a list.
+        /// Checks for null and appropriate index.
         /// </summary>        public static T SafeGet<T>(this IList<T> Source, int Index) where T: class
         {
             if (Source.IsNullOrEmpty()) return null;
             if (Index < 0 || Index >= Source.Count) return null;
             return Source[Index];
+        }
+
+        /// <summary>
+        /// Retrieves an element safely from a list.
+        /// Checks for null and appropriate index.
+        /// If requested index is above or below range of elements the element returned will be the first or last respectively.
+        /// </summary>
+        public static T SafeGet<T>(this IList<T> Source, int Index, bool Clamp) where T : class
+        {
+            if (Source.IsNullOrEmpty()) return null;
+            if (Index < 0) return Clamp ? Source[0] : null;
+            else if (Index >= Source.Count) return Clamp ? Source[Source.Count - 1] : null;
+            else return Source[Index];
         }        /// <summary>
         /// Resizes a target list.
         /// </summary>        public static void Resize<T>(this List<T> List, int NewCapacity, T NewObjects = default(T))
@@ -189,41 +203,6 @@ using System.Text;namespace CustomExtensions{    /// <summary>
             }
 
             return newText.ToString();
-        }        public static bool HasFlags(this Enum Source, Enum Comparer)
-        {
-            // Check whether the flag was given
-            if (Comparer == null)
-            {
-                throw new ArgumentNullException("Flag Comparer is Null");
-            }
-
-            // Compare the types of both enumerations
-            if (Source.GetType() != (Comparer.GetType()))
-            {
-                throw new ArgumentException(string.Format(
-                    "The type of the given flag is not of type {0}", Source.GetType()),
-                    "Comparer");
-            }
-
-            // Get the type code of the enumeration
-            var typeCode = Source.GetTypeCode();
-
-            // If the underlying type of the flag is signed
-            if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 ||
-                typeCode == TypeCode.Int64)
-            {
-                return (Convert.ToInt64(Source) & Convert.ToInt64(Comparer)) != 0;
-            }
-
-            // If the underlying type of the flag is unsigned
-            if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 ||
-                typeCode == TypeCode.UInt64)
-            {
-                return (Convert.ToUInt64(Source) & Convert.ToUInt64(Comparer)) != 0;
-            }
-
-            // Unsupported flag type
-            throw new Exception(string.Format("The comparison of the type {0} is not implemented.", Source.GetType().Name));
         }    }    /// <summary>
     /// Unity specific extension methods.
     /// </summary>    public static partial class Unity
@@ -528,5 +507,121 @@ using System.Text;namespace CustomExtensions{    /// <summary>
 
                 Source.transform.localPosition -= Offset;
             }
+        }
+
+        [System.Serializable]
+        public struct Chance : IEnumerable<Chance>
+        {
+            [Range(0, 1)]
+            public float chance;
+
+            public static implicit operator bool(Chance val)
+            {
+                return UnityEngine.Random.Range(0f, 1f) < val.chance;
+            }
+
+            public static implicit operator Chance(float val)
+            {
+                return new Chance() { chance = val };
+            }
+
+            public IEnumerator<Chance> GetEnumerator()
+            {
+                yield return this;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Extension methods that are specifically for enums.
+    /// </summary>
+    public static partial class EnumUtility
+    {
+        private static void CheckIsEnum<T>(bool withFlags)
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException(string.Format("Type '{0}' is not an enum", typeof(T).FullName));
+            if (withFlags && !Attribute.IsDefined(typeof(T), typeof(FlagsAttribute)))
+                throw new ArgumentException(string.Format("Type '{0}' doesn't have the 'Flags' attribute", typeof(T).FullName));
+        }
+
+        public static bool IsFlagSet<T>(this T value, T flag) where T : struct
+        {
+            CheckIsEnum<T>(true);
+            long lValue = Convert.ToInt64(value);
+            long lFlag = Convert.ToInt64(flag);
+            return (lValue & lFlag) != 0;
+        }
+
+        public static IEnumerable<T> GetFlags<T>(this T value) where T : struct
+        {
+            CheckIsEnum<T>(true);
+            foreach (T flag in Enum.GetValues(typeof(T)).Cast<T>())
+            {
+                if (value.IsFlagSet(flag))
+                    yield return flag;
+            }
+        }
+
+        public static T SetFlags<T>(this T value, T flags, bool on) where T : struct
+        {
+            CheckIsEnum<T>(true);
+            long lValue = Convert.ToInt64(value);
+            long lFlag = Convert.ToInt64(flags);
+            if (on)
+            {
+                lValue |= lFlag;
+            }
+            else
+            {
+                lValue &= (~lFlag);
+            }
+            return (T)Enum.ToObject(typeof(T), lValue);
+        }
+
+        public static T SetFlags<T>(this T value, T flags) where T : struct
+        {
+            return value.SetFlags(flags, true);
+        }
+
+        public static T ClearFlags<T>(this T value, T flags) where T : struct
+        {
+            return value.SetFlags(flags, false);
+        }
+
+        public static T CombineFlags<T>(this IEnumerable<T> flags) where T : struct
+        {
+            CheckIsEnum<T>(true);
+            long lValue = 0;
+            foreach (T flag in flags)
+            {
+                long lFlag = Convert.ToInt64(flag);
+                lValue |= lFlag;
+            }
+            return (T)Enum.ToObject(typeof(T), lValue);
+        }
+
+        public static string GetDescription<T>(this T value) where T : struct
+        {
+            CheckIsEnum<T>(false);
+            string name = Enum.GetName(typeof(T), value);
+            if (name != null)
+            {
+                FieldInfo field = typeof(T).GetField(name);
+                if (field != null)
+                {
+                    System.ComponentModel.DescriptionAttribute attr = Attribute.GetCustomAttribute(field, typeof(System.ComponentModel.DescriptionAttribute)) as System.ComponentModel.DescriptionAttribute;
+                    if (attr != null)
+                    {
+                        return attr.Description;
+                    }
+                }
+            }
+            return null;
         }
     }}
