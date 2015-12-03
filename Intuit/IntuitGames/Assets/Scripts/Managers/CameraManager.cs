@@ -33,6 +33,12 @@ using CustomExtensions;/// <summary>
     public float shakeStrength = 0.5f;
     public float shakeFrequency = 0.1f;
 
+    [Header("On Single Death")]
+    public bool refocusToAlive = true;
+    [Range(0, 50)]
+    public float singleCamZoom = 4;
+    private bool singleAlive;
+
     public override void ManagerAwake()
     {
         FindComponentReferences();
@@ -41,6 +47,10 @@ using CustomExtensions;/// <summary>
     public override void ManagerOnLevelLoad()
     {
         FindComponentReferences();
+
+        // Reset single death effects
+        followCamera.target = followCamera.initialTarget;
+        singleAlive = false;
     }    private void FindComponentReferences()
     {
         if (!mainCamera) mainCamera = Camera.main;
@@ -52,12 +62,15 @@ using CustomExtensions;/// <summary>
         // Subscribe to tether events
         GameManager.TetherManager.OnDisconnected += UnhingeCamera;
         GameManager.TetherManager.OnReconnected += StabalizeCamera;
+        GameManager.PlayerManager.OnSingleDead += OnSingleDead;
     }
 
     void Update()
     {
         // Update unhinged camera zoom
-        if (isDynamic && dynamicZoom)
+        if (singleAlive && refocusToAlive)
+            followCamera.distance = singleCamZoom;
+        else if (isDynamic && dynamicZoom)
             followCamera.distance = GameManager.PlayerManager.distanceBetweenCharacters
                 .Normalize(minCamProximity, maxCamProximity, minCamZoomDistance, maxCamZoomDistance);
 
@@ -82,4 +95,12 @@ using CustomExtensions;/// <summary>
 
         // Reset camera FOV
         followCamera.targetFOV = followCamera.initialFOV;
+    }
+
+    private void OnSingleDead(Character aliveCharacter)
+    {
+        singleAlive = true;
+
+        if (refocusToAlive)
+            followCamera.target = aliveCharacter.transform;
     }}

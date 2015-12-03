@@ -1,5 +1,6 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;/// <summary>
+using CustomExtensions;
+using System;/// <summary>
 /// Handles common behavior between both players.
 /// </summary>public class PlayerManager : Manager
 {
@@ -55,6 +56,12 @@ using CustomExtensions;/// <summary>
     public bool canWeaken = true;
     [Range(0, 1)]
     public float weakenedMoveSpeedMulti = 0.5f;
+    [Range(0, 1)]
+    public float weakenedJumpImpulseMulti = 0.7f;
+    [Range(0, 1)]
+    public float weakenedJumpForceMulti = 0.6f;
+    [Range(0, 1)]
+    public float weakenedDashPowerMulti = 0.5f;
     public bool reconnectOnTouch = true;
     [Popup(new string[] { "Nothing", "Game Over", "Reload Level", "Exit Game" })]
     public string actionOnDeath = "Game Over";
@@ -65,6 +72,7 @@ using CustomExtensions;/// <summary>
     [ReadOnly]
     public float currentJelly;
 
+    // PROPERTIES
     public float distanceBetweenCharacters
     {
         get { return Vector3.Distance(character1.transform.position, character2.transform.position); }
@@ -86,6 +94,11 @@ using CustomExtensions;/// <summary>
         get { return character2.transform.position; }
     }
 
+    public event Action OnBothDead = delegate { };
+    // Returns the still alive character
+    public event Action<Character> OnSingleDead = delegate { };
+    private bool isSingleDead;
+
     #endregion
 
     #region MESSAGES
@@ -103,6 +116,7 @@ using CustomExtensions;/// <summary>
     {
         collectibleScore = 0;
         currentJelly = maxJelly;
+        isSingleDead = false;
     }
 
     void Update()
@@ -133,8 +147,24 @@ using CustomExtensions;/// <summary>
         isWeakened = false;
     }
 
+    public void SingleDeath(bool isPlayerOne)
+    {
+        if (!isSingleDead)
+        {
+            isSingleDead = true;
+            if (isPlayerOne)
+                OnSingleDead(character2);
+            else
+                OnSingleDead(character1);
+        }
+        else // If both have died call this instead
+            DeathAction();
+    }
+
     public void DeathAction()
     {
+        OnBothDead();
+
         if (actionOnDeath == "Nothing")
             return;
         else if (actionOnDeath == "Reload Level")

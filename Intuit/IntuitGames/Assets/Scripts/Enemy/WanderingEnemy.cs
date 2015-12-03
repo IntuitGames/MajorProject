@@ -55,8 +55,17 @@ public class WanderingEnemy : EnemyBase {
 
     protected override void UpdateAnimator()
     {
-        base.UpdateAnimator();
-        this.animatorComp.SetFloat("speed", this.agent.velocity.IgnoreY2().magnitude);
+        if (riggedModel.activeInHierarchy)
+        {
+            base.UpdateAnimator();
+            this.animatorComp.SetFloat("speed", this.agent.velocity.IgnoreY2().magnitude);
+        }
+    }
+
+    public override void OnDeath()
+    {
+        biteController.StopBiteEffect();
+        base.OnDeath();
     }
 
     public Vector3 getStartLocation() {

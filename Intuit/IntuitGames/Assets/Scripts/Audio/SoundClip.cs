@@ -159,10 +159,7 @@ public class SoundClip : IDisposable
     // Updates a single FMOD param
     public void UpdateParameter(int paramIndex, float paramValue)
     {
-        if (paramIndex >= 0 && paramIndex < FMODParameters.Count)
-        {
-            FMODParameters[paramIndex].setValue(paramValue);
-        }
+        FMODParameters.SafeGet(paramIndex, true).setValue(paramValue);
     }
 
     // Dispose FMOD instances

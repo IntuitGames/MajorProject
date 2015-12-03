@@ -28,9 +28,10 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip jump = new SoundClip();
     public SoundClip dash = new SoundClip();
     public SoundClip collide = new SoundClip();
+    public SoundClip heavyOn = new SoundClip();
+    public SoundClip heavyOff = new SoundClip();
 
     // FMOD PARAMS
-    private float[] parameters;
     private float playerMoveSpeed
     {
         get { return Mathf.Lerp(0, 1, character.currentMoveSpeed / character.sprintMoveSpeed); }
@@ -55,6 +56,8 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         jump.Initialize();
         dash.Initialize();
         collide.Initialize();
+        heavyOn.Initialize();
+        heavyOff.Initialize();
     }
 
     void Update()
@@ -65,6 +68,8 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         jump.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
         dash.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
         collide.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
+        heavyOn.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
+        heavyOff.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
     }
 
     public bool ConditionalAudio(System.Action method, bool condition)
@@ -76,32 +81,41 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     public void PlayWalkAudio(Surface.SurfaceType surfaceType, bool isWet)
     {
-        parameters = new float[] { 0, isWet ? 0.7f : 0, (int)surfaceType, GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, isWet ? 0.7f : 0, (int)surfaceType, GameManager.TetherManager.weakenedParam };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayLandAudio(float downwardVelocity)
     {
-        parameters = new float[] { 0, downwardVelocity.Normalize(2, 30, 0, 1), GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, downwardVelocity.Normalize(2, 30, 0, 1), GameManager.TetherManager.weakenedParam };
         land.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
     public void PlayJumpAudio()
     {
-        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, GameManager.TetherManager.weakenedParam };
         jump.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayDashAudio()
     {
-        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, GameManager.TetherManager.weakenedParam };
         dash.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void PlayCollideAudio()
     {
-        parameters = new float[] { 0, GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, GameManager.TetherManager.weakenedParam };
         collide.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
+    }
+
+    public void PlayHeavyAudio(bool isOn)
+    {
+        float[] parameters = { isOn ? GameManager.TetherManager.weakenedParam : 0, isOn ? 0 : GameManager.TetherManager.weakenedParam };
+        if (isOn)
+            heavyOn.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
+        else
+            heavyOff.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
     }
 
     public void Dispose()

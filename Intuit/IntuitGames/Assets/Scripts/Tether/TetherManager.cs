@@ -418,11 +418,13 @@ public class TetherManager : Manager
     {
         if (isStartPoint)
         {
-            return (joints.FirstOrDefault().transform.position - startPoint.position).normalized;
+            //return (joints.FirstOrDefault().transform.position - startPoint.position).normalized;
+            return (joints.SafeGet(jointCount / 10).transform.position - startPoint.position).normalized;
         }
         else
         {
-            return (joints.LastOrDefault().transform.position - endPoint.position).normalized;
+            //return (joints.LastOrDefault().transform.position - endPoint.position).normalized;
+            return (joints.SafeGet(jointCount - (jointCount / 10)).transform.position - endPoint.position).normalized;
         }
     }
 

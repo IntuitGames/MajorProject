@@ -391,7 +391,6 @@ public class TimerPlus: IDisposable
     public void ModifyLength(float newLength)
     {
         Length = newLength;
-        Value = Mathf.Min(Value, Length);
     }
 
     /// <summary>

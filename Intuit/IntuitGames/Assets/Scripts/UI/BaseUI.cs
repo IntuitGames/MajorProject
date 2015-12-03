@@ -1,13 +1,14 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;public abstract class BaseUI : MonoBehaviour{
+using CustomExtensions;
+using UnityEngine.EventSystems;public abstract class BaseUI : MonoBehaviour, ISelectHandler{
     [SerializeField, ReadOnly]
     private bool isShown = false;
     [EnumFlags]
     public ModeManager.GameMode shownModes;
 
-    void Start()
+    protected virtual void Awake()
     {
-        if (GameManager.ModeManager.currentGameMode.HasFlags(shownModes))
+        if (shownModes.IsFlagSet<ModeManager.GameMode>(GameManager.ModeManager.currentGameMode))
         {
             Show();
             isShown = true;
@@ -21,17 +22,14 @@ using CustomExtensions;public abstract class BaseUI : MonoBehaviour{
         GameManager.ModeManager.OnGameModeChanged += this.OnGameModeChanged;
     }
 
-    void OnDestroy()
+    protected virtual void OnDestroy()
     {
         GameManager.ModeManager.OnGameModeChanged -= this.OnGameModeChanged;
     }
 
     private void OnGameModeChanged(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
     {
-        if (newMode.HasFlags(shownModes))
-            ChangeVisibility(true);
-        else
-            ChangeVisibility(false);
+        ChangeVisibility(shownModes.IsFlagSet<ModeManager.GameMode>(newMode));
     }
 
     public void ChangeVisibility(bool state)
@@ -48,6 +46,33 @@ using CustomExtensions;public abstract class BaseUI : MonoBehaviour{
         }
     }
 
+    #region ABSTRACT METHODS
+
     protected abstract void Show();
 
-    protected abstract void Hide();}
+    protected abstract void Hide();
+
+    // Called when a new UI element is selected
+    public virtual void OnSelect(BaseEventData eventData) { }
+
+    #endregion
+
+    #region COMMON BUTTON BEHAVIOURS
+
+    public virtual void Restart()
+    {
+        GameManager.ReloadLevel();
+    }
+
+    public virtual void MainMenu()
+    {
+        GameManager.LoadMainMenu();
+    }
+
+    public virtual void Exit()
+    {
+        GameManager.ExitGame();
+    }
+
+    #endregion
+}

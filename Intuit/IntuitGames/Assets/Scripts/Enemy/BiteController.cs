@@ -6,6 +6,8 @@ public class BiteController : Trigger {
 
     public Animator animatorComp;
     private bool triggerEnabled = false;
+    private bool coroutineRunning = false;
+    private IEnumerator coroutine;
 
     protected override bool canBeTriggered
     {
@@ -26,12 +28,25 @@ public class BiteController : Trigger {
 
     public void Bite(float duration, float hang)
     {
-        StartCoroutine(BiteEffect(duration, hang));
+        if (!coroutineRunning)
+        {
+            coroutine = BiteEffect(duration, hang);
+            StartCoroutine(coroutine);
+        }
+    }
+
+    public void StopBiteEffect()
+    {
+        if (coroutineRunning)
+        {
+            StopCoroutine(coroutine);
+            triggerEnabled = false;
+        }
     }
 
     IEnumerator BiteEffect(float duration, float hang)
     {
-        //if (beginBite) animatorComp.gameObject.SetActive(beginBite);
+        coroutineRunning = true;
         SpriteRenderer renderer = animatorComp.GetComponent<SpriteRenderer>();
         Color start = renderer.color;
         Color end = start;
@@ -55,13 +70,6 @@ public class BiteController : Trigger {
         }
         renderer.color = end;
         animatorComp.SetBool("startBite", false);
-        // After this didnt work out too well, decided to just do it manually. Running a coroutine from within a coroutine didnt work reliably
-        //if (beginBite)
-        //{
-        //    yield return new WaitForSeconds(hang);
-        //    StartCoroutine(BiteEffect(false, 0f, duration, hang)); // apply the same effect in reverse 
-        //}
-        //else animatorComp.gameObject.SetActive(beginBite);
-
+        coroutineRunning = false;
     }
 }

@@ -183,7 +183,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 157332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 125.940315, y: 1.19836699e-17, z: 18.7618217}
+  m_LocalPosition: {x: 5.36364746, y: -10.2618332, z: -34.1163216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 452810}
@@ -247,9 +247,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129894}
-  m_LocalRotation: {x: 0, y: 0, z: .0019392398, w: .999998152}
+  m_LocalRotation: {x: 0, y: -.484809607, z: 0, w: .874619722}
   m_LocalPosition: {x: 0, y: -1.01866376, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .943941236, y: .943941236, z: .943941236}
   m_Children:
   - {fileID: 460958}
   m_Father: {fileID: 407858}
@@ -288,7 +288,7 @@ Transform:
   m_GameObject: {fileID: 175546}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .943941236, y: 1, z: .943941236}
   m_Children:
   - {fileID: 449480}
   m_Father: {fileID: 407858}
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dad3c3316551c7448bea5345e2ac136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 5
+  _type: 4
   isWet: 0
 --- !u!114 &11487124
 MonoBehaviour:
@@ -425,10 +425,11 @@ MonoBehaviour:
   uncutGrassObject: {fileID: 115658}
   cutGrassObject: {fileID: 175546}
   grassJoint: {fileID: 129894}
-  particleSystems:
-  - {fileID: 19858456}
-  - {fileID: 19832254}
+  pickupDrop: {fileID: 11419112, guid: 19025b26a97b6b0419c0212ce99dd1ed, type: 2}
+  dropChance:
+    chance: .25
   requireBothToDash: 0
+  requireNotWeakened: 0
   scoreValue: 10
   cutSound:
     player: 2
@@ -2646,6 +2647,15 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: randomizeOnStart
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: pickupDrop
+      value: 
+      objectReference: {fileID: 11419112, guid: 19025b26a97b6b0419c0212ce99dd1ed,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: dropChance.chance
+      value: .25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

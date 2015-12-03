@@ -24,6 +24,8 @@ public class SmoothCameraFollow : MonoBehaviour
     private float FOVSpeed;
 
     [System.NonSerialized]
+    public Transform initialTarget;
+    [System.NonSerialized]
     public float initialDistance;
     [System.NonSerialized]
     public float initialFOV;
@@ -34,6 +36,7 @@ public class SmoothCameraFollow : MonoBehaviour
     {
         cameraComp = GetComponent<Camera>();
         initialOffsetDirection = (target.transform.position - transform.position).normalized;
+        initialTarget = target;
         initialDistance = distance;
         initialFOV = cameraComp.fieldOfView;
         targetFOV = initialFOV;

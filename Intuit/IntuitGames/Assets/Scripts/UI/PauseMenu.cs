@@ -3,25 +3,25 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CustomExtensions;public class PauseMenu : MonoBehaviour{
+using CustomExtensions;
+using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     [Header("Components")]
     public Image backgroundPanel;
     public Button resumeButton;
     public Button restartButton;
     public Button mainMenuButton;
     public Button exitButton;
-    public Slider volumeSlider;    void Awake()
+    public Slider volumeSlider;
+
+    [Header("Settings")]
+    public SoundClip onSelectedSFX = new SoundClip();
+
+    void Start()
     {
-        HidePauseMenu();
-        GameManager.ModeManager.OnGameModeChanged += CheckForGameModeChange;
+        onSelectedSFX.Initialize();
     }
 
-    void OnDestroy()
-    {
-        GameManager.ModeManager.OnGameModeChanged -= CheckForGameModeChange;
-    }
-
-    public void ShowPauseMenu()
+    protected override void Show()
     {
         // Enable the parent back panel
         backgroundPanel.gameObject.SetActive(true);
@@ -32,7 +32,7 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
         resumeButton.Select();
     }
 
-    public void HidePauseMenu()
+    protected override void Hide()
     {
         // Disable the parent back panel
         backgroundPanel.gameObject.SetActive(false);
@@ -40,12 +40,18 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
         // Deselect
         if (UnityEngine.EventSystems.EventSystem.current)
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
-    }    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
+    }
+
+    public override void OnSelect(BaseEventData eventData)
     {
-        if (newMode == ModeManager.GameMode.PauseMenu)
-            ShowPauseMenu();
-        else if (oldMode == ModeManager.GameMode.PauseMenu)
-            HidePauseMenu();
+        onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        onSelectedSFX.Dispose();
     }
 
     #region BUTTON ACTIONS
@@ -53,21 +59,6 @@ using CustomExtensions;public class PauseMenu : MonoBehaviour{
     public void Resume()
     {
         GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.InGame, false, 0.1f);
-    }
-
-    public void Restart()
-    {
-        GameManager.ReloadLevel();
-    }
-
-    public void MainMenu()
-    {
-        GameManager.LoadMainMenu();
-    }
-
-    public void Exit()
-    {
-        GameManager.ExitGame();
     }
 
     public void OnVolumeSliderChange()

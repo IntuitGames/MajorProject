@@ -1,29 +1,28 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEngine.UI;public class MainMenu : MonoBehaviour{
+using UnityEngine.UI;
+using UnityEngine.EventSystems;public class MainMenu : BaseUI{
+    [Header("Components")]
     public CoopSelector coopSelector;
     public RectTransform menu;
     public RectTransform levelSelect;
     public RectTransform options;
 
-    [ReadOnly(EditableInEditor = true)]
-    public bool remainClickable = false;
-
-    [Header("Components")]
+    [Space(10)]
     public Button playButton;
     public Button levelSelectButton;
     public Button optionsButton;
     public Button exitButton;
 
+    [Header("Settings")]
+    [ReadOnly(EditableInEditor = true)]
+    public bool remainClickable = false;
+    public SoundClip onSelectedSFX = new SoundClip();
+
     private Button.ButtonClickedEvent playButtonEvent, levelSelectButtonEvent, optionsButtonEvent, exitButtonEvent;
 
-    void Awake()
+    protected override void Awake()
     {
-        if (GameManager.ModeManager.currentGameMode != ModeManager.GameMode.MainMenu)
-            HideMainMenu();
-        else
-            ShowMainMenu();
-
-        GameManager.ModeManager.OnGameModeChanged += CheckForGameModeChange;
+        base.Awake();
 
         // Cache event listeners
         playButtonEvent = playButton.onClick;
@@ -41,20 +40,12 @@ using UnityEngine.UI;public class MainMenu : MonoBehaviour{
         }
     }
 
-    void OnDestroy()
+    void Start()
     {
-        GameManager.ModeManager.OnGameModeChanged -= CheckForGameModeChange;
+        onSelectedSFX.Initialize();
     }
 
-    private void CheckForGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
-    {
-        if (newMode == ModeManager.GameMode.MainMenu)
-            ShowMainMenu();
-        else if (oldMode == ModeManager.GameMode.MainMenu)
-            HideMainMenu();
-    }
-
-    public void ShowMainMenu()
+    protected override void Show()
     {
         // Enable the parent back panel
         menu.gameObject.SetActive(true);
@@ -66,7 +57,7 @@ using UnityEngine.UI;public class MainMenu : MonoBehaviour{
         coopSelector.SetActive(true);
     }
 
-    public void HideMainMenu()
+    protected override void Hide()
     {
         // Disable the parent back panel
         menu.gameObject.SetActive(false);
@@ -77,6 +68,18 @@ using UnityEngine.UI;public class MainMenu : MonoBehaviour{
         // Deselect
         if (UnityEngine.EventSystems.EventSystem.current)
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public override void OnSelect(BaseEventData eventData)
+    {
+        onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        onSelectedSFX.Dispose();
     }
 
     #region BUTTON BEHAVIOURS
@@ -109,11 +112,6 @@ using UnityEngine.UI;public class MainMenu : MonoBehaviour{
     public void ShowOptions()
     {
         Debug.Log("Not implemented!");
-    }
-
-    public void Exit()
-    {
-        GameManager.ExitGame();
     }
 
     #endregion
