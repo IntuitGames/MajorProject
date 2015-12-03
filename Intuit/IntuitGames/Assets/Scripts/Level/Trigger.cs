@@ -1,9 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Events;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;/// <summary>
+using UnityEngine.Events;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using CustomExtensions;
+
+/// <summary>
 /// Base class for trigger effects.
-/// </summary>public abstract class Trigger : MonoBehaviour{
+/// </summary>
+public abstract class Trigger : MonoBehaviour
+{
     // NESTED TYPES
     public enum TriggerType { TriggerVolume = 0, CollisionVolume = 1, ProximityBased = 2 };
     public enum VolumeType { Box = 0, Sphere = 1, Capsule = 2, Mesh = 3 };
@@ -68,11 +75,15 @@ using CustomExtensions;/// <summary>
         {
             proximityTimer.ModifyLength(proximityCheckFrequency);
         }
-    }    void OnCollisionEnter(Collision collision)
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         if (triggerLayer == (triggerLayer | (1 << collision.collider.gameObject.layer)))
             CallTrigger(collision.collider.gameObject);
-    }    void OnTriggerEnter(Collider other)
+    }
+
+	protected virtual void OnTriggerEnter(Collider other)
     {
         if (triggerLayer == (triggerLayer | (1 << other.gameObject.layer)))
             CallTrigger(other.gameObject);
@@ -113,4 +124,4 @@ using CustomExtensions;/// <summary>
     }
 
     protected abstract void OnTrigger(GameObject triggerObject);
-}
+}

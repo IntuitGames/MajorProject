@@ -1,6 +1,13 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;/// <summary>
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+/// <summary>
 /// Monitors for and stores collision data.
-/// </summary>public class CollisionMonitor : MonoBehaviour{
+/// </summary>
+public class CollisionMonitor : MonoBehaviour
+{
     [SerializeField, ReadOnly]
     private bool _isColliding;
     [SerializeField, ReadOnly]
@@ -41,8 +48,8 @@
         float refCount = collisionObjects.Count;
 
         // Remove nulls
-        collisionObjects.RemoveAll(x => !x);
-        collisionInfos.RemoveAll(x => !x.gameObject);
+        collisionObjects.RemoveAll(x => !x || !x.GetComponent<Collider>().enabled);
+		collisionInfos.RemoveAll(x => !x.gameObject || !x.gameObject.GetComponent<Collider>().enabled);
 
         // Check for change
         if (refCount != collisionObjects.Count)
@@ -82,15 +89,22 @@
             UpdateData();
             OnRemovedCollisionObject(col.gameObject);
         }
-    }    private void UpdateData()    {
+    }
+
+    private void UpdateData()
+    {
         collisionCount = collisionObjects.Count;
         isColliding = collisionCount > 0;
         OnCollisionCountChange(collisionCount);
-    }        // Retrieves the collision info for a specific object    public bool GetCollisionInfo(GameObject collisionObject, ref Collision collisionInfo)
+    }
+    
+    // Retrieves the collision info for a specific object
+    public bool GetCollisionInfo(GameObject collisionObject, ref Collision collisionInfo)
     {
         if (!collisionObjects.Contains(collisionObject))
             return false;
 
         collisionInfo = collisionInfos.First(x => x.gameObject == collisionObject);
         return true;
-    }}
+    }
+}

@@ -1,5 +1,12 @@
-﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
-using CustomExtensions;public class CuttableGrass : Trigger{
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using CustomExtensions;
+
+public class CuttableGrass : Trigger
+{
+	public Animator animatorComp;
     public GameObject uncutGrassObject;
     public GameObject cutGrassObject;
     public GameObject grassJoint;
@@ -9,10 +16,13 @@ using CustomExtensions;public class CuttableGrass : Trigger{
     public bool requireNotWeakened = false;
     public float scoreValue;
     public SoundClip cutSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
+	public SoundClip walkThroughSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
 
     [Header("Transformation Randomization")]
     public bool randomizeOnStart = false;
     public FloatRange randomScale = new FloatRange() { normal = 1, min = 0.8f, max = 1.2f };
+
+	private int collisionCount;
 
     protected override bool canBeTriggered
     {
@@ -38,11 +48,18 @@ using CustomExtensions;public class CuttableGrass : Trigger{
     void Start()
     {
         cutSound.Initialize();
+		walkThroughSound.Initialize();
     }
+
+	void Update()
+	{
+		animatorComp.SetBool ("WalkedThrough", collisionCount > 0);
+	}
 
     void OnDestroy()
     {
         cutSound.Dispose();
+		walkThroughSound.Dispose();
     }
 
     protected override void OnTrigger(GameObject triggerObject)
@@ -90,4 +107,16 @@ using CustomExtensions;public class CuttableGrass : Trigger{
         grassJoint.transform.eulerAngles = Vector3.zero;
         cutGrassObject.transform.localScale = new Vector3(randomScale.normal, randomScale.normal, randomScale.normal);
     }
-}
+
+	// Monitor collisions
+	protected override void OnTriggerEnter (Collider other)
+	{
+		base.OnTriggerEnter (other);
+		collisionCount++;
+	}
+	
+	void OnTriggerExit (Collider other)
+	{
+		collisionCount--;
+	}
+}

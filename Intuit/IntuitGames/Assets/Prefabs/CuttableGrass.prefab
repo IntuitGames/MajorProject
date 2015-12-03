@@ -122,6 +122,7 @@ GameObject:
   - 4: {fileID: 407858}
   - 114: {fileID: 11487124}
   - 65: {fileID: 6566616}
+  - 95: {fileID: 9512966}
   m_Layer: 11
   m_Name: CuttableGrass
   m_TagString: Untagged
@@ -183,7 +184,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 157332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.36364746, y: -10.2618332, z: -34.1163216}
+  m_LocalPosition: {x: -1.02999997, y: -10.2618332, z: -34.1163216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 452810}
@@ -211,7 +212,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115658}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -7.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 407858}
@@ -374,6 +375,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &9512966
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 157332}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 5febc8d7c51da494bacc224fa81f39f9, type: 3}
+  m_Controller: {fileID: 9100000, guid: ad04184edf21baf42ad15f8d19a2c06d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11441438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -422,6 +440,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  animatorComp: {fileID: 9512966}
   uncutGrassObject: {fileID: 115658}
   cutGrassObject: {fileID: 175546}
   grassJoint: {fileID: 129894}
@@ -432,6 +451,14 @@ MonoBehaviour:
   requireNotWeakened: 0
   scoreValue: 10
   cutSound:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  walkThroughSound:
     player: 2
     type: 0
     group: 0
