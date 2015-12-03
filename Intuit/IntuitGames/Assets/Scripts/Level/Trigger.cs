@@ -77,7 +77,7 @@ public abstract class Trigger : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         if (triggerLayer == (triggerLayer | (1 << collision.collider.gameObject.layer)))
             CallTrigger(collision.collider.gameObject);
