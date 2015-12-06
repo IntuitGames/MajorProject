@@ -14,6 +14,7 @@ public class CuttableGrass : Trigger
     public Unity.Chance dropChance = 0.25f;
     public bool requireBothToDash = false;
     public bool requireNotWeakened = false;
+    public float swayDuration = 0.4f;
     public float scoreValue;
     public SoundClip cutSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
 	public SoundClip walkThroughSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
@@ -22,7 +23,7 @@ public class CuttableGrass : Trigger
     public bool randomizeOnStart = false;
     public FloatRange randomScale = new FloatRange() { normal = 1, min = 0.8f, max = 1.2f };
 
-	private int collisionCount;
+    private TimerPlus swayTimer;
 
     protected override bool canBeTriggered
     {
@@ -49,17 +50,20 @@ public class CuttableGrass : Trigger
     {
         cutSound.Initialize();
 		walkThroughSound.Initialize();
+        swayTimer = TimerPlus.Create(swayDuration, TimerPlus.Presets.Standard);
     }
 
 	void Update()
 	{
-		animatorComp.SetBool ("WalkedThrough", collisionCount > 0);
+        swayTimer.ModifyLength(swayDuration);
+		animatorComp.SetBool ("WalkedThrough", swayTimer.IsPlaying);
 	}
 
     void OnDestroy()
     {
         cutSound.Dispose();
 		walkThroughSound.Dispose();
+        swayTimer.Dispose();
     }
 
     protected override void OnTrigger(GameObject triggerObject)
@@ -112,11 +116,11 @@ public class CuttableGrass : Trigger
 	protected override void OnTriggerEnter (Collider other)
 	{
 		base.OnTriggerEnter (other);
-		collisionCount++;
+        swayTimer.Restart();
 	}
 	
 	void OnTriggerExit (Collider other)
 	{
-		collisionCount--;
+        swayTimer.Restart();
 	}
 }
