@@ -479,9 +479,15 @@ public class Character : MonoBehaviour, IBounce
         }
         else if (isSliding) // Gradually slowing down slide movement
         {
-            targetVelocity.x = transform.forward.x * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1);
-            targetVelocity.z = transform.forward.z * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1);
+            targetVelocity.x = transform.forward.x * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1) + (direction.x * baseMoveSpeed / 4);
+            targetVelocity.z = transform.forward.z * dashPower * dashTimer.Percentage.Normalize(0, 1, 0.1f, 1) + (direction.y * baseMoveSpeed / 4);
             targetVelocity.y = 0;
+        }
+        else if (isDashJumping) // Rise during dash jump with slight forward and side control.
+        {
+            targetVelocity.x = transform.forward.x * dashJumpPower + (direction.x * baseMoveSpeed / 4);
+            targetVelocity.z = transform.forward.z * dashJumpPower + (direction.y * baseMoveSpeed / 4);
+            targetVelocity.y = dashJumpPower;
         }
         else
         {
@@ -489,10 +495,6 @@ public class Character : MonoBehaviour, IBounce
             targetVelocity.x = transform.forward.x * dashPower;
             targetVelocity.z = transform.forward.z * dashPower;
             targetVelocity.y = 0;
-
-            // Apply dash jump vertically
-            if (isDashJumping)
-                targetVelocity.y = dashJumpPower;
         }
     }
 
