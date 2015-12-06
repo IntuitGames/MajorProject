@@ -449,6 +449,7 @@ MonoBehaviour:
     chance: .25
   requireBothToDash: 0
   requireNotWeakened: 0
+  swayDuration: .200000003
   scoreValue: 10
   cutSound:
     player: 2
