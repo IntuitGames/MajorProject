@@ -1,6 +1,7 @@
 ﻿using UnityEngine;using System.Collections;using System.Collections.Generic;using System.Linq;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;public class MainMenu : BaseUI{
+using UnityEngine.EventSystems;
+using CustomExtensions;public class MainMenu : BaseUI{
     [Header("Components")]
     public CoopSelector coopSelector;
     public RectTransform menu;
@@ -13,7 +14,36 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
     public Button optionsButton;
     public Button exitButton;
 
+    [Space(10)]
+    public LevelButton levelOneButton;
+    public LevelButton levelTwoButton;
+    public LevelButton testLevelButton;
+    public Button levelSelectToMenuButton;
+
+    [Space(10)]
+    public Slider masterVolumeSlider;
+    public Slider BGMVolumeSlider;
+    public Slider SFXVolumeSlider;
+    public Toggle fullscreenToggle;
+    public CycleSelector resolutionPicker;
+    public CycleSelector qualityPicker;
+    public Button optionsToMenuButton;
+
     [Header("Settings")]
+    // 0 = Main Menu, 1 = Level Select, 2 = Options
+    [SerializeField, ReadOnly]
+    private int _mainMenuIndex = 0;
+    public int mainMenuIndex
+    {
+        get { return _mainMenuIndex; }
+        set
+        {
+            if (value == _mainMenuIndex || value < 0 || value > 2) return;
+            _mainMenuIndex = value;
+            OnMainMenuIndexChanged();
+        }
+    }
+    public float transitionDelay = 0.5f;
     [ReadOnly(EditableInEditor = true)]
     public bool remainClickable = false;
     public SoundClip onSelectedSFX = new SoundClip();
@@ -23,6 +53,8 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
     protected override void Awake()
     {
         base.Awake();
+
+        mainMenuIndex = 0;
 
         // Cache event listeners
         playButtonEvent = playButton.onClick;
@@ -38,6 +70,19 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
             optionsButton.onClick = new Button.ButtonClickedEvent();
             exitButton.onClick = new Button.ButtonClickedEvent();
         }
+
+        // Retrieve resolutions
+        resolutionPicker.options = GameManager.allResolutionsDisplay;
+        resolutionPicker.text.text = GameManager.currentResolutionDisplay;
+        resolutionPicker.index = GameManager.currentResolutionIndex;
+
+        // Retrieve quality settings
+        qualityPicker.options = GameManager.qualityLevels;
+        qualityPicker.text.text = GameManager.currentQualityLevelDisplay;
+        qualityPicker.index = GameManager.currentQualityIndex;
+
+        // Retrieve full screen setting
+        fullscreenToggle.isOn = Screen.fullScreen;
     }
 
     void Start()
@@ -49,6 +94,12 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
     {
         // Enable the parent back panel
         menu.gameObject.SetActive(true);
+        mainMenuIndex = 0;
+
+        // Set volume slider values
+        masterVolumeSlider.value = GameManager.AudioManager.masterVolume;
+        BGMVolumeSlider.value = GameManager.AudioManager.backgroundMusicVolume;
+        SFXVolumeSlider.value = GameManager.AudioManager.soundEffectVolume;
 
         // Select the default button
         playButton.Select();
@@ -61,6 +112,8 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
     {
         // Disable the parent back panel
         menu.gameObject.SetActive(false);
+        levelSelect.gameObject.SetActive(false);
+        options.gameObject.SetActive(false);
 
         // Disable the coop selector
         coopSelector.SetActive(false);
@@ -80,6 +133,45 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
         base.OnDestroy();
 
         onSelectedSFX.Dispose();
+    }
+
+    // 0 = main, 1 = Level Select, 2 = Options
+    private void OnMainMenuIndexChanged()
+    {
+        if (mainMenuIndex == 0)
+        {
+            playButton.Select();
+            coopSelector.SetActive(true);
+            levelSelect.gameObject.SetActive(false);
+            options.gameObject.SetActive(false);
+            TimerPlus.Create(transitionDelay, () =>
+                {
+                    menu.gameObject.SetActive(true);
+                    playButton.Select();
+                });
+        }
+        else if (mainMenuIndex == 1)
+        {
+            coopSelector.SetActive(false);
+            menu.gameObject.SetActive(false);
+            options.gameObject.SetActive(false);
+            TimerPlus.Create(transitionDelay, () =>
+            {
+                levelSelect.gameObject.SetActive(true);
+                levelOneButton.button.Select();
+            });
+        }
+        else if (mainMenuIndex == 2)
+        {
+            coopSelector.SetActive(false);
+            menu.gameObject.SetActive(false);
+            options.gameObject.SetActive(false);
+            TimerPlus.Create(transitionDelay, () =>
+            {
+                options.gameObject.SetActive(true);
+                masterVolumeSlider.Select();
+            });
+        }
     }
 
     #region BUTTON BEHAVIOURS
@@ -104,14 +196,27 @@ using UnityEngine.EventSystems;public class MainMenu : BaseUI{
         GameManager.LoadLevel(1);
     }
 
-    public void ShowLevelSelect()
+    // 0 = main, 1 = Level Select, 2 = Options
+    public void ChangeMenuIndex(int index)
     {
-        Debug.Log("Not implemented!");
+        mainMenuIndex = index;
     }
 
-    public void ShowOptions()
+    // 0 = master, 1 = BGM, 2 = SFX
+    public void OnVolumeSliderChange(int slider)
     {
-        Debug.Log("Not implemented!");
+        if (slider == 0)
+            GameManager.AudioManager.masterVolume = masterVolumeSlider.value;
+        else if (slider == 1)
+            GameManager.AudioManager.backgroundMusicVolume = BGMVolumeSlider.value;
+        else
+            GameManager.AudioManager.soundEffectVolume = SFXVolumeSlider.value;
+    }
+
+    public void ApplySettings()
+    {
+        GameManager.SetResolution(resolutionPicker.index, fullscreenToggle.isOn);
+        GameManager.SetQualityLevel(qualityPicker.index);
     }
 
     #endregion

@@ -46,9 +46,13 @@ using System;/// <summary>
     {
         // Load player preferences
         masterVolume = PlayerPrefs.GetFloat("MasterVolume", masterVolume);
+        backgroundMusicVolume = PlayerPrefs.GetFloat("BGMVolume", backgroundMusicVolume);
+        soundEffectVolume = PlayerPrefs.GetFloat("SFXVolume", soundEffectVolume);
 
         // Save volume to player preferences on application exit
         GameManager.OnApplicationExit += () => PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        GameManager.OnApplicationExit += () => PlayerPrefs.SetFloat("BGMVolume", backgroundMusicVolume);
+        GameManager.OnApplicationExit += () => PlayerPrefs.SetFloat("SFXVolume", soundEffectVolume);
     }    // Returns the final play volume of a sound clip    public float GetFinalVolume(SoundClip soundClip, float additionalMulti = 1)
     {
         if(!enabled) return 0;

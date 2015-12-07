@@ -16,8 +16,25 @@ using CustomExtensions;/// <summary>
     // Events
     public static event System.Action OnApplicationExit = delegate { };
 
-    // Levels
-    public static string[] levels = { "Main Menu", "Level 1", "Level 2", "Test" };
+    // Static Data
+    public static Resolution[] resolutions { private set; get;}
+    public static int currentResolutionIndex { private set; get;}
+    public static string[] qualityLevels { private set; get;}
+    public static int currentQualityIndex { private set; get;}
+
+    // Quick-access Properties
+    public static string currentResolutionDisplay
+    {
+        get { return ResolutionDisplayString(resolutions[currentResolutionIndex]); }
+    }
+    public static string[] allResolutionsDisplay
+    {
+        get { return ResolutionDisplayString(resolutions).ToArray(); }
+    }
+    public static string currentQualityLevelDisplay
+    {
+        get { return qualityLevels[currentQualityIndex]; }
+    }
 
     #region MESSAGES
 
@@ -36,6 +53,24 @@ using CustomExtensions;/// <summary>
 
         // Ensure all manager references are set
         SetManagerReferences();
+
+        // Get resolution and quality settings data
+        Screen.fullScreen = PlayerPrefs.GetInt("IsFullScreen", Screen.fullScreen ? 1 : 0) == 1;
+
+        resolutions = Screen.resolutions.ToArray();
+        qualityLevels = QualitySettings.names;
+
+        if (!Application.isEditor)
+        {
+            // For some reason Screen.currentResolution is incorrect when not in full screen
+            if (Screen.fullScreen)
+                currentResolutionIndex = Mathf.Clamp(PlayerPrefs.GetInt("ResolutionIndex", System.Array.IndexOf<Resolution>(resolutions, Screen.currentResolution)), 0, resolutions.Length - 1);
+            else
+                currentResolutionIndex = Mathf.Clamp(PlayerPrefs.GetInt("ResolutionIndex", System.Array.IndexOf<Resolution>(resolutions, new Resolution() { width = Screen.width, height = Screen.height, refreshRate = Screen.currentResolution.refreshRate })), 0, resolutions.Length - 1);
+        }
+        else // Only a single resolution in editor
+            currentResolutionIndex = 0;
+        currentQualityIndex = Mathf.Clamp(PlayerPrefs.GetInt("QualityIndex", QualitySettings.GetQualityLevel()), 0, qualityLevels.Length - 1);
 
         // Sub-manager awake calls must be after references are set
         InvokeManagerAwake();
@@ -60,6 +95,23 @@ using CustomExtensions;/// <summary>
     {
         if (this == gameManagerInstance)
             TimerPlus.DisposeAllOnLoad();
+    }
+
+    #endregion
+
+    #region HELPER METHODS
+
+    // Returns a nicely formatted string of a resolution
+    private static string ResolutionDisplayString(Resolution resolution)
+    {
+        return string.Format("{0} x {1}", resolution.height, resolution.width);
+    }
+
+    // Returns a nicely formatted string of an array of resolutions
+    private static IEnumerable<string> ResolutionDisplayString(params Resolution[] resolutions)
+    {
+        foreach (var res in resolutions)
+            yield return ResolutionDisplayString(res);
     }
 
     #endregion
@@ -142,6 +194,22 @@ using CustomExtensions;/// <summary>
     public static void LoadMainMenu()
     {
         Application.LoadLevel(0);
+    }
+
+    public static void SetResolution(int requestedIndex, bool isFull)
+    {
+        currentResolutionIndex = requestedIndex;
+        Screen.SetResolution(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, isFull);
+        //PlayerPrefs.SetInt("ResolutionIndex", requestedIndex);
+    }
+
+    public static void SetQualityLevel(int requestedIndex)
+    {
+        if (requestedIndex == currentQualityIndex) return;
+
+        currentQualityIndex = requestedIndex;
+        QualitySettings.SetQualityLevel(currentQualityIndex, true);
+        PlayerPrefs.SetInt("QualityIndex", requestedIndex);
     }
 
     #endregion
