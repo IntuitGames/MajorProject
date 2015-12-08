@@ -108,7 +108,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 184378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 126.742477, y: .769999981, z: 19.6004944}
+  m_LocalPosition: {x: 124.291557, y: 2.13020878e-17, z: 16.2438354}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 483012}
@@ -321,7 +321,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 4be568144fae88f45a8bbcba3909db0f, type: 2}
 --- !u!198 &19812058
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -84,7 +84,7 @@ public class Character : MonoBehaviour, IBounce
     private TimerPlus dashCooldownTimer;
     public bool canDash
     {
-        get { return _canDash && !dashCooldownTimer.IsPlaying; }
+        get { return _canDash && !dashCooldownTimer.IsPlaying && !dashFlag; }
         set
         {
             if (value)
@@ -186,6 +186,7 @@ public class Character : MonoBehaviour, IBounce
     private const float airborneRayOffset = -1.1f;      // How much additional height offset will the ray checks account for.
     private float jumpTime;                             // How long the jump button has been held in for.
     private bool jumpFlag;                              // Is the character ready to jump again?
+    private bool dashFlag;                              // Can the character dash again?
     private bool jumpDashFlag;                          // Has the character already jump dashed?
     private bool yankFlag = true;                       // Is the character able to be yanked
     private float lastRecoredY;                         // The last recorded position Y Value.
@@ -331,8 +332,9 @@ public class Character : MonoBehaviour, IBounce
         normalDrag = rigidbodyComp.drag;
 
         // Reset the jump dash flag when grounded
+        OnGrounded += (grounded) => { if (grounded) dashFlag = false; };
         OnGrounded += (grounded) => { if (grounded) jumpDashFlag = false; };
-        OnGrounded += (grounded) => { if (isGrounded) isHeavyHighJump = false; };
+        OnGrounded += (grounded) => { if (grounded) isHeavyHighJump = false; };
     }
 
     void Update()
@@ -519,7 +521,7 @@ public class Character : MonoBehaviour, IBounce
         if (p1 != isPlayerOne || isFreeze || isSliding) return;
 
         // Enter the dash jump state
-        if (isDashing && isPressed && !isDashJumping && canDashJump)
+        if (isDashing && isPressed && !isDashJumping && canDashJump && !dashFlag)
         {
             // Raise flag so this can only happen once until grounded
             jumpDashFlag = true;
@@ -574,6 +576,7 @@ public class Character : MonoBehaviour, IBounce
             isDashing = true;
 
             if (isGrounded) targetVelocity.y += dashHeight;
+            else dashFlag = true;
 
             audioDataComp.PlayDashAudio();
         }

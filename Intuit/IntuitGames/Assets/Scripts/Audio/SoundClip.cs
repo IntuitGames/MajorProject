@@ -184,8 +184,13 @@ public class SoundClip : IDisposable
 
     public void TriggerCue(int cueIndex)
     {
-        if (FMODCues.SafeGet(cueIndex).isValid())
+        if (FMODCues.SafeGet(cueIndex) != null)
             FMODCues.SafeGet(cueIndex).trigger();
+    }
+
+    public void Stop(STOP_MODE stopMode)
+    {
+        FMODEvent.stop(stopMode);
     }
 
     // Dispose FMOD instances
