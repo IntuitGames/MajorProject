@@ -1,17 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class EnemyBase : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    //   public EnemyBodyPart[] bodyParts;
-    //   public EnemyWeakSpot[] weakSpots;
-    //   public EnemyAggro aggroHandler;
-    //public EnemyBodyBase[] baseParts;
     [Header("Base Components")]
     public Animator animatorComp;
     [Header("Aggressive")]
     public EnemyAggro aggroHandler;
-    public float knockbackForce;
 
     [Header("Death")]
     public GameObject riggedModel;
@@ -20,7 +15,7 @@ public abstract class EnemyBase : MonoBehaviour
     public WeakSpot weakSpot;
     public float gibForce;
     public float fadeTime;
-    private bool movedModel = false;
+    private bool swapModel;
     [HideInInspector]
     public bool isDead;
     
@@ -39,35 +34,32 @@ public abstract class EnemyBase : MonoBehaviour
         UpdateAnimator();
         if(isDead)
         {
-            if(movedModel)
-            {
+            if (animatorComp.gameObject.activeInHierarchy && animatorComp.GetCurrentAnimatorStateInfo(0).IsTag("dead") && animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.99f)
+            {                
                 riggedModel.SetActive(false);
                 deathParticle.Play();
-                deathModel.SetActive(true);
-                movedModel = false;
-            }
-            if (animatorComp.gameObject.activeInHierarchy && animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
-            {
-                riggedModel.transform.position = Camera.main.transform.position - new Vector3(0, 0, -3);    //Move the model out of view for a frame to call any OnTriggerExits
-                movedModel = true;                
+                if (swapModel)
+                    deathModel.SetActive(true);
             }
         }
     }
 
     protected virtual void UpdateAnimator()
     {
-        if(riggedModel.activeInHierarchy)
-        animatorComp.SetBool("dead", isDead);
+            
     }
 
-    public virtual void OnDeath()
+    public virtual void OnDeath(bool swapModel)
     {
+        animatorComp.SetTrigger("dead");
         isDead = true;
+        this.swapModel = swapModel;
     }
 
     public virtual void DestroyMe()
     {
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
+        //Destroy(this.gameObject, 5f);
     }
 
     public abstract void SendAggroMessage(bool becomeAggro);
