@@ -27,7 +27,7 @@ using CustomExtensions;/// <summary>
     {
         GameManager.PlayerManager.AddJelly(jellyValue);
         GameManager.PlayerManager.collectibleScore += scoreValue;
-        soundEffect.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
+        soundEffect.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1, new float[] { GameManager.TetherManager.weakenedParam, 0 });
         gameObject.SetActive(false);
         Destroy(gameObject, 5);
     }

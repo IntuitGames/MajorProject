@@ -466,7 +466,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: dd65a016881f7d64c851c3f76ff4f2cf, type: 2}
   randomizeOnStart: 1
   randomScale:
     normal: 1
@@ -2685,6 +2685,11 @@ Prefab:
       propertyPath: dropChance.chance
       value: .25
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: walkThroughSound.FMODAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: dd65a016881f7d64c851c3f76ff4f2cf,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 157332}

@@ -65,6 +65,7 @@ using System;/// <summary>
     public bool reconnectOnTouch = true;
     [Popup(new string[] { "Nothing", "Game Over", "Reload Level", "Exit Game" })]
     public string actionOnDeath = "Game Over";
+    public SoundClip deathSound = new SoundClip();
     public float maxJelly = 10;
     public bool autoRecover = false;
     [Range(0, 1)]
@@ -110,6 +111,9 @@ using System;/// <summary>
         // Subscribe to tether events
         GameManager.TetherManager.OnDisconnected += Weaken;
         GameManager.TetherManager.OnReconnected += Unweaken;
+
+        deathSound.Initialize();
+        OnBothDead += () => deathSound.PlayAttached(character1.audioDataComp.audioSource, AudioManager.GetFMODAttribute(character1.transform, character1.targetVelocity), 1);
     }
 
     public override void ManagerOnLevelLoad()
@@ -128,6 +132,11 @@ using System;/// <summary>
 
         if (currentJelly <= 0)
             DeathAction();
+    }
+
+    void OnDestroy()
+    {
+        deathSound.Dispose();
     }
 
     #endregion

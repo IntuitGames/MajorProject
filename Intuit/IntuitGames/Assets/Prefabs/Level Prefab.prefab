@@ -31590,9 +31590,17 @@ MonoBehaviour:
   weakenedMoveSpeedMulti: .75
   weakenedJumpImpulseMulti: .699999988
   weakenedJumpForceMulti: .600000024
-  weakenedDashPowerMulti: .5
+  weakenedDashPowerMulti: .25
   reconnectOnTouch: 1
   actionOnDeath: Game Over
+  deathSound:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: aeb2f65af01cb8247942a2287f89a323, type: 2}
   maxJelly: 10
   autoRecover: 0
   recoveryRate: .5

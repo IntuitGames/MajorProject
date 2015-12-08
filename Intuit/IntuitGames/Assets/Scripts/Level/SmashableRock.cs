@@ -64,7 +64,7 @@ public class SmashableRock : Trigger
 		}
 		
 		// Play sound
-		smashSound.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1);
+		smashSound.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1, new float[] { 0, GameManager.TetherManager.weakenedParam } );
 
 		// Disable collider
 		colliderComp.enabled = false;

@@ -50,7 +50,7 @@ public class CuttableGrass : Trigger
     {
         cutSound.Initialize();
 		walkThroughSound.Initialize();
-        swayTimer = TimerPlus.Create(swayDuration, TimerPlus.Presets.Standard);
+        swayTimer = TimerPlus.Create(swayDuration, TimerPlus.Presets.Standard, () => walkThroughSound.UpdateParameter(0, 1));
     }
 
 	void Update()
@@ -116,11 +116,13 @@ public class CuttableGrass : Trigger
 	protected override void OnTriggerEnter (Collider other)
 	{
 		base.OnTriggerEnter (other);
+        walkThroughSound.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1, new float[] { 0, GameManager.TetherManager.weakenedParam, 0 } );
         swayTimer.Restart();
 	}
 	
 	void OnTriggerExit (Collider other)
 	{
+        walkThroughSound.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(transform, Vector3.zero), 1, new float[] { 0, GameManager.TetherManager.weakenedParam, 0 });
         swayTimer.Restart();
 	}
 }
