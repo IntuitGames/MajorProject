@@ -24,6 +24,7 @@ public class SoundClip : IDisposable
     private bool isInitialized;
     private EventInstance FMODEvent;
     private List<ParameterInstance> FMODParameters = new List<ParameterInstance>();
+    private List<CueInstance> FMODCues = new List<CueInstance>();
 
     // CONSTRUCTORS
     public SoundClip() { }
@@ -54,6 +55,24 @@ public class SoundClip : IDisposable
                 ParameterInstance newParamter;
                 if (FMODEvent.getParameterByIndex(i, out newParamter) == FMOD.RESULT.OK)
                     FMODParameters.Add(newParamter);
+            }
+
+            // Find all its cues (KEYOFFS)
+            int cueCount;
+            try
+            {
+                FMODEvent.getCueCount(out cueCount);
+            }
+            catch
+            {
+                cueCount = 0;
+            }
+
+            for (int i = 0; i < cueCount; i++)
+            {
+                CueInstance newCue;
+                if (FMODEvent.getCueByIndex(i, out newCue) == FMOD.RESULT.OK)
+                    FMODCues.Add(newCue);
             }
         }
 
@@ -159,7 +178,14 @@ public class SoundClip : IDisposable
     // Updates a single FMOD param
     public void UpdateParameter(int paramIndex, float paramValue)
     {
-        FMODParameters.SafeGet(paramIndex, true).setValue(paramValue);
+        if (FMODParameters.SafeGet(paramIndex, true).isValid())
+            FMODParameters.SafeGet(paramIndex, true).setValue(paramValue);
+    }
+
+    public void TriggerCue(int cueIndex)
+    {
+        if (FMODCues.SafeGet(cueIndex).isValid())
+            FMODCues.SafeGet(cueIndex).trigger();
     }
 
     // Dispose FMOD instances
