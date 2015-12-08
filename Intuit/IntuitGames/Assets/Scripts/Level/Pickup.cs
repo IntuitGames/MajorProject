@@ -34,6 +34,7 @@ using CustomExtensions;/// <summary>
 
     void Start()
     {
+        soundEffect.Initialize();
         initialPosition = transform.position;
         transform.rotation = Quaternion.Euler(Random.Range(-180f, 180), Random.Range(-180f, 180), Random.Range(-180f, 180));
     }
