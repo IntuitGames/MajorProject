@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAggro : MonoBehaviour
@@ -9,7 +6,7 @@ public class EnemyAggro : MonoBehaviour
     public EnemyAggroEnter enterZone;
     public EnemyAggroExit exitZone;
 
-    public EnemyBase enemy;
+    public Enemy enemy;
 
     public List<GameObject> enteredObs = new List<GameObject>();
 
@@ -18,7 +15,7 @@ public class EnemyAggro : MonoBehaviour
 
     void Start()
     {
-        if (enemy == null) enemy = GetComponentInParent<EnemyBase>();
+        if (enemy == null) enemy = GetComponentInParent<Enemy>();
     }
 
     public void ObjectEnteredRange(GameObject enteredOb)

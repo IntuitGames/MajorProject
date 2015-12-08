@@ -27,7 +27,7 @@ public class weStateSuprise : EnemyCoreState<WanderingEnemy>
 
     public override void Update(WanderingEnemy obj)
     {
-        if (obj.animatorComp.GetCurrentAnimatorStateInfo(0).IsName("Surprised") && obj.animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        if (obj.animatorComp.GetCurrentAnimatorStateInfo(0).IsName("Suprised") && obj.animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             ownerFSM.popState();    //remove this state from the stack because at no point should we really be becoming suprised again unless its coming from wander/idle
             ownerFSM.pushState(new weStateChase(ownerFSM));

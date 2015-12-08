@@ -2,17 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-//just a sneak comment to note rotations as needed on the Level1 prefab:
-// Environment rot = 0, 90, 0
-// Art  pos = 129.14, 0, -145.3
-//      rot = 0, -90, 0
+/// <summary>
+/// Gets all parts of the death model and fades them out.
+/// </summary>
 
-public class deathModelHandler : MonoBehaviour {
+public class DeathModelHandler : MonoBehaviour {
 
-    public EnemyBase parentEnemy;
+    public Enemy parentEnemy;
     List<GameObject> parts = new List<GameObject>();
 
-    void Start ()
+    void OnEnable ()
     {
         foreach (Transform trans in transform)
         {

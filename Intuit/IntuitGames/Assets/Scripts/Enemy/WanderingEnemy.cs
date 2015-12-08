@@ -3,7 +3,7 @@ using CustomExtensions;
 
 // Main functionality for the Totem and Softhead Enemies
 [RequireComponent(typeof(NavMeshAgent))]
-public class WanderingEnemy : EnemyBase {
+public class WanderingEnemy : Enemy {
 
     public EnemyFSM<EnemyCoreState<WanderingEnemy>, WanderingEnemy> fsm;
 
@@ -62,10 +62,11 @@ public class WanderingEnemy : EnemyBase {
         }
     }
 
-    public override void OnDeath()
+    public override void OnDeath(bool swapModel)
     {
         biteController.StopBiteEffect();
-        base.OnDeath();
+        StopAgent();
+        base.OnDeath(swapModel);
     }
 
     public Vector3 getStartLocation() {
@@ -77,7 +78,7 @@ public class WanderingEnemy : EnemyBase {
         fsm.SendAggressionChange(becomeAggro);
     }
 
-    void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;
         if (startLocation != Vector3.zero) Gizmos.DrawWireSphere(startLocation, wanderRadius); else Gizmos.DrawWireSphere(transform.position, wanderRadius);
@@ -86,6 +87,12 @@ public class WanderingEnemy : EnemyBase {
             Gizmos.DrawWireCube(agent.destination, Vector3.one);
         }
 
+    }
+
+    public void StopAgent()
+    {
+        agent.velocity = Vector3.zero;
+        agent.Stop();
     }
 
 }
