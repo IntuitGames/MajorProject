@@ -10,6 +10,7 @@ using CustomExtensions;/// <summary>
     public float drawSpeed = 10;
     public bool dynamicDrawSpeed = true;
     public bool returnToInitialPosition = true;
+    public float rotateSpeed = 5;
     public SoundClip soundEffect = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
 
     private Vector3 initialPosition;
@@ -34,6 +35,7 @@ using CustomExtensions;/// <summary>
     void Start()
     {
         initialPosition = transform.position;
+        transform.rotation = Quaternion.Euler(Random.Range(-180f, 180), Random.Range(-180f, 180), Random.Range(-180f, 180));
     }
 
     void Update()
@@ -52,6 +54,11 @@ using CustomExtensions;/// <summary>
         else if (returnToInitialPosition)
         {
             transform.position += Vector3.ClampMagnitude((initialPosition - transform.position), 1) * Time.deltaTime * drawSpeed / 2;
+        }
+
+        if (rotateSpeed != 0)
+        {
+            transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, targetDirection.magnitude.Normalize(0, 30, 50 * rotateSpeed, 10 * rotateSpeed) * Time.deltaTime, 0));
         }
     }
 

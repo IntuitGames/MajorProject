@@ -270,7 +270,7 @@ public class Character : MonoBehaviour, IBounce
     public bool isHeavyHighJump { get; set; }
     public bool isFreeze
     {
-        get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying || isSuspended; }
+        get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying; }
     }
     public bool isKnockedBack { get; set; }
     public bool isSuspended
@@ -386,9 +386,7 @@ public class Character : MonoBehaviour, IBounce
 
         // Stop dash on collision 
         if (stopDashOnCollision && forwardObject)
-        {
             isDashing = false;
-        }
 
         // Reconnect on touch
         if (GameManager.PlayerManager.reconnectOnTouch && col.collider.gameObject == GetPartner().gameObject)
@@ -444,7 +442,7 @@ public class Character : MonoBehaviour, IBounce
             AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        if (!isFreeze)
+        if (!isFreeze || !isSuspended)
             rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
@@ -667,7 +665,7 @@ public class Character : MonoBehaviour, IBounce
     {
         float length = GameManager.TetherManager.tetherLength;
 
-        if (GameManager.TetherManager.disconnected || length < GameManager.PlayerManager.freeRadius) return;
+        if (GameManager.TetherManager.disconnected || length < GameManager.PlayerManager.freeRadius || isHeavy && !GetPartner().isHeavy) return;
 
         Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne);
         float constrainMulti = length.Normalize(GameManager.PlayerManager.freeRadius, GameManager.PlayerManager.maxRadius, 0, 1000);
@@ -705,7 +703,7 @@ public class Character : MonoBehaviour, IBounce
         }
         else if (isDashing)
         {
-            if (!GetPartner().isHeavy || length > GameManager.PlayerManager.maxRadius)
+            if (!GetPartner().isHeavy && length > GameManager.PlayerManager.maxRadius)
                 rigidbodyComp.MovePosition(transform.position + movement);
             else
                 isDashing = false;
