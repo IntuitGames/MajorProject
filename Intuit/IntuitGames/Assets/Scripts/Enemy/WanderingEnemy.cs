@@ -9,10 +9,9 @@ public class WanderingEnemy : Enemy {
 
     [Header("Wandering Components")]
     public NavMeshAgent agent;
-    public bool showStateDebugs = false;
 
     [Header("Wandering")]
-    [Range(0.5f, 1.5f)]
+    [Range(0, 2f)]
     public float wanderSpeed;
     public float wanderRadius;
     public float wanderDistanceBuffer;

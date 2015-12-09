@@ -23,7 +23,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Horizontal
-    descriptiveName: All players horizontal joystick
+    descriptiveName: All players horizontal joystick 1
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: 
@@ -33,10 +33,26 @@ InputManager:
     dead: .189999998
     sensitivity: 1
     snap: 0
-    invert: 0
+    invert: 1
     type: 2
     axis: 0
-    joyNum: 0
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: All players horizontal joystick 2
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 1
+    type: 2
+    axis: 0
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Vertical
     descriptiveName: All players vertical keyboard
@@ -55,7 +71,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Vertical
-    descriptiveName: All players vertical joystick
+    descriptiveName: All players vertical joystick 1
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: 
@@ -65,10 +81,26 @@ InputManager:
     dead: .189999998
     sensitivity: 1
     snap: 0
-    invert: 0
+    invert: 1
     type: 2
     axis: 1
-    joyNum: 0
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: All players vertical joystick 2
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 1
+    type: 2
+    axis: 1
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Submit
     descriptiveName: All players submit
@@ -77,6 +109,38 @@ InputManager:
     positiveButton: return
     altNegativeButton: 
     altPositiveButton: '[+]'
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 1
+    invert: 0
+    type: 0
+    axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Submit
+    descriptiveName: All players submit Joystick 1
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick 1 button 7
+    altNegativeButton: 
+    altPositiveButton: joystick 1 button 0
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 1
+    invert: 0
+    type: 0
+    axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Submit
+    descriptiveName: All players submit Joystick 2
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick 2 button 7
+    altNegativeButton: 
+    altPositiveButton: joystick 2 button 0
     gravity: 1000
     dead: .00100000005
     sensitivity: 1000
@@ -186,7 +250,7 @@ InputManager:
     descriptiveName: Player 1 dash joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 1 button 2
+    positiveButton: joystick 1 button 4
     altNegativeButton: 
     altPositiveButton: left ctrl
     gravity: 1000
@@ -202,7 +266,7 @@ InputManager:
     descriptiveName: Player 1 heavy joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 1 button 1
+    positiveButton: joystick 1 button 5
     altNegativeButton: 
     altPositiveButton: left alt
     gravity: 1000
@@ -220,7 +284,7 @@ InputManager:
     negativeButton: 
     positiveButton: left shift
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick 1 button 2
     gravity: 1000
     dead: .00100000005
     sensitivity: 1000
@@ -362,7 +426,7 @@ InputManager:
     descriptiveName: Player 2 dash joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 2 button 2
+    positiveButton: joystick 2 button 4
     altNegativeButton: 
     altPositiveButton: '[1]'
     gravity: 1000
@@ -378,7 +442,7 @@ InputManager:
     descriptiveName: Player 2 heavy joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 2 button 1
+    positiveButton: joystick 2 button 5
     altNegativeButton: 
     altPositiveButton: '[2]'
     gravity: 1000
@@ -396,7 +460,7 @@ InputManager:
     negativeButton: 
     positiveButton: right ctrl
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick 2 button 2
     gravity: 1000
     dead: .00100000005
     sensitivity: 1000
@@ -460,7 +524,7 @@ InputManager:
     negativeButton: 
     positiveButton: e
     altNegativeButton: 
-    altPositiveButton: joystick 1 button 3
+    altPositiveButton: joystick 1 button 1
     gravity: 1000
     dead: .00100000005
     sensitivity: 1000
@@ -476,7 +540,7 @@ InputManager:
     negativeButton: 
     positiveButton: '[3]'
     altNegativeButton: 
-    altPositiveButton: joystick 2 button 3
+    altPositiveButton: joystick 2 button 1
     gravity: 1000
     dead: .00100000005
     sensitivity: 1000

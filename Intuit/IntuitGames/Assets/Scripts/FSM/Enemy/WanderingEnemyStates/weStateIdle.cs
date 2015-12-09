@@ -7,18 +7,16 @@ public class weStateIdle : EnemyCoreState<WanderingEnemy> {
 
     private float idleTimer;
 
-    public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
+    public override bool RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
-        if (!becomeAggressive) return;
-        else
-        {
+        if (becomeAggressive) 
             owner.fsm.pushState(new weStateSuprise(ownerFSM));
-        }
+        return true;
     }
 
     public override void Begin(WanderingEnemy obj)
     {
-        if (obj.showStateDebugs) Debug.Log(this.GetType().ToString() + " has begun!");
+        base.Begin(obj);
         obj.agent.velocity = Vector3.zero;
         obj.agent.Stop();
         idleTimer = Random.Range(obj.minIdleTime, obj.maxIdleTime);

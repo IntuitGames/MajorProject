@@ -450,6 +450,37 @@ using System.Text;namespace CustomExtensions{    /// <summary>
         }
 
         /// <summary>
+        /// Gets a point dist units from A, in direction B.
+        /// </summary>
+        public static Vector3 GetPointAtDistAlongLine(Vector3 pointA, Vector3 pointB, float dist, bool fromA)
+        {
+            float vx = pointB.x - pointA.x;
+            float vy = pointB.y - pointA.y;
+            float vz = pointB.z - pointA.z;
+
+            float mag = Mathf.Sqrt(vx * vx + vy * vy + vz * vz); // length
+
+            vx /= mag;
+            vy /= mag;
+            vz /= mag;
+
+            Vector3 point = new Vector3();
+            if (fromA)
+            {
+                point.x = pointA.x + vx * (mag + dist);
+                point.y = pointA.y + vy * (mag + dist);
+                point.z = pointA.z + vz * (mag + dist);
+            }
+            else
+            {
+                point.x = pointB.x + vx * (mag + dist);
+                point.y = pointB.y + vy * (mag + dist);
+                point.z = pointB.z + vz * (mag + dist);
+            }
+            return point;
+        }
+
+        /// <summary>
         /// Retrieves the surface type of given game object.
         /// </summary>
         public static Surface.SurfaceType GetSurfaceType(this GameObject Source)

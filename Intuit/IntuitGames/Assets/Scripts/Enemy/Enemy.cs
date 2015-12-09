@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public bool showStateDebugs = false;
     [Header("Base Components")]
     public Animator animatorComp;
     [Header("Aggressive")]
@@ -12,10 +13,10 @@ public abstract class Enemy : MonoBehaviour
     public GameObject riggedModel;
     public GameObject deathModel;
     public ParticleSystem deathParticle;
-    public WeakSpot weakSpot;
     public float gibForce;
     public float fadeTime;
     private bool swapModel;
+    private bool deadMove = false;
     [HideInInspector]
     public bool isDead;
     
@@ -30,18 +31,25 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void Update()
-    {
-        UpdateAnimator();
+    {        
         if(isDead)
         {
+            if (deadMove) DeathEffect();            
             if (animatorComp.gameObject.activeInHierarchy && animatorComp.GetCurrentAnimatorStateInfo(0).IsTag("dead") && animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.99f)
-            {                
-                riggedModel.SetActive(false);
-                deathParticle.Play();
-                if (swapModel)
-                    deathModel.SetActive(true);
+            {
+                riggedModel.transform.position = Camera.main.transform.position - Vector3.one * 4; //Apparently this actually does get Exits called on colliders and triggers, yay.
+                deadMove = true;
             }
         }
+        else UpdateAnimator();
+    }
+
+    public virtual void DeathEffect()
+    {
+        riggedModel.SetActive(false);
+        deathParticle.Play();
+        if (swapModel)
+            deathModel.SetActive(true);
     }
 
     protected virtual void UpdateAnimator()
