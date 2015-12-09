@@ -6,21 +6,21 @@ public class weStateSuprise : EnemyCoreState<WanderingEnemy>
 {
     public weStateSuprise(EnemyFSM<EnemyCoreState<WanderingEnemy>, WanderingEnemy> owner) : base(owner) { }
 
-    public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
+    public override bool RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
-        if (!becomeAggressive)
-        {
-            if(owner.showStateDebugs)Debug.Log("Suprised and leaving aggressive!");
-            owner.animatorComp.SetBool("aggressive", false);
-            ownerFSM.popState();
-        }
+        //if (!becomeAggressive)
+        //{
+        //    if(owner.showStateDebugs)Debug.Log("Suprised and leaving aggressive!");
+        //    owner.animatorComp.SetBool("aggressive", false);
+        //    ownerFSM.popState();
+        //}
+        return false;
     }
 
     public override void Begin(WanderingEnemy obj)
     {
-        if (obj.showStateDebugs) Debug.Log(this.GetType().ToString() + " has begun!");
-        obj.agent.velocity = Vector3.zero;
-        obj.agent.Stop();
+        base.Begin(obj);
+        obj.StopAgent();
         obj.animatorComp.SetBool("suprised", true);
         obj.animatorComp.SetBool("aggressive", true);
     }

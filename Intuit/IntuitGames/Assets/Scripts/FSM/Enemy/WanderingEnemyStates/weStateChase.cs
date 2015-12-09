@@ -6,18 +6,19 @@ public class weStateChase : EnemyCoreState<WanderingEnemy>
 
     public weStateChase(EnemyFSM<EnemyCoreState<WanderingEnemy>, WanderingEnemy> owner) : base(owner) { }
 
-    public override void RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
+    public override bool RecieveAggressionChange(WanderingEnemy owner, bool becomeAggressive)
     {
         if (!becomeAggressive)
         {
             owner.animatorComp.SetBool("aggressive", false);
             ownerFSM.popState();
         }
+        return true;
     }
 
     public override void Begin(WanderingEnemy obj)
     {
-        if (obj.showStateDebugs) Debug.Log(this.GetType().ToString() + " has begun!");
+        base.Begin(obj);
         obj.agent.speed = obj.chasingSpeed;
     }
     public override void Update(WanderingEnemy obj)
