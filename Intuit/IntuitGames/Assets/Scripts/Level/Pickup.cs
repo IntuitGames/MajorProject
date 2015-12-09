@@ -2,7 +2,7 @@
 using CustomExtensions;/// <summary>
 /// Basic player pickups that trigger when touched.
 /// </summary>public class Pickup : Trigger{
-    public float jellyValue = 1;
+    public int jellyValue = 1;
     public float scoreValue = 0;
     public bool allowPickupOnMaxJelly = true;
     [Range(0, 50)]

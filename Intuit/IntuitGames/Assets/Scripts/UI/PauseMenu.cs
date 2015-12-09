@@ -8,10 +8,10 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     [Header("Components")]
     public Image backgroundPanel;
     public Button resumeButton;
+    public Button optionsButton;
     public Button restartButton;
     public Button mainMenuButton;
     public Button exitButton;
-    public Slider volumeSlider;
 
     [Header("Settings")]
     public SoundClip onSelectedSFX = new SoundClip();
@@ -25,8 +25,6 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     {
         // Enable the parent back panel
         backgroundPanel.gameObject.SetActive(true);
-
-        volumeSlider.value = GameManager.AudioManager.masterVolume;
 
         // Select the default button
         resumeButton.Select();
@@ -59,11 +57,6 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     public void Resume()
     {
         GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.InGame, false, 0.1f);
-    }
-
-    public void OnVolumeSliderChange()
-    {
-        GameManager.AudioManager.masterVolume = volumeSlider.value;
     }
 
     #endregion

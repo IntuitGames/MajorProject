@@ -35,6 +35,8 @@ using System;/// <summary>
 
     [ReadOnly]
     public float collectibleScore;
+    [ReadOnly]
+    public int currentJelly;
 
     // TETHER
     [Header("Tether")]
@@ -66,12 +68,8 @@ using System;/// <summary>
     [Popup(new string[] { "Nothing", "Game Over", "Reload Level", "Exit Game" })]
     public string actionOnDeath = "Game Over";
     public SoundClip deathSound = new SoundClip();
-    public float maxJelly = 10;
-    public bool autoRecover = false;
-    [Range(0, 1)]
-    public float recoveryRate = 0.5f;
-    [ReadOnly]
-    public float currentJelly;
+    public int initialJelly = 10;
+    public int maxJelly = 15;
 
     // PROPERTIES
     public float distanceBetweenCharacters
@@ -80,7 +78,7 @@ using System;/// <summary>
     }
     public float jellyPercentage
     {
-        get { return currentJelly / maxJelly; }
+        get { return (float)currentJelly / (float)maxJelly; }
     }
     public float freeRadius
     {
@@ -99,6 +97,7 @@ using System;/// <summary>
     // Returns the still alive character
     public event Action<Character> OnSingleDead = delegate { };
     private bool isSingleDead;
+    private TimerPlus jellyTimer;
 
     #endregion
 
@@ -106,9 +105,13 @@ using System;/// <summary>
 
     void Start()
     {
-        currentJelly = maxJelly;
+        currentJelly = initialJelly;
+        jellyTimer = TimerPlus.Create(1, TimerPlus.Presets.Repeater, () => AddJelly(-1));
+        jellyTimer.Stop();
 
         // Subscribe to tether events
+        GameManager.TetherManager.OnDisconnected += (joint) => jellyTimer.Restart();
+        GameManager.TetherManager.OnReconnected += (joint) => jellyTimer.Stop();
         GameManager.TetherManager.OnDisconnected += Weaken;
         GameManager.TetherManager.OnReconnected += Unweaken;
 
@@ -119,19 +122,8 @@ using System;/// <summary>
     public override void ManagerOnLevelLoad()
     {
         collectibleScore = 0;
-        currentJelly = maxJelly;
+        currentJelly = initialJelly;
         isSingleDead = false;
-    }
-
-    void Update()
-    {
-        if (isWeakened)
-            AddJelly(-Time.deltaTime);
-        else if (autoRecover)
-            AddJelly(Time.deltaTime * recoveryRate);
-
-        if (currentJelly <= 0)
-            DeathAction();
     }
 
     void OnDestroy()
@@ -184,8 +176,11 @@ using System;/// <summary>
             ModeManager.RequestGameModeChange(global::ModeManager.GameMode.GameOver, true, 0);
     }
 
-    public void AddJelly(float value)
+    public void AddJelly(int value)
     {
         currentJelly = Mathf.Clamp(currentJelly + value, 0, maxJelly);
+
+        if (currentJelly == 0)
+            DeathAction();
     }
 }
