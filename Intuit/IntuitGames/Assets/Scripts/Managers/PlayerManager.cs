@@ -64,6 +64,8 @@ using System;/// <summary>
     public float weakenedJumpForceMulti = 0.6f;
     [Range(0, 1)]
     public float weakenedDashPowerMulti = 0.5f;
+    [Range(0, 5)]
+    public float weakenedDashLengthMulti = 2;
     public bool reconnectOnTouch = true;
     [Popup(new string[] { "Nothing", "Game Over", "Reload Level", "Exit Game" })]
     public string actionOnDeath = "Game Over";

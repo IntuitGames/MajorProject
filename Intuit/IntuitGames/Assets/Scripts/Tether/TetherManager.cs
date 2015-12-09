@@ -540,6 +540,28 @@ public class TetherManager : Manager
         OnReconnected(reconnectJoint);
     }
 
+    public bool GetClosestCollidingJoint(bool isStartPoint, out TetherJoint joint, out float distance)
+    {
+        joint = null; distance = 0;
+
+        if (collidingJointCount <= 0) return false;
+
+        if (isStartPoint)
+        {
+            joint = joints.FirstOrDefault(x => x.isColliding);
+            for (int i = 0; i < joint.index; i++)
+                distance += tetherVisuals[i].distanceBetweenObjects;
+            return joint;
+        }
+        else
+        {
+            joint = joints.LastOrDefault(x => x.isColliding);
+            for (int i = jointCount; i > joint.index; i--)
+                distance += tetherVisuals[i].distanceBetweenObjects;
+            return joint;
+        }
+    }
+
     private void ExperimentalStickResist(TetherJoint joint, int index)
     {
         Vector3 targetDirection = joint.transform.position - Vector3.Lerp(startPoint.position, endPoint.position, 0.5f).normalized * jointSpeed * Time.fixedDeltaTime;

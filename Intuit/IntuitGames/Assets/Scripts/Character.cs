@@ -17,7 +17,6 @@ public class Character : MonoBehaviour, IBounce
     public Animator animatorComp;
     public CharacterAudio audioDataComp;
     public SkinnedMeshRenderer bodyRendererComp;
-    public SkinnedMeshRenderer maskRendererComp;
 
     // BASIC STATS
     [SerializeField, Popup(new string[2] { "Player 1", "Player 2" }, OverrideName = "Player"), Header("Basic")]
@@ -73,8 +72,8 @@ public class Character : MonoBehaviour, IBounce
     private bool _canDash = true;
     [SerializeField]
     private float _dashPower = 30;
-    [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3)]
-    public float dashLength = 0.5f;
+    [Tooltip("In seconds (Will try to make it distance soon)"), Range(0, 3), SerializeField]
+    private float _dashLength = 0.5f;
     [Range(0, 10)]
     public float dashHeight = 3;
     private TimerPlus dashTimer;
@@ -113,6 +112,10 @@ public class Character : MonoBehaviour, IBounce
     {
         get { return _canSlide && !isSliding; }
     }
+    public float dashLength
+    {
+        get { return isWeakened ? _dashLength * GameManager.PlayerManager.weakenedDashLengthMulti : _dashLength; }
+    }
 
     // HEAVY
     [Header("Heavy"), SerializeField]
@@ -150,11 +153,11 @@ public class Character : MonoBehaviour, IBounce
     }
     public bool canHeavy
     {
-        get { return _canHeavy && !isHeavyTransitioning; }
+        get { return _canHeavy && !isHeavyTransitioning && !isWeakened; }
     }
     public bool canUnheavy
     {
-        get { return !isHeavyTransitioning && isGrounded; }
+        get { return !isHeavyTransitioning && isGrounded || !isHeavyTransitioning && isSuspended; }
     }
 
     // BOUNCE
@@ -271,7 +274,7 @@ public class Character : MonoBehaviour, IBounce
     public bool isHeavyHighJump { get; set; }
     public bool isFreeze
     {
-        get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying; }
+        get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying || isHeavy && isSuspended; }
     }
     public bool isKnockedBack { get; set; }
     public bool isSuspended
@@ -444,7 +447,7 @@ public class Character : MonoBehaviour, IBounce
             AddConstrainedMovement(targetVelocity * delta);
 
         // Apply gravity
-        if (!isFreeze || !isSuspended)
+        if (!isFreeze && !isSuspended)
             rigidbodyComp.AddForce(new Vector3(0, gravity, 0), ForceMode.Force);
 
         // Apply constraining force
@@ -485,9 +488,15 @@ public class Character : MonoBehaviour, IBounce
         }
         else if (isDashJumping) // Rise during dash jump with slight forward and side control.
         {
-            targetVelocity.x = transform.forward.x * dashJumpPower + (direction.x * baseMoveSpeed / 4);
-            targetVelocity.z = transform.forward.z * dashJumpPower + (direction.y * baseMoveSpeed / 4);
+            targetVelocity.x = transform.forward.x * dashJumpPower + (direction.x * baseMoveSpeed * 1.5f);
+            targetVelocity.z = transform.forward.z * dashJumpPower + (direction.y * baseMoveSpeed * 1.5f);
             targetVelocity.y = dashJumpPower;
+        }
+        else if (isWeakened)
+        {
+            targetVelocity.x = transform.forward.x * dashPower + (direction.x * baseMoveSpeed / 4);
+            targetVelocity.z = transform.forward.z * dashPower + (direction.y * baseMoveSpeed / 4);
+            targetVelocity.y = 0;
         }
         else
         {
@@ -521,12 +530,12 @@ public class Character : MonoBehaviour, IBounce
         if (p1 != isPlayerOne || isFreeze || isSliding) return;
 
         // Enter the dash jump state
-        if (isDashing && isPressed && !isDashJumping && canDashJump && !dashFlag)
+        if (isDashing && isPressed && !isDashJumping && canDashJump && !dashFlag && !isWeakened)
         {
             // Raise flag so this can only happen once until grounded
             jumpDashFlag = true;
             isDashJumping = true;
-            dashTimer.ModifyValue(dashJumpLength, true);
+            dashTimer.SetValue(dashJumpLength, true);
             return;
         }
 
@@ -605,12 +614,15 @@ public class Character : MonoBehaviour, IBounce
         {
             audioDataComp.PlayHeavyAudio(false);
             isHeavy = false;
+
+            if (isSuspended)
+                AddConstrainedForce(Vector3.up * heavyJumpPower * 5, ForceMode.Impulse);
         }
     }
 
     public void Sprint(bool p1, bool isPressed)
     {
-        if (p1 != isPlayerOne) return;
+        if (p1 != isPlayerOne || isWeakened) return;
 
         isSprinting = isPressed && targetVelocity.magnitude != 0 && !isWeakened;
     }
@@ -668,11 +680,26 @@ public class Character : MonoBehaviour, IBounce
     {
         float length = GameManager.TetherManager.tetherLength;
 
-        if (GameManager.TetherManager.disconnected || length < GameManager.PlayerManager.freeRadius || isHeavy && !GetPartner().isHeavy) return;
+        if (GameManager.TetherManager.disconnected || length < GameManager.PlayerManager.freeRadius || isHeavy) return;
 
-        Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne);
-        float constrainMulti = length.Normalize(GameManager.PlayerManager.freeRadius, GameManager.PlayerManager.maxRadius, 0, 1000);
-        rigidbodyComp.AddForce(direction * constrainMulti * GameManager.PlayerManager.constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
+        if (!isSuspended)
+        {
+            if (!GetPartner().isHeavy || GetPartner().isSuspended) return;
+
+            Vector3 direction = GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne);
+            float constrainMulti = length.Normalize(GameManager.PlayerManager.freeRadius, GameManager.PlayerManager.maxRadius, 0, 1000);
+            rigidbodyComp.AddForce(direction * constrainMulti * GameManager.PlayerManager.constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
+        }
+        else
+        {
+            TetherJoint joint; float distance;
+            if (GameManager.TetherManager.GetClosestCollidingJoint(isPlayerOne, out joint, out distance))
+            {
+                Vector3 targetPos = joint.transform.position + (Vector3.down * (GameManager.PlayerManager.maxRadius + 1 - distance));
+                Vector3 direction = (targetPos - transform.position) * 100;
+                rigidbodyComp.AddForce(direction * GameManager.PlayerManager.constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
+            }
+        }
     }
 
     // Rigidbody.AddForce() with constraining
@@ -706,6 +733,8 @@ public class Character : MonoBehaviour, IBounce
         }
         else if (isDashing)
         {
+            if (GetPartner().isSuspended) return;
+
             if (!GetPartner().isHeavy && length > GameManager.PlayerManager.maxRadius)
                 rigidbodyComp.MovePosition(transform.position + movement);
             else
@@ -719,6 +748,12 @@ public class Character : MonoBehaviour, IBounce
             if (isGrounded)
                 direction.y = direction.magnitude / 10;
             AddConstrainedForce(direction * (GameManager.PlayerManager.yankingDashForce / 4), ForceMode.Impulse);
+        }
+        else if (GetPartner().isSuspended)
+        {
+            Vector3 projectedPosition = transform.position + movement;
+            if (Vector3.Distance(projectedPosition, GetPartnerPosition()) < Vector3.Distance(transform.position, GetPartnerPosition()))
+                rigidbodyComp.MovePosition(projectedPosition);
         }
         else
         {
