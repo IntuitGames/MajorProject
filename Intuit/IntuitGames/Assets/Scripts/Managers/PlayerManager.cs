@@ -121,6 +121,9 @@ using System;/// <summary>
 
     public override void ManagerOnLevelLoad()
     {
+        jellyTimer = TimerPlus.Create(1, TimerPlus.Presets.Repeater, () => AddJelly(-1));
+        jellyTimer.Stop();
+
         collectibleScore = 0;
         currentJelly = initialJelly;
         isSingleDead = false;
@@ -129,6 +132,9 @@ using System;/// <summary>
     void OnDestroy()
     {
         deathSound.Dispose();
+
+        if (jellyTimer != null)
+            jellyTimer.Dispose();
     }
 
     #endregion

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;
-using UnityEngine.EventSystems;public class GameOver : BaseUI{
+using UnityEngine.EventSystems;
+using CustomExtensions;public class GameOver : BaseUI{
     [Header("Components")]
     public Image backgroundPanel;
     public Button restartButton;
@@ -39,7 +40,7 @@ using UnityEngine.EventSystems;public class GameOver : BaseUI{
         backgroundPanel.gameObject.SetActive(true);
 
         // Select the default button
-        restartButton.Select();
+        StartCoroutine(Unity.NextFrame(restartButton.Select));
     }
 
     protected override void Hide()

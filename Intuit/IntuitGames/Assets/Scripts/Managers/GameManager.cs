@@ -13,6 +13,8 @@ using CustomExtensions;/// <summary>
     public static PlayerManager PlayerManager;
     public static CameraManager CameraManager;
 
+    public static Fader ScreenFader;
+
     // Events
     public static event System.Action OnApplicationExit = delegate { };
 
@@ -53,6 +55,8 @@ using CustomExtensions;/// <summary>
 
         // Ensure all manager references are set
         SetManagerReferences();
+        if (!ScreenFader)
+            ScreenFader = GameObject.FindObjectOfType<Fader>();
 
         // Get resolution and quality settings data
         Screen.fullScreen = PlayerPrefs.GetInt("IsFullScreen", Screen.fullScreen ? 1 : 0) == 1;
@@ -74,6 +78,10 @@ using CustomExtensions;/// <summary>
 
         // Sub-manager awake calls must be after references are set
         InvokeManagerAwake();
+
+        // Fade in screen
+        ScreenFader.ActivatePanel(true, 1);
+        StartCoroutine(ScreenFader.FadeIn(0));
     }
 
     // Update all the timers
@@ -85,9 +93,14 @@ using CustomExtensions;/// <summary>
     // Disable timers that should only exist on one level
     void OnLevelWasLoaded(int level)
     {
+        if (this != gameManagerInstance) return;
+
         TimerPlus.DisposeAllOnLoad();
 
         InvokeManagerOnLevelLoad();
+
+        ScreenFader.ActivatePanel(true, 1);
+        TimerPlus.Create(5, TimerPlus.Presets.BackgroundOneTimeUse, () => StartCoroutine(ScreenFader.FadeIn(0)));
     }
 
     // Disable timers that should only exist on one level
@@ -173,27 +186,38 @@ using CustomExtensions;/// <summary>
     {
         OnApplicationExit();
 
+        ScreenFader.ActivatePanel(true, 0);
 #if !UNITY_EDITOR
-        Application.Quit();
+        gameManagerInstance.StartCoroutine(ScreenFader.FadeOut(0, 0, () =>
+        Application.Quit()));
 #else
-        PlayerPrefs.Save();
-        UnityEditor.EditorApplication.isPlaying = false;
+        gameManagerInstance.StartCoroutine(ScreenFader.FadeOut(0, 0, () =>
+            {
+                PlayerPrefs.Save();
+                UnityEditor.EditorApplication.isPlaying = false;
+            }));
 #endif
     }
 
     public static void ReloadLevel()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        ScreenFader.ActivatePanel(true, 0);
+        gameManagerInstance.StartCoroutine(ScreenFader.FadeOut(0, 0, () =>
+        Application.LoadLevel(Application.loadedLevel)));
     }
 
     public static void LoadLevel(int number)
     {
-        Application.LoadLevel(number);
+        ScreenFader.ActivatePanel(true, 0);
+        gameManagerInstance.StartCoroutine(ScreenFader.FadeOut(0, 0, () =>
+        Application.LoadLevel(number)));
     }
 
     public static void LoadMainMenu()
     {
-        Application.LoadLevel(0);
+        ScreenFader.ActivatePanel(true, 0);
+        gameManagerInstance.StartCoroutine(ScreenFader.FadeOut(0, 0, () =>
+        Application.LoadLevel(0)));
     }
 
     public static void SetResolution(int requestedIndex, bool isFull)
