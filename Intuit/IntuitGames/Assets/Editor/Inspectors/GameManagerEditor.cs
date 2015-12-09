@@ -35,6 +35,8 @@ public class GameManagerEditor : Editor
             EditorGUI.indentLevel--;
         }
 
+        GameManager.ScreenFader = EditorGUILayout.ObjectField("Screen Fader", GameManager.ScreenFader, typeof(Fader), true) as Fader;
+
         if (GUILayout.Button("Clear Player Prefs"))
         {
             PlayerPrefs.DeleteAll();

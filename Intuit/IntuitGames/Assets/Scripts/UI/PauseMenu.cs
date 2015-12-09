@@ -27,7 +27,7 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
         backgroundPanel.gameObject.SetActive(true);
 
         // Select the default button
-        resumeButton.Select();
+        StartCoroutine(Unity.NextFrame(resumeButton.Select));
     }
 
     protected override void Hide()
