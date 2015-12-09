@@ -28871,6 +28871,7 @@ MonoBehaviour:
   followCamera: {fileID: 11484838}
   backgroundMusic: {fileID: 11414714}
   audioSourceComp: {fileID: 8244056}
+  unsnapCameraModes: 2
   isDynamic: 0
   dynamicZoom: 1
   minCamZoomDistance: 4

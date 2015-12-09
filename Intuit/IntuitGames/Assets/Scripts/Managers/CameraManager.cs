@@ -7,6 +7,8 @@ using CustomExtensions;/// <summary>
     public SmoothCameraFollow followCamera;
     public SoundSource backgroundMusic;
     public AudioSource audioSourceComp;
+    [EnumFlags]
+    public ModeManager.GameMode unsnapCameraModes;
 
     [Header("Dynamic Zoom"), ReadOnly]
     public bool isDynamic;
@@ -57,12 +59,18 @@ using CustomExtensions;/// <summary>
         if (!followCamera) followCamera = mainCamera.GetComponent<SmoothCameraFollow>();
         if (!backgroundMusic) backgroundMusic = mainCamera.GetComponent<SoundSource>();
         if (!audioSourceComp) audioSourceComp = mainCamera.GetComponent<AudioSource>();
+
+        if (!unsnapCameraModes.IsFlagSet(GameManager.ModeManager.currentGameMode))
+            followCamera.enabled = true;
+        else
+            followCamera.enabled = false;
     }    void Start()
     {
         // Subscribe to tether events
         GameManager.TetherManager.OnDisconnected += UnhingeCamera;
         GameManager.TetherManager.OnReconnected += StabalizeCamera;
         GameManager.PlayerManager.OnSingleDead += OnSingleDead;
+        GameManager.ModeManager.OnGameModeChanged += OnGameModeChange;
     }
 
     void Update()
@@ -77,6 +85,16 @@ using CustomExtensions;/// <summary>
         if (isDynamic && dynamicFOV)
             followCamera.targetFOV = GameManager.PlayerManager.distanceBetweenCharacters
                 .Normalize(minCamProximity, maxCamProximity, minCamFOV, maxCamFOV);
+    }
+
+    private void OnGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
+    {
+        if (followCamera == null) return;
+
+        if (!unsnapCameraModes.IsFlagSet(newMode))
+            followCamera.enabled = true;
+        else
+            followCamera.enabled = false;
     }
 
     public void UnhingeCamera(TetherJoint brokenJoint)
