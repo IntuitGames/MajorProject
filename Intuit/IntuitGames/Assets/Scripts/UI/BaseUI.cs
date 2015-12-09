@@ -74,5 +74,20 @@ using UnityEngine.EventSystems;public abstract class BaseUI : MonoBehaviour, I
         GameManager.ExitGame();
     }
 
+    public virtual void OptionsMenu()
+    {
+        GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.Options, false, 0.25f);
+    }
+
+    public virtual void LevelSelectMenu()
+    {
+        GameManager.ModeManager.RequestGameModeChange(ModeManager.GameMode.LevelSelect, false, 0.25f);
+    }
+
+    public virtual void ReturnToLastMenu()
+    {
+        GameManager.ModeManager.RequestGameModeChange(GameManager.ModeManager.previousGameMode, false, 0.25f);
+    }
+
     #endregion
 }

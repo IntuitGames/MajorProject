@@ -4,7 +4,7 @@ using CustomExtensions;/// <summary>
 /// Manages the current mode of the game.
 /// </summary>public class ModeManager : Manager{
     [System.Flags]
-    public enum GameMode { None = 1, MainMenu = 2, PauseMenu = 4, InGame = 8, GameOver = 16, LevelComplete = 32, Loading = 64 };
+    public enum GameMode { None = 1, MainMenu = 2, PauseMenu = 4, InGame = 8, GameOver = 16, Options = 32, LevelSelect = 64 };
 
     public GameMode initialGameMode = GameMode.InGame;
     [System.NonSerialized]
@@ -31,6 +31,10 @@ using CustomExtensions;/// <summary>
     public float pauseTimeScale = 0;
     [Range(0, 1)]
     public float gameOverTimeScale = 0.5f;
+    [Range(0, 1)]
+    public float optionsMenuTimeScale = 0;
+    [Range(0, 1)]
+    public float levelSelectTimeScale = 0;
     public float modeChangeCooldown = 0.1f;
 
     [ReadOnly]
@@ -92,6 +96,10 @@ using CustomExtensions;/// <summary>
             Time.timeScale = pauseTimeScale;
         else if (newMode == GameMode.GameOver)
             Time.timeScale = gameOverTimeScale;
+        else if (newMode == GameMode.Options)
+            Time.timeScale = optionsMenuTimeScale;
+        else if (newMode == GameMode.LevelSelect)
+            Time.timeScale = levelSelectTimeScale;
         else
             Time.timeScale = normalTimeScale;
     }}
