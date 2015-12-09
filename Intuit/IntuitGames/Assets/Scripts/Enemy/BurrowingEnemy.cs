@@ -132,6 +132,11 @@ public class BurrowingEnemy : Enemy {
         fsm.SendAggressionChange(becomeAggro);
     }
 
+    public override Vector3 GetVelocity()
+    {
+        return agentComp.velocity;
+    }
+
     public bool TranslateModel(bool up)
     {
         if (up)

@@ -4,6 +4,7 @@ using System;
 
 public class BiteController : Trigger {
 
+    public Enemy parentEnemy;
     public Animator animatorComp;
     private bool triggerEnabled = false;
     private bool coroutineRunning = false;
@@ -47,6 +48,7 @@ public class BiteController : Trigger {
     IEnumerator BiteEffect(float duration, float hang)
     {
         coroutineRunning = true;
+        parentEnemy.audioDataComp.PlayAttackAudio();
         SpriteRenderer renderer = animatorComp.GetComponent<SpriteRenderer>();
         Color start = renderer.color;
         Color end = start;
@@ -58,7 +60,7 @@ public class BiteController : Trigger {
         }
         renderer.color = end;
         animatorComp.SetBool("startBite", true);
-        triggerEnabled = true;
+        triggerEnabled = true;        
         yield return new WaitForSeconds(hang);  //After holding the bite trigger there for a time, reverse the proecess
         triggerEnabled = false;        
         start = end;

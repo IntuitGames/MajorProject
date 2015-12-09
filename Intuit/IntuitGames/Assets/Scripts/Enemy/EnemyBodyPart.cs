@@ -24,6 +24,7 @@ public class EnemyBodyPart : Trigger{
     protected override void OnTrigger(GameObject triggerObject)
     {
         Vector3 knockbackdir = (contact.point - transform.position).normalized;
+        parentEnemy.audioDataComp.PlayCollideAudio();
         triggerObject.GetComponent<Character>().Knockback(knockbackdir);
     }
 }

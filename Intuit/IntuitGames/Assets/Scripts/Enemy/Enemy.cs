@@ -6,6 +6,7 @@ public abstract class Enemy : MonoBehaviour
     public bool showStateDebugs = false;
     [Header("Base Components")]
     public Animator animatorComp;
+    public EnemyAudio audioDataComp;
     [Header("Aggressive")]
     public EnemyAggro aggroHandler;
 
@@ -48,8 +49,10 @@ public abstract class Enemy : MonoBehaviour
     {
         riggedModel.SetActive(false);
         deathParticle.Play();
+        audioDataComp.PlayDeathAudio();
         if (swapModel)
             deathModel.SetActive(true);
+        deadMove = false;
     }
 
     protected virtual void UpdateAnimator()
@@ -59,6 +62,7 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void OnDeath(bool swapModel)
     {
+        audioDataComp.PlayVocaliseAudio();
         animatorComp.SetTrigger("dead");
         isDead = true;
         this.swapModel = swapModel;
@@ -69,6 +73,8 @@ public abstract class Enemy : MonoBehaviour
         this.gameObject.SetActive(false);
         //Destroy(this.gameObject, 5f);
     }
+
+    public abstract Vector3 GetVelocity();
 
     public abstract void SendAggroMessage(bool becomeAggro);
     

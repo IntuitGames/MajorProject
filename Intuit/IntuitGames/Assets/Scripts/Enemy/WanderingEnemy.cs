@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using CustomExtensions;
+using System;
 
 // Main functionality for the Totem and Softhead Enemies
 [RequireComponent(typeof(NavMeshAgent))]
@@ -86,6 +87,11 @@ public class WanderingEnemy : Enemy {
             Gizmos.DrawWireCube(agent.destination, Vector3.one);
         }
 
+    }
+
+    public override Vector3 GetVelocity()
+    {
+        return agent.velocity;
     }
 
     public void StopAgent()
