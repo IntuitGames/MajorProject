@@ -533,6 +533,10 @@ Prefab:
       propertyPath: m_Name
       value: SM_Fence (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 1eba4c9e767acb44890a0f3be5c45cf2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 274ba2988a6a04d4aa5145bd1b4010ee, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1eba4c9e767acb44890a0f3be5c45cf2, type: 3}
   m_IsPrefabParent: 0
@@ -3219,6 +3223,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 5.19999886
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 1eba4c9e767acb44890a0f3be5c45cf2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 274ba2988a6a04d4aa5145bd1b4010ee, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1eba4c9e767acb44890a0f3be5c45cf2, type: 3}
   m_IsPrefabParent: 0
