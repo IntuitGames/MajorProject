@@ -122,7 +122,7 @@ using System;/// <summary>
     public override void ManagerOnLevelLoad()
     {
         collectibleScore = 0;
-        currentJelly = maxJelly;
+        currentJelly = initialJelly;
         isSingleDead = false;
     }
 

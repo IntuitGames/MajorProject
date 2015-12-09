@@ -36167,7 +36167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: .705882311, g: .705882311, b: .705882311, a: 1}
   m_Sprite: {fileID: 21300000, guid: 6c7cc1677722e4845873dcab50c01661, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -43055,13 +43055,13 @@ RectTransform:
   m_GameObject: {fileID: 118686}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.20000005, y: 1.20000005, z: 1.20000005}
   m_Children: []
   m_Father: {fileID: 22424828}
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 115}
   m_SizeDelta: {x: 512, y: 256}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22474932
