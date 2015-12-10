@@ -203,6 +203,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 420232}
+  - 114: {fileID: 11462030}
   m_Layer: 0
   m_Name: BurrowingEnemyDeath
   m_TagString: Untagged
@@ -255,6 +256,7 @@ GameObject:
   - 4: {fileID: 447200}
   - 212: {fileID: 21213036}
   - 95: {fileID: 9520652}
+  - 114: {fileID: 11409080}
   m_Layer: 0
   m_Name: MouthSprite
   m_TagString: Untagged
@@ -536,6 +538,8 @@ GameObject:
   - 4: {fileID: 483196}
   - 195: {fileID: 19530696}
   - 114: {fileID: 11470220}
+  - 82: {fileID: 8253788}
+  - 114: {fileID: 11487232}
   m_Layer: 0
   m_Name: BurrowingEnemy
   m_TagString: Untagged
@@ -555,6 +559,23 @@ GameObject:
   - 23: {fileID: 2382068}
   m_Layer: 0
   m_Name: BurrowingEnemyIntestines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &175902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 461342}
+  - 114: {fileID: 11466020}
+  - 65: {fileID: 6555470}
+  m_Layer: 0
+  m_Name: StompController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -859,7 +880,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 150654}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: -3.5999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 474716}
@@ -955,6 +976,18 @@ Transform:
   - {fileID: 447240}
   m_Father: {fileID: 474716}
   m_RootOrder: 0
+--- !u!4 &461342
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175902}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 483196}
+  m_RootOrder: 5
 --- !u!4 &463344
 Transform:
   m_ObjectHideFlags: 1
@@ -1104,7 +1137,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 125.330002, y: 1.42269389e-18, z: 28.5100002}
+  m_LocalPosition: {x: 127.20681, y: -7.21313488e-18, z: 23.9491043}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 447104}
@@ -1112,6 +1145,7 @@ Transform:
   - {fileID: 404008}
   - {fileID: 436610}
   - {fileID: 490772}
+  - {fileID: 461342}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &485676
@@ -1536,8 +1570,89 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 2, z: 1}
+  m_Size: {x: 3, y: 2.79999995, z: 1}
   m_Center: {x: 0, y: 2, z: 1.5}
+--- !u!65 &6555470
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175902}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6, y: 10, z: 6}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &8253788
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169976}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!95 &9520652
 Animator:
   serializedVersion: 3
@@ -1589,6 +1704,43 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11409080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690a6c0c530a9474dac9820ca24da9d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnFootStep:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11487232}
+        m_MethodName: PlayAttackAudio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: CallBackRelay+UnityIntEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnSelect:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: CallBackRelay+UnityEventDataEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: CallBackRelay+UnityEventDataEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &11430808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1750,6 +1902,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyAggro: {fileID: 11435472}
+--- !u!114 &11462030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 116340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf86cc41fc85d514ab9ab456ee25b02f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentEnemy: {fileID: 11470220}
+--- !u!114 &11466020
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33511c7bcd86e5c4298e29c5c48697d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderComp: {fileID: 6555470}
+  proximityTimer:
+    Length: 0
+    IsPlaying: 0
+    AutoReset: 0
+    IsPersistent: 0
+    DisableOnLoad: 0
+    TimeScaled: 0
+    MinLength: 0
+    MaxLength: 0
+  triggerType: 0
+  volumeType: 0
+  proximityDistance: 1
+  proximityCheckFrequency: 1
+  triggerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  isMultiTrigger: 1
+  hasBeenTriggered: 0
+  onTriggeredEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  parentEnemy: {fileID: 11470220}
+  playersEntered: []
 --- !u!114 &11470220
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1763,7 +1964,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showStateDebugs: 1
   animatorComp: {fileID: 9571694}
-  aggroHandler: {fileID: 0}
+  audioDataComp: {fileID: 11487232}
+  aggroHandler: {fileID: 11435472}
   riggedModel: {fileID: 150654}
   deathModel: {fileID: 116340}
   deathParticle: {fileID: 19814980}
@@ -1774,13 +1976,73 @@ MonoBehaviour:
   biteComp: {fileID: 11430808}
   dizzyStars: {fileID: 11434790}
   burrowingEffect: {fileID: 19833540}
+  stompController: {fileID: 11466020}
   startLocation: {x: 0, y: 0, z: 0}
   modelStartLocation: {x: 0, y: 0, z: 0}
+  idleSpeed: 2
+  idleDistanceBuffer: 1
   burrowRate: 5
   chasingSpeed: 6
-  chasingDistanceBuffer: 5
-  chargeThroughDist: 6
-  stunDuration: 3
+  chasingDistanceBuffer: 10
+  chargingSpeed: 10
+  chargeThroughDist: 10
+  chargeDistanceBuffer: 2
+  stunDuration: 5
+--- !u!114 &11487232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8da0cb54d070d49a8002a9c5d74fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  enemy: {fileID: 0}
+  audioSource: {fileID: 0}
+  feetTransform: {fileID: 0}
+  footstep:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: eddf6a6cb2b09364fb60ce96cc01761d, type: 2}
+  vocalise:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: ad790c1ed89324f4fbc91a1fe497f853, type: 2}
+  attack:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: fcec218bff3272842a9cf4e07c35c8cd, type: 2}
+  death:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 83f195b181ddbcd49ba8327bf56aeb93, type: 2}
+  collide:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 23800f111170a1f478e8448d678eb598, type: 2}
 --- !u!135 &13541180
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -1803,7 +2065,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 11
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &13683406
 CapsuleCollider:

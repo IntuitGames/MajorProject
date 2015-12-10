@@ -228,7 +228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &128230
 GameObject:
   m_ObjectHideFlags: 1
@@ -1384,9 +1384,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 141056}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.69000006, z: 1.45000005}
-  m_LocalScale: {x: .449999988, y: .600000024, z: 0}
+  m_LocalRotation: {x: .116948754, y: -3.83316534e-09, z: 1.37052547e-08, w: .993137956}
+  m_LocalPosition: {x: 1.47745439e-07, y: 1.38000357, z: .88699913}
+  m_LocalScale: {x: .152145401, y: .152145401, z: 0}
   m_Children: []
   m_Father: {fileID: 469682}
   m_RootOrder: 0
@@ -1975,8 +1975,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 5.5, z: 1}
-  m_Center: {x: 0, y: 3, z: 1.5}
+  m_Size: {x: 2, y: 2, z: 1}
+  m_Center: {x: 0, y: 1, z: 1.5}
 --- !u!82 &8287156
 AudioSource:
   m_ObjectHideFlags: 1
@@ -2072,7 +2072,7 @@ Animator:
   m_GameObject: {fileID: 146356}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8216d5efd543f094b85d4828c889b445, type: 3}
-  m_Controller: {fileID: 9100000, guid: bf0e38835e9c0644bbd9096d4305d5f1, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6feb6694a0b901a4f95e5519eced1dda, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2167,7 +2167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ecd9ebc70e89840bb24c3c7d9655e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showStateDebugs: 0
+  showStateDebugs: 1
   animatorComp: {fileID: 9522818}
   audioDataComp: {fileID: 11478102}
   aggroHandler: {fileID: 11405512}
@@ -2288,7 +2288,7 @@ MonoBehaviour:
     player: 2
     type: 0
     group: 3
-    volume: 1
+    volume: .5
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: fd8600d3ce0f1c745ae25cf7b11578cd, type: 2}
@@ -3776,7 +3776,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 843503234ed529347a88c8feba7bb3f4, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 843503234ed529347a88c8feba7bb3f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
 --- !u!1001 &100100000
 Prefab:

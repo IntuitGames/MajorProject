@@ -740,7 +740,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 135.479996, y: -2.04973089e-17, z: 27.5387001}
+  m_LocalPosition: {x: 135.137512, y: -9.18513512e-18, z: 24.4819698}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 434920}
@@ -884,7 +884,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 175190}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -2, z: .129999995}
+  m_LocalPosition: {x: -0, y: -2.15400004, z: .0260000005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 489462}
@@ -1113,8 +1113,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187914}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.34899998, z: 1.59500003}
-  m_LocalScale: {x: .300000012, y: .300000012, z: 0}
+  m_LocalPosition: {x: -0, y: 2.07500005, z: 1.25699997}
+  m_LocalScale: {x: .200000003, y: .200000003, z: 0}
   m_Children: []
   m_Father: {fileID: 444766}
   m_RootOrder: 0
@@ -1583,8 +1583,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 4, z: 1}
-  m_Center: {x: 0, y: 3, z: 1.5}
+  m_Size: {x: 2.20000005, y: 2.20000005, z: 1}
+  m_Center: {x: 0, y: 2.79999995, z: 1.5}
 --- !u!82 &8278062
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1663,7 +1663,7 @@ Animator:
   m_GameObject: {fileID: 105988}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d761bb0d0e9dd10498db96624fb36575, type: 3}
-  m_Controller: {fileID: 9100000, guid: 2404bc44756e69849acec3ba3f33c27d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 560352d60ab52c8469c8c4ed5cfa9ef5, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3288,7 +3288,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 843503234ed529347a88c8feba7bb3f4, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 843503234ed529347a88c8feba7bb3f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
 --- !u!1001 &100100000
 Prefab:
