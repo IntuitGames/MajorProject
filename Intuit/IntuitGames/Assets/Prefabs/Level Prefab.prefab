@@ -13458,6 +13458,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -37092,7 +37093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: .666666687}
   m_Sprite: {fileID: 21300000, guid: 85f80317d1b2cb347a2523fb18df1004, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
