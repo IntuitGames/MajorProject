@@ -31,8 +31,8 @@ public class InputManager : Manager
 
     // Input Booleans
     [System.NonSerialized] public InputData jumpData = new InputData(jumpStr);
-    [System.NonSerialized] public InputData dashData = new InputData(dashStr);
-    [System.NonSerialized] public InputData heavyData = new InputData(heavyStr);
+    [System.NonSerialized] public InputData dashData = new InputData(dashStr, true);
+    [System.NonSerialized] public InputData heavyData = new InputData(heavyStr, true);
     [System.NonSerialized] public InputData pauseData = new InputData(pauseStr);
     [System.NonSerialized] public InputData unpauseData = new InputData(unpauseStr);
     [System.NonSerialized] public InputData sprintData = new InputData(sprintStr);
@@ -71,6 +71,9 @@ public class InputManager : Manager
     public UpdateTypes pauseUpdates = UpdateTypes.Update;
     public UpdateTypes sprintUpdates = UpdateTypes.Update;
     public UpdateTypes waveUpdates = UpdateTypes.Update;
+
+    [Range(0, 1)]
+    public float triggerThreshold = 0.1f;
 
     // Quick-access Properties
     public float movementDelta { get { return GetDelta(movementUpdates); } }
@@ -269,23 +272,63 @@ public class InputManager : Manager
         public bool p1Down, p2Down;
         public bool p1Hold, p2Hold;
         public bool p1Up, p2Up;
+        public bool checkAxis;
 
-        public InputData(string inputStr)
+        private bool p1DownFlag, p2DownFlag;
+        private bool p1UpFlag, p2UpFlag;
+
+        public InputData(string inputStr, bool triggerAxis = false)
         {
             actionStr = inputStr;
+            checkAxis = triggerAxis;
+
             p1Down = false; p2Down = false;
             p1Hold = false; p2Hold = false;
             p1Up = false; p2Up = false;
+            p1DownFlag = true; p2DownFlag = true;
+            p1UpFlag = false; p2UpFlag = false;
         }
 
         public void Update()
         {
-            if (Input.GetButtonDown(actionStr + player1Str)) p1Down = true;
-            if (Input.GetButtonDown(actionStr + player2Str)) p2Down = true;
-            p1Hold = Input.GetButton(actionStr + player1Str);
-            p2Hold = Input.GetButton(actionStr + player2Str);
-            if (Input.GetButtonUp(actionStr + player1Str)) p1Up = true;
-            if (Input.GetButtonUp(actionStr + player2Str)) p2Up = true;
+            if (!checkAxis)
+            {
+                if (Input.GetButtonDown(actionStr + player1Str)) p1Down = true;
+                if (Input.GetButtonDown(actionStr + player2Str)) p2Down = true;
+                p1Hold = Input.GetButton(actionStr + player1Str);
+                p2Hold = Input.GetButton(actionStr + player2Str);
+                if (Input.GetButtonUp(actionStr + player1Str)) p1Up = true;
+                if (Input.GetButtonUp(actionStr + player2Str)) p2Up = true;
+            }
+            else
+            {
+                if (p1DownFlag && Input.GetAxis(actionStr + player1Str) > GameManager.InputManager.triggerThreshold
+                    || Input.GetButtonDown(actionStr + player1Str))
+                {
+                    p1Down = true; p1DownFlag = false; p1UpFlag = true;
+                }
+
+                if (p2DownFlag && Input.GetAxis(actionStr + player2Str) > GameManager.InputManager.triggerThreshold
+                    || Input.GetButtonDown(actionStr + player2Str))
+                {
+                    p2Down = true; p2DownFlag = false; p2UpFlag = true;
+                }
+
+                p1Hold = Input.GetButton(actionStr + player1Str) || Input.GetAxis(actionStr + player1Str) > GameManager.InputManager.triggerThreshold;
+                p2Hold = Input.GetButton(actionStr + player2Str) || Input.GetAxis(actionStr + player2Str) > GameManager.InputManager.triggerThreshold;
+
+                if (p1UpFlag && Input.GetAxis(actionStr + player1Str) <= GameManager.InputManager.triggerThreshold
+                    || Input.GetButtonUp(actionStr + player1Str))
+                {
+                    p1Up = true; p1UpFlag = false; p1UpFlag = true;
+                }
+
+                if (p2UpFlag && Input.GetAxis(actionStr + player2Str) <= GameManager.InputManager.triggerThreshold
+                    || Input.GetButtonUp(actionStr + player2Str))
+                {
+                    p2Up = true; p2UpFlag = false; p2UpFlag = true;
+                }
+            }
         }
 
         // Raise specified events based on input data
