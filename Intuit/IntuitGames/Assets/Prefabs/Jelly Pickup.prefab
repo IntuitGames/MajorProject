@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 464704}
   - 114: {fileID: 11419112}
   - 136: {fileID: 13653758}
+  - 135: {fileID: 13596596}
   m_Layer: 11
   m_Name: Jelly Pickup
   m_TagString: Untagged
@@ -42,7 +43,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 127.469017, y: 1.93900001, z: 16.3349991}
+  m_LocalPosition: {x: 1.75, y: .415166855, z: .123680115}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children:
   - {fileID: 472306}
@@ -56,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 179314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.29027438, y: 2.29027486, z: 2.29027486}
   m_Children: []
   m_Father: {fileID: 464704}
   m_RootOrder: 0
@@ -70,7 +71,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: c074e6c3bfb79a441b6012f685e232fa, type: 2}
+  - {fileID: 2100000, guid: fd65433560b2a5942b16c983ba9d5d84, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -90,7 +91,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 179314}
-  m_Mesh: {fileID: 4300000, guid: 164bcc87622573d40a7bd981dd8d72a3, type: 3}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!95 &9590290
 Animator:
   serializedVersion: 3
@@ -119,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73fcf724bd919fa458f63a06f74bcad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderComp: {fileID: 13653758}
+  colliderComp: {fileID: 13596596}
   proximityTimer:
     Length: 0
     IsPlaying: 0
@@ -159,6 +160,18 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 14fd0e2a3d851e743a74753483550eea, type: 2}
+--- !u!135 &13596596
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 135118}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: .5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &13653758
 CapsuleCollider:
   m_ObjectHideFlags: 1
