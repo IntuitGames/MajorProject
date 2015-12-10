@@ -493,7 +493,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 470920}
-  - 114: {fileID: 11406364}
+  - 114: {fileID: 11423166}
   m_Layer: 0
   m_Name: SoftHeadEnemyDead
   m_TagString: Untagged
@@ -740,7 +740,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 135.137512, y: -9.18513512e-18, z: 24.4819698}
+  m_LocalPosition: {x: 140.115921, y: -8.30456924, z: 55.5764885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 434920}
@@ -1724,18 +1724,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   parentEnemy: {fileID: 11421160}
---- !u!114 &11406364
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 184536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf86cc41fc85d514ab9ab456ee25b02f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentEnemy: {fileID: 11421160}
 --- !u!114 &11418244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1815,6 +1803,18 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  parentEnemy: {fileID: 11421160}
+--- !u!114 &11423166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 184536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07fe2c6ffcc67a4f8337521f553342d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   parentEnemy: {fileID: 11421160}
 --- !u!114 &11425666
 MonoBehaviour:
