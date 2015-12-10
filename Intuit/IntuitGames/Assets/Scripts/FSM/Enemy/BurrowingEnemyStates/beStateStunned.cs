@@ -13,6 +13,7 @@ public class beStateStunned : EnemyCoreState<BurrowingEnemy> {
 
     public override void Begin(BurrowingEnemy obj)
     {
+		base.Begin (obj);
         TimerPlus.Create(obj.stunDuration, TimerPlus.Presets.OneTimeUse, () => EndStun(obj));
         onSurface = obj.fullSurface;
         obj.StopAgent();

@@ -36,7 +36,7 @@ public abstract class Enemy : MonoBehaviour
         if(isDead)
         {
             if (deadMove) DeathEffect();            
-            if (animatorComp.gameObject.activeInHierarchy && animatorComp.GetCurrentAnimatorStateInfo(0).IsTag("dead") && animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.99f)
+            if (animatorComp.gameObject.activeInHierarchy && animatorComp.GetCurrentAnimatorStateInfo(0).IsTag("dead") && animatorComp.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
             {
                 riggedModel.transform.position = Camera.main.transform.position - Vector3.one * 4; //Apparently this actually does get Exits called on colliders and triggers, yay.
                 deadMove = true;

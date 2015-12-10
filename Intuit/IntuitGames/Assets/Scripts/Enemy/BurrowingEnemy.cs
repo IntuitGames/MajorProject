@@ -97,7 +97,6 @@ public class BurrowingEnemy : Enemy {
         if (riggedModel.activeInHierarchy)
         {
             base.UpdateAnimator();
-            animatorComp.SetFloat("speed", this.agentComp.velocity.IgnoreY2().magnitude);
         }
     }
     public override void DeathEffect()
@@ -109,6 +108,7 @@ public class BurrowingEnemy : Enemy {
     public override void OnDeath(bool swapModel)
     {
         base.OnDeath(swapModel);
+		audioDataComp.footstep.TriggerCue(0);
         riggedModel.transform.localPosition = new Vector3(0, 2.5f, 0);
     }
 
@@ -140,13 +140,19 @@ public class BurrowingEnemy : Enemy {
     public bool TranslateModel(bool up)
     {
         if (up)
+		{
             if (!fullSurface)
             {
-                if (!burrowingEffect.isPlaying) burrowingEffect.Play();
+                if (!burrowingEffect.isPlaying)
+				{
+					burrowingEffect.Play();
+					audioDataComp.PlayWalkAudio();
+				}
                 riggedModel.transform.Translate(new Vector3(0,burrowRate * Time.deltaTime,0));
                 return false;
             }
             else return true;
+		}
         else
         {
             if (!fullUnderground)
@@ -157,6 +163,7 @@ public class BurrowingEnemy : Enemy {
             else
             {
                 if (burrowingEffect.isPlaying) burrowingEffect.Stop();
+				audioDataComp.footstep.TriggerCue(0);
                 return true;
             }
         }
