@@ -880,12 +880,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 150654}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.5999999, z: 0}
+  m_LocalPosition: {x: 0, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 474716}
   - {fileID: 488280}
-  - {fileID: 482876}
   m_Father: {fileID: 483196}
   m_RootOrder: 0
 --- !u!4 &447200
@@ -1118,8 +1117,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116944}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.6099999, z: 0}
+  m_LocalRotation: {x: 6.30005702e-17, y: 1.21564501e-16, z: -2.98023224e-08, w: 1}
+  m_LocalPosition: {x: 0, y: 1.43833065, z: -1.51933563}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 463344}
@@ -1128,8 +1127,8 @@ Transform:
   - {fileID: 474320}
   - {fileID: 491516}
   - {fileID: 403492}
-  m_Father: {fileID: 447104}
-  m_RootOrder: 2
+  m_Father: {fileID: 486382}
+  m_RootOrder: 3
 --- !u!4 &483196
 Transform:
   m_ObjectHideFlags: 1
@@ -1137,7 +1136,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 134.956131, y: -8.30456924, z: 52.1273308}
+  m_LocalPosition: {x: -3.57901835, y: 2.5, z: 66.2149124}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 447104}
@@ -1175,6 +1174,7 @@ Transform:
   - {fileID: 465988}
   - {fileID: 469788}
   - {fileID: 426486}
+  - {fileID: 482876}
   m_Father: {fileID: 485676}
   m_RootOrder: 1
 --- !u!4 &488280
@@ -1582,7 +1582,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6, y: 10, z: 6}
+  m_Size: {x: 8, y: 10, z: 8}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &8253788
 AudioSource:
@@ -1962,7 +1962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163488ff7b79fcc4b8cdc5e92cd8f91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showStateDebugs: 1
+  showStateDebugs: 0
   animatorComp: {fileID: 9571694}
   audioDataComp: {fileID: 11487232}
   aggroHandler: {fileID: 11435472}
@@ -2026,7 +2026,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 11400000, guid: fcec218bff3272842a9cf4e07c35c8cd, type: 2}
+    FMODAsset: {fileID: 11400000, guid: 26ab23a64ee4aab45bf8235b715873e3, type: 2}
   death:
     player: 2
     type: 0
@@ -2043,6 +2043,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 23800f111170a1f478e8448d678eb598, type: 2}
+  stunned:
+    player: 2
+    type: 0
+    group: 3
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: b1a94e9fd1f14ec42a65f63d432eba0c, type: 2}
 --- !u!135 &13541180
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -2232,7 +2240,7 @@ NavMeshAgent:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169976}
   m_Enabled: 1
-  m_Radius: 2
+  m_Radius: 2.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
