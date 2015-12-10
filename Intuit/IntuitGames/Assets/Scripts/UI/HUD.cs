@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;using System.Collections;using System.Collections.Generic;using System.Linq;
 using CustomExtensions;public class HUD : BaseUI{
     [Header("Components")]
@@ -54,7 +54,7 @@ using CustomExtensions;public class HUD : BaseUI{
     protected override void Hide()
     {
         jellyJarImage.gameObject.SetActive(false);
-        jellyTextImage.gameObject.SetActive(true);
+        jellyTextImage.gameObject.SetActive(false);
         collectibleScoreLabel.gameObject.SetActive(false);
         collectibleScoreTextValue.gameObject.SetActive(false);
     }
