@@ -67,9 +67,9 @@ public class BurrowingEnemy : Enemy {
     private bool player1Primed = false;
     private bool player2Primed = false;
 
-    public bool fullSurface { get { return riggedModel.transform.position.y >= 0f; } }
+    public bool fullSurface { get { return riggedModel.transform.localPosition.y >= 0f; } }
 
-    public bool fullUnderground { get { return riggedModel.transform.position.y <= modelStartLocation.y; } }
+    public bool fullUnderground { get { return riggedModel.transform.localPosition.y <= modelStartLocation.y; } }
 
     protected override void Start()
     {

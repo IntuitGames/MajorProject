@@ -19,6 +19,7 @@ public class beStateStunned : EnemyCoreState<BurrowingEnemy> {
         obj.StopAgent();
         obj.animatorComp.SetBool("stunned", true);
         obj.dizzyStars.gameObject.SetActive(true);
+        obj.audioDataComp.PlayStunnedAudio();
     }
 
     public override void Update(BurrowingEnemy obj)

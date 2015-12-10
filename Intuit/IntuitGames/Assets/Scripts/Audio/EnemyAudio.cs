@@ -22,7 +22,8 @@ public class EnemyAudio : MonoBehaviour {
     public SoundClip vocalise = new SoundClip();
     public SoundClip attack = new SoundClip();
     public SoundClip death = new SoundClip();
-    public SoundClip collide = new SoundClip();   
+    public SoundClip collide = new SoundClip();
+    public SoundClip stunned = new SoundClip();
 
     #endregion
 
@@ -44,6 +45,7 @@ public class EnemyAudio : MonoBehaviour {
         attack.Initialize();
         death.Initialize();
         collide.Initialize();
+        stunned.Initialize();
     }
 
     void Update()
@@ -54,6 +56,7 @@ public class EnemyAudio : MonoBehaviour {
         attack.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
         death.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
         collide.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
+        stunned.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
     }
 
     public bool ConditionalAudio(System.Action method, bool condition)
@@ -72,6 +75,7 @@ public class EnemyAudio : MonoBehaviour {
         attack.Dispose();
         death.Dispose();
         collide.Dispose();
+        stunned.Dispose();
     }
 
     public void PlayWalkAudio()
@@ -100,6 +104,12 @@ public class EnemyAudio : MonoBehaviour {
     }
 
     public void PlayCollideAudio()
+    {
+        float[] parameters = { 0, GameManager.TetherManager.weakenedParam };
+        collide.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, enemy.GetVelocity()), volume, parameters);
+    }
+
+    public void PlayStunnedAudio()
     {
         float[] parameters = { 0, GameManager.TetherManager.weakenedParam };
         collide.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, enemy.GetVelocity()), volume, parameters);
