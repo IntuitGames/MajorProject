@@ -33,17 +33,20 @@ public class weStateWander : EnemyCoreState<WanderingEnemy> {
 	{
         bool foundPathable = false;
         Vector3 pos = new Vector3 ();
+		int loopCount = 0;
         do
         {
+			loopCount++;
             Vector2 randPos = Random.insideUnitCircle * obj.wanderRadius;
             NavMeshPath path = new NavMeshPath();
-            pos = obj.getStartLocation() + (new Vector3(randPos.x, obj.transform.position.y, randPos.y));
+            pos = obj.getStartLocation() + (new Vector3(randPos.x, 0, randPos.y));
             obj.agent.CalculatePath(pos, path);
+			Debug.Log (path.status.ToString ());
             if (path.status == NavMeshPathStatus.PathComplete)
             {
                 foundPathable = true;
             }
-        } while (!foundPathable);
+        } while (!foundPathable || loopCount > 5);
 
         return pos;
 	}
