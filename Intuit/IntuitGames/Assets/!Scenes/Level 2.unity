@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 2100000, guid: 33b9a60fbda783046a753a9732cd95f4, type: 2}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -3842,6 +3842,15 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: 130.699997
       objectReference: {fileID: 0}
+    - target: {fileID: 11439526, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: playOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11414714, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+      propertyPath: music.FMODAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f54478815c3e1304a8c1af1bd682f13f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
   m_IsPrefabParent: 0
@@ -8967,6 +8976,18 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 423436, guid: 46f1d0379b686a14da997af3b87db3dc, type: 2}
   m_PrefabInternal: {fileID: 1217619152}
+--- !u!1 &712716159 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 189392, guid: dab929b36b6127f46b70de1d3835d46e, type: 2}
+  m_PrefabInternal: {fileID: 300200570}
+--- !u!45 &712716165
+Skybox:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 712716159}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 35fe030f8dda55546be616afbdb5d9ab, type: 2}
 --- !u!4 &719263940 stripped
 Transform:
   m_PrefabParentObject: {fileID: 423436, guid: 46f1d0379b686a14da997af3b87db3dc, type: 2}
