@@ -54,6 +54,38 @@ InputManager:
     axis: 0
     joyNum: 2
   - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: All players horizontal joystick 1 D-Pad
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 5
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: All players horizontal joystick 2 D-pad
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 5
+    joyNum: 2
+  - serializedVersion: 3
     m_Name: Vertical
     descriptiveName: All players vertical keyboard
     descriptiveNegativeName: 
@@ -100,6 +132,38 @@ InputManager:
     invert: 1
     type: 2
     axis: 1
+    joyNum: 2
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: All players vertical joystick 1 d-pad
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 6
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: All players vertical joystick 2 D-Pad
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .189999998
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 6
     joyNum: 2
   - serializedVersion: 3
     m_Name: Submit
@@ -250,7 +314,7 @@ InputManager:
     descriptiveName: Player 1 dash joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 1 button 4
+    positiveButton: 
     altNegativeButton: 
     altPositiveButton: left ctrl
     gravity: 1000
@@ -262,11 +326,27 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Heavy_P1
-    descriptiveName: Player 1 heavy joystick and keyboard
+    m_Name: Dash_P1
+    descriptiveName: Player 1 dash joystick right trigger
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 1 button 5
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: left ctrl
+    gravity: 0
+    dead: .100000001
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 9
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Heavy_P1
+    descriptiveName: Player 1 heavy keyboard
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
     altNegativeButton: 
     altPositiveButton: left alt
     gravity: 1000
@@ -277,6 +357,22 @@ InputManager:
     type: 0
     axis: 0
     joyNum: 0
+  - serializedVersion: 3
+    m_Name: Heavy_P1
+    descriptiveName: Player 1 heavy joystick and keyboard
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: .100000001
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 8
+    joyNum: 1
   - serializedVersion: 3
     m_Name: Sprint_P1
     descriptiveName: Player 1 sprint keyboard
@@ -423,10 +519,10 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Dash_P2
-    descriptiveName: Player 2 dash joystick and keyboard
+    descriptiveName: Player 2 dash keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 2 button 4
+    positiveButton: 
     altNegativeButton: 
     altPositiveButton: '[1]'
     gravity: 1000
@@ -438,11 +534,27 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Heavy_P2
-    descriptiveName: Player 2 heavy joystick and keyboard
+    m_Name: Dash_P2
+    descriptiveName: Player 2 dash right trigger
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick 2 button 5
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .100000001
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 9
+    joyNum: 2
+  - serializedVersion: 3
+    m_Name: Heavy_P2
+    descriptiveName: Player 2 heavy keyboard
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
     altNegativeButton: 
     altPositiveButton: '[2]'
     gravity: 1000
@@ -453,6 +565,22 @@ InputManager:
     type: 0
     axis: 0
     joyNum: 0
+  - serializedVersion: 3
+    m_Name: Heavy_P2
+    descriptiveName: Player 2 heavy joystick trigger
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: .100000001
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 8
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Sprint_P2
     descriptiveName: Player 2 sprint keyboard
