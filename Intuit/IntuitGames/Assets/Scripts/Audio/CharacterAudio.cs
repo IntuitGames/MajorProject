@@ -29,7 +29,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip dash = new SoundClip();
     public SoundClip collide = new SoundClip();
     public SoundClip heavyOn = new SoundClip();
-    public SoundClip heavyOff = new SoundClip();
+    public SoundClip heavyOff = new SoundClip();	public SoundClip groundPound = new SoundClip();
 
     // FMOD PARAMS
     private float playerMoveSpeed
@@ -57,7 +57,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         dash.Initialize();
         collide.Initialize();
         heavyOn.Initialize();
-        heavyOff.Initialize();
+        heavyOff.Initialize();		groundPound.Initialize();
     }
 
     void Update()
@@ -81,7 +81,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
 
     public void PlayWalkAudio(Surface.SurfaceType surfaceType, bool isWet)
     {
-        float[] parameters = { 0, isWet ? 0.7f : 0, (int)surfaceType, GameManager.TetherManager.weakenedParam };
+        float[] parameters = { 0, isWet ? 1 : 0, (int)surfaceType, GameManager.TetherManager.weakenedParam };
         footstep.PlayDetached(audioSource, AudioManager.GetFMODAttribute(feetTransform, rigidbodyComp.velocity), volume, null, parameters);
     }
 
@@ -116,7 +116,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
             heavyOn.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
         else
             heavyOff.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
-    }
+    }	public void PlayGroundPound()	{		float[] parameters = { GameManager.TetherManager.weakenedParam, 0 };		groundPound.PlayAttached (audioSource, AudioManager.GetFMODAttribute (transform, rigidbodyComp.velocity), volume, parameters);	}
 
     public void Dispose()
     {

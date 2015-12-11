@@ -16,6 +16,8 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     [Header("Settings")]
     public SoundClip onSelectedSFX = new SoundClip();
 
+	private bool enableSound;
+
     void Start()
     {
         onSelectedSFX.Initialize();
@@ -28,6 +30,9 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
 
         // Select the default button
         StartCoroutine(Unity.NextFrame(resumeButton.Select));
+
+		// After auto-selecting the first option re-anble sound
+		StartCoroutine(Unity.NextFrame(() => enableSound = true));
     }
 
     protected override void Hide()
@@ -42,7 +47,8 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
 
     public override void OnSelect(BaseEventData eventData)
     {
-        onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
+		if (enableSound)
+        	onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
     }
 
     protected override void OnDestroy()
