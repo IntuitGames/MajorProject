@@ -320,13 +320,13 @@ public class InputManager : Manager
                 if (p1UpFlag && Input.GetAxis(actionStr + player1Str) <= GameManager.InputManager.triggerThreshold
                     || Input.GetButtonUp(actionStr + player1Str))
                 {
-                    p1Up = true; p1UpFlag = false; p1UpFlag = true;
+                    p1Up = true; p1UpFlag = false; p1DownFlag = true;
                 }
 
                 if (p2UpFlag && Input.GetAxis(actionStr + player2Str) <= GameManager.InputManager.triggerThreshold
                     || Input.GetButtonUp(actionStr + player2Str))
                 {
-                    p2Up = true; p2UpFlag = false; p2UpFlag = true;
+                    p2Up = true; p2UpFlag = false; p2DownFlag = true;
                 }
             }
         }
