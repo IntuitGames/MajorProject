@@ -31,22 +31,36 @@ public class weStateWander : EnemyCoreState<WanderingEnemy> {
 
 	private Vector3 getPathablePosition(WanderingEnemy obj)
 	{
-        bool foundPathable = false;
-        Vector3 pos = new Vector3 ();
-		int loopCount = 0;
-        do
+        Vector3 pos = new Vector3 ();		
+        Vector2 randPos = Random.insideUnitCircle * obj.wanderRadius;
+        NavMeshPath path = new NavMeshPath();
+        pos = obj.getStartLocation() + (new Vector3(randPos.x, 0, randPos.y));
+        obj.agent.CalculatePath(pos, path);
+        switch(path.status)
         {
-			loopCount++;
-            Vector2 randPos = Random.insideUnitCircle * obj.wanderRadius;
-            NavMeshPath path = new NavMeshPath();
-            pos = obj.getStartLocation() + (new Vector3(randPos.x, 0, randPos.y));
-            obj.agent.CalculatePath(pos, path);
-            if (path.status == NavMeshPathStatus.PathComplete)
-            {
-                foundPathable = true;
-            }
-        } while (!foundPathable || loopCount > 5);
-
+            case NavMeshPathStatus.PathComplete:
+                {
+                    break;
+                }
+            case NavMeshPathStatus.PathPartial:
+                {
+                    TimerPlus.Create(3f, TimerPlus.Presets.OneTimeUse, ()=>FindNewPath(obj) );
+                    break;
+                }
+            case NavMeshPathStatus.PathInvalid:
+                {
+                    pos = obj.getStartLocation();
+                    //pos = getPathablePosition(obj);                   
+                    break;
+                }
+            default:
+                break;        
+        } 
         return pos;
 	}
+
+    void FindNewPath(WanderingEnemy obj)
+    {
+        obj.agent.SetDestination(getPathablePosition(obj));
+    }
 }
