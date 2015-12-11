@@ -13447,7 +13447,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: .300000012
-  far clip plane: 200
+  far clip plane: 300
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -27865,7 +27865,7 @@ MonoBehaviour:
     group: 0
     volume: 1
     pitch: 1
-    unityClip: {fileID: 8300000, guid: 8649a30ba6833ab4bb8c82228c3d75c1, type: 3}
+    unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 6bb428f7795d0004292a32c453365d9d, type: 2}
   useWeakenedParam: 1
   weakenedParamIndex: 0
@@ -31458,7 +31458,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 11400000, guid: aeb2f65af01cb8247942a2287f89a323, type: 2}
+    FMODAsset: {fileID: 0}
   initialJelly: 10
   maxJelly: 15
 --- !u!114 &11440740
@@ -33386,6 +33386,7 @@ MonoBehaviour:
   pauseUpdates: 0
   sprintUpdates: 0
   waveUpdates: 0
+  triggerThreshold: .100000001
 --- !u!114 &11456556
 MonoBehaviour:
   m_ObjectHideFlags: 1
