@@ -183,7 +183,7 @@ Material:
       data:
         first:
           name: _Rotation
-        second: 192
+        second: 0
     m_Colors:
       data:
         first:
