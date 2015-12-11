@@ -26485,7 +26485,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
+    FMODAsset: {fileID: 11400000, guid: 027faae2a3909c94d9d4173b655bebfe, type: 2}
   heavyOff:
     player: 2
     type: 0
@@ -26494,6 +26494,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 027faae2a3909c94d9d4173b655bebfe, type: 2}
+  groundPound:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
 --- !u!114 &11408028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28367,7 +28375,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
+    FMODAsset: {fileID: 11400000, guid: 027faae2a3909c94d9d4173b655bebfe, type: 2}
   heavyOff:
     player: 2
     type: 0
@@ -28376,6 +28384,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 027faae2a3909c94d9d4173b655bebfe, type: 2}
+  groundPound:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
 --- !u!114 &11418546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29006,7 +29022,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: ae74708be0639574fabe41fad38609ae, type: 2}
 --- !u!114 &11423592
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37600,7 +37616,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: ae74708be0639574fabe41fad38609ae, type: 2}
 --- !u!114 &11488858
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38018,7 +38034,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: ae74708be0639574fabe41fad38609ae, type: 2}
 --- !u!114 &11492212
 MonoBehaviour:
   m_ObjectHideFlags: 1

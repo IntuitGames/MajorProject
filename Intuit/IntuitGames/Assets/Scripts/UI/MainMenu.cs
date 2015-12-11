@@ -12,7 +12,7 @@ using CustomExtensions;public class MainMenu : BaseUI{
     public bool remainClickable = false;
     public SoundClip onSelectedSFX = new SoundClip();
 
-    private Button.ButtonClickedEvent playButtonEvent, exitButtonEvent;
+    private Button.ButtonClickedEvent playButtonEvent, exitButtonEvent;	private bool enableSound;
 
     protected override void Awake()
     {
@@ -41,7 +41,7 @@ using CustomExtensions;public class MainMenu : BaseUI{
         backPanel.gameObject.SetActive(true);
 
         // Select the default button
-        StartCoroutine(Unity.NextFrame(playButton.Select));
+        StartCoroutine(Unity.NextFrame(playButton.Select));		// After auto-selecting the first option re-anble sound		StartCoroutine(Unity.NextFrame(() => enableSound = true));
     }
 
     protected override void Hide()
@@ -55,8 +55,8 @@ using CustomExtensions;public class MainMenu : BaseUI{
     }
 
     public override void OnSelect(BaseEventData eventData)
-    {
-        onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
+    {		if (enableSound)
+        	onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
     }
 
     protected override void OnDestroy()

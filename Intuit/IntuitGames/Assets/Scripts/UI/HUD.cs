@@ -24,6 +24,9 @@ using CustomExtensions;public class HUD : BaseUI{
         expectedJelly = GameManager.PlayerManager.currentJelly;
     }    void Update()
     {
+		if (!shownModes.IsFlagSet<ModeManager.GameMode> (GameManager.ModeManager.currentGameMode))
+			return;
+
         jellyJarImage.sprite = jellyJarSprites[GameManager.PlayerManager.currentJelly];
         jellyTextImage.sprite = jellyTextSprites[GameManager.PlayerManager.currentJelly];
 
