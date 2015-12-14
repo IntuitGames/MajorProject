@@ -27141,7 +27141,6 @@ MonoBehaviour:
     minScale: .5
     maxScale: 1
   blendColour: 1
-  includeOriginal: 1
   experimentalNoStick: 0
   experimentalStickResist: 0
   anotherExperimentalStickThing: 1
@@ -37823,6 +37822,8 @@ MonoBehaviour:
   backgroundPanel: {fileID: 11458640}
   restartButton: {fileID: 11486130}
   exitButton: {fileID: 11409952}
+  restartStrechButton: {fileID: 11464324}
+  exitStrechButton: {fileID: 11469556}
   remainClickable: 0
   onSelectedSFX:
     player: 2
@@ -37832,6 +37833,16 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: ae74708be0639574fabe41fad38609ae, type: 2}
+  onShowSFX:
+    player: 2
+    type: 0
+    group: 1
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
+  fadeSpeed: .600000024
+  currentAlpha: 0
 --- !u!114 &11492212
 MonoBehaviour:
   m_ObjectHideFlags: 1

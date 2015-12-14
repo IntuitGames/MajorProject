@@ -31,7 +31,7 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
         // Select the default button
         StartCoroutine(Unity.NextFrame(resumeButton.Select));
 
-		// After auto-selecting the first option re-anble sound
+        // After auto-selecting the first option re-enable sound
 		StartCoroutine(Unity.NextFrame(() => enableSound = true));
     }
 

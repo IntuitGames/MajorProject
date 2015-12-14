@@ -2,7 +2,7 @@
 using CustomExtensions;
 using UnityEngine.EventSystems;public abstract class BaseUI : MonoBehaviour, ISelectHandler{
     [SerializeField, ReadOnly]
-    private bool isShown = false;
+    protected bool isShown = false;
     [EnumFlags]
     public ModeManager.GameMode shownModes;
 
