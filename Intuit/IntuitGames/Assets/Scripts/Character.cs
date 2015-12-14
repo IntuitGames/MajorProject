@@ -338,6 +338,7 @@ public class Character : MonoBehaviour, IBounce
         OnGrounded += (grounded) => { if (grounded) dashFlag = false; };
         OnGrounded += (grounded) => { if (grounded) jumpDashFlag = false; };
         OnGrounded += (grounded) => { if (grounded) isHeavyHighJump = false; };
+        OnGrounded += (grounded) => { if (grounded && isHeavy) audioDataComp.PlayGroundPound(); };
     }
 
     void Update()

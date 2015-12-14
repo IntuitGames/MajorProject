@@ -65,6 +65,7 @@ public class TetherManager : Manager
     [Header("Experimental")]
     public bool experimentalNoStick = false;
     public bool experimentalStickResist = false;
+    public bool anotherExperimentalStickThing = false;
     public bool experimentalWrapping = false;   // Adds force instead of moving if a joint is colliding (Sticky behavior)
     public bool experimentalCollision = false;
     [Range(0, 200)]
@@ -161,7 +162,6 @@ public class TetherManager : Manager
 
     void Update()
     {
-
         // Basic info
         if (startPoint && endPoint) directLength = Vector3.Distance(startPoint.position, endPoint.position);
         else directLength = default(float);
@@ -405,6 +405,14 @@ public class TetherManager : Manager
                 endPointPos = endPoint.position;
                 relativeIndex = index + 1;
                 relativeCount = jointCount + 1;
+            }
+
+            if (anotherExperimentalStickThing && tetherLength > PlayerManager.freeRadius
+                && joint.isColliding && (joint.previousJoint.isColliding || joint.nextJoint.isColliding))
+            {
+                Vector3 collidingRest = Vector3.Lerp(startPointPos, endPointPos, (float)relativeIndex / relativeCount);
+                Vector3 normalRest = Vector3.Lerp(startPoint.position, endPoint.position, ((float)index + 1) / (jointCount + 1));
+                return Vector3.Lerp(collidingRest, normalRest, tetherLength.Normalize(PlayerManager.freeRadius, PlayerManager.maxRadius, 0, 1));
             }
 
             return Vector3.Lerp(startPointPos, endPointPos, (float)relativeIndex / relativeCount);

@@ -36,8 +36,7 @@ public class CollisionMonitor : MonoBehaviour
         }
     }
 
-    public List<GameObject> collisionObjects = new List<GameObject>(10);
-    private List<Collision> collisionInfos = new List<Collision>(10);
+    public HashSet<Collider> collisionObjects = new HashSet<Collider>();
 
     public event System.Action<int> OnCollisionCountChange = delegate { };
     public event System.Action<GameObject> OnNewCollisionObject = delegate { };
@@ -47,9 +46,11 @@ public class CollisionMonitor : MonoBehaviour
     {
         float refCount = collisionObjects.Count;
 
-        // Remove nulls
-        collisionObjects.RemoveAll(x => !x || !x.GetComponent<Collider>().enabled);
-		collisionInfos.RemoveAll(x => !x.gameObject || !x.gameObject.GetComponent<Collider>().enabled);
+        // Remove nulls, disabled colliders and inactive game objects.
+        if (collisionObjects.Any(x => x == null || !x || !x.gameObject.activeInHierarchy || !x.enabled))
+        {
+            collisionObjects = new HashSet<Collider>(collisionObjects.Where(x => x != null && x && x.gameObject.activeInHierarchy && x.enabled));
+        }
 
         // Check for change
         if (refCount != collisionObjects.Count)
@@ -62,7 +63,6 @@ public class CollisionMonitor : MonoBehaviour
 
         // Clear list
         collisionObjects.Clear();
-        collisionInfos.Clear();
 
         // Check for change
         if (refCount != collisionObjects.Count)
@@ -71,10 +71,9 @@ public class CollisionMonitor : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        if (!collisionObjects.Contains(col.gameObject))
+        if (!collisionObjects.Contains(col.collider))
         {
-            collisionObjects.Add(col.gameObject);
-            collisionInfos.Add(col);
+            collisionObjects.Add(col.collider);
             UpdateData();
             OnNewCollisionObject(col.gameObject);
         }
@@ -82,10 +81,9 @@ public class CollisionMonitor : MonoBehaviour
 
     void OnCollisionExit(Collision col)
     {
-        if (collisionObjects.Contains(col.gameObject))
+        if (collisionObjects.Contains(col.collider))
         {
-            collisionObjects.Remove(col.gameObject);
-            collisionInfos.Remove(col);
+            collisionObjects.Remove(col.collider);
             UpdateData();
             OnRemovedCollisionObject(col.gameObject);
         }
@@ -97,14 +95,15 @@ public class CollisionMonitor : MonoBehaviour
         isColliding = collisionCount > 0;
         OnCollisionCountChange(collisionCount);
     }
-    
-    // Retrieves the collision info for a specific object
-    public bool GetCollisionInfo(GameObject collisionObject, ref Collision collisionInfo)
-    {
-        if (!collisionObjects.Contains(collisionObject))
-            return false;
 
-        collisionInfo = collisionInfos.First(x => x.gameObject == collisionObject);
-        return true;
+    // Call this if manually disabling collider or game object
+    public void RemoveCollidingObject(Collider removeCollider)
+    {
+        if (collisionObjects.Contains(removeCollider))
+        {
+            collisionObjects.Remove(removeCollider);
+            UpdateData();
+            OnRemovedCollisionObject(removeCollider.gameObject);
+        }
     }
 }

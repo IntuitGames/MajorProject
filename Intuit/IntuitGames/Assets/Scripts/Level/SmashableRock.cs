@@ -9,6 +9,7 @@ public class SmashableRock : Trigger
 	public Pickup pickupDrop;
 	public Unity.Chance dropChance = 0.75f;
 	public float scoreValue;
+    public float requiredVelocity = 20;
 	public SoundClip smashSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
 
 	void Awake()
@@ -31,10 +32,19 @@ public class SmashableRock : Trigger
 	{
 		get
 		{
-			return GameManager.PlayerManager.character1.isHeavy && !GameManager.PlayerManager.character1.isGrounded
-				|| GameManager.PlayerManager.character2.isHeavy && !GameManager.PlayerManager.character2.isGrounded;
+			return GameManager.PlayerManager.character1.isHeavy || GameManager.PlayerManager.character2.isHeavy;
 		}
 	}
+
+    public override bool CollisionCheck(Collision col)
+    {
+        // Simply made to make ground pounding more consistent
+        Character character = col.gameObject.GetComponent<Character>();
+        if (!character.isHeavy || col.relativeVelocity.magnitude < requiredVelocity)
+            return false;
+        else
+            return true;
+    }
 
 	protected override void OnTrigger (GameObject triggerObject)
 	{

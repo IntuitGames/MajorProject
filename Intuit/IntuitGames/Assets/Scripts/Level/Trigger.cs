@@ -79,7 +79,7 @@ public abstract class Trigger : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        if (triggerLayer == (triggerLayer | (1 << collision.collider.gameObject.layer)))
+        if (triggerLayer == (triggerLayer | (1 << collision.collider.gameObject.layer)) && CollisionCheck(collision))
             CallTrigger(collision.collider.gameObject);
     }
 
@@ -95,6 +95,11 @@ public abstract class Trigger : MonoBehaviour
 
         if (colliders != null && colliders.Any() && colliders.Count > 0)
             CallTrigger(colliders.First().gameObject);
+    }
+
+    public virtual bool CollisionCheck(Collision col)
+    {
+        return true;
     }
 
     // Call trigger events if able

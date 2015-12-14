@@ -13458,7 +13458,6 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -25672,7 +25671,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11400440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25749,7 +25747,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11401860
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25836,7 +25833,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11402110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -25850,7 +25846,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11402282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26014,7 +26009,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11403134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26063,7 +26057,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11403344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26280,7 +26273,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11404408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26428,7 +26420,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11406044
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26479,7 +26470,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11406330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26493,7 +26483,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11406376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26713,11 +26702,11 @@ MonoBehaviour:
   groundPound:
     player: 2
     type: 0
-    group: 0
+    group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
 --- !u!114 &11408028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -26772,7 +26761,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11408268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27156,6 +27144,7 @@ MonoBehaviour:
   includeOriginal: 1
   experimentalNoStick: 0
   experimentalStickResist: 0
+  anotherExperimentalStickThing: 1
   experimentalWrapping: 0
   experimentalCollision: 0
   collisionBuffer: 50
@@ -27253,7 +27242,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11408890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27452,7 +27440,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11410038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27487,7 +27474,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11410498
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27501,7 +27487,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11411054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27619,7 +27604,7 @@ MonoBehaviour:
   aerialRotationSpeed: 10
   _canDash: 1
   _dashPower: 30
-  _dashLength: .5
+  _dashLength: .400000006
   dashHeight: 0
   stopDashOnCollision: 1
   dashCooldown: .5
@@ -27751,7 +27736,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11412118
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27765,7 +27749,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11412460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28000,7 +27983,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11414100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28014,7 +27996,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11414136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28048,7 +28029,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11414312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28062,7 +28042,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11414466
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28096,7 +28075,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11414714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28231,7 +28209,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11415584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28271,7 +28248,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11416454
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28327,7 +28303,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11417022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28393,7 +28368,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11417240
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28473,7 +28447,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11417614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28507,7 +28480,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11418130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28521,7 +28493,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11418228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28617,11 +28588,11 @@ MonoBehaviour:
   groundPound:
     player: 2
     type: 0
-    group: 0
+    group: 2
     volume: 1
     pitch: 1
     unityClip: {fileID: 0}
-    FMODAsset: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
 --- !u!114 &11418546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28684,7 +28655,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11419626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28853,7 +28823,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11420582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -28961,7 +28930,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11420906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29016,7 +28984,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11421120
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29109,7 +29076,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11421556
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29203,7 +29169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11422654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29294,7 +29259,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11423762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29527,7 +29491,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11425080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29649,7 +29612,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11425616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29934,7 +29896,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11427384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29969,7 +29930,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11427928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29983,7 +29943,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11427960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30039,7 +29998,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11428734
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30053,7 +30011,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11428750
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30108,7 +30065,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11429134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30183,7 +30139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11429810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30218,7 +30173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11430028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30391,7 +30345,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11431264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30405,7 +30358,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11431362
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30461,7 +30413,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11431506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30475,7 +30426,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11431554
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30515,7 +30465,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11432034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30590,7 +30539,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11432830
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30703,7 +30651,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11433562
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30738,7 +30685,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11434090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30795,7 +30741,7 @@ MonoBehaviour:
   aerialRotationSpeed: 10
   _canDash: 1
   _dashPower: 30
-  _dashLength: .5
+  _dashLength: .400000006
   dashHeight: 0
   stopDashOnCollision: 1
   dashCooldown: .5
@@ -30840,7 +30786,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11434254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30958,7 +30903,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11435670
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31162,7 +31106,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11437386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31404,7 +31347,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11439970
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31562,7 +31504,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11441304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31645,7 +31586,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11441712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31923,7 +31863,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11444444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32093,7 +32032,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11445232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32128,7 +32066,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11445384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32202,7 +32139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11446440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32216,7 +32152,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11446460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32230,7 +32165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11446622
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32244,7 +32178,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11446782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32258,7 +32191,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11446796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32339,7 +32271,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11447392
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32436,7 +32367,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11448790
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32450,7 +32380,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11449178
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32510,7 +32439,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11450152
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32712,7 +32640,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11452198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32726,7 +32653,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11452408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32740,7 +32666,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11452410
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32754,7 +32679,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11452490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32794,7 +32718,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11452624
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -32907,7 +32830,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11453056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33030,7 +32952,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11453976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33064,7 +32985,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11454212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33157,7 +33077,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11455174
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33465,7 +33384,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11457136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33499,7 +33417,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11457328
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33534,7 +33451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11457504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33548,7 +33464,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11457552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33641,7 +33556,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11458294
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33669,7 +33583,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11458640
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33704,7 +33617,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11459558
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33738,7 +33650,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11459908
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33772,7 +33683,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11460736
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33786,7 +33696,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11460806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33909,7 +33818,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11461766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -33944,7 +33852,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11462602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34043,7 +33950,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11463316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34057,7 +33963,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11463526
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34071,7 +33976,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11463582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34106,7 +34010,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11463832
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34177,7 +34080,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11463996
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34260,7 +34162,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11464416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34274,7 +34175,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11464470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34436,7 +34336,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11466552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34553,7 +34452,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11467200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34681,7 +34579,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11468342
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34695,7 +34592,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11468408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34709,7 +34605,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11468518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34723,7 +34618,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11468544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34838,7 +34732,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11469428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34943,7 +34836,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11469756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34983,7 +34875,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11470612
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35126,7 +35017,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11472232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35258,7 +35148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11473218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35422,7 +35311,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11475876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35457,7 +35345,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11475968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35677,7 +35564,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11476986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35691,7 +35577,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11477286
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35705,7 +35590,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11477472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35766,7 +35650,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11477656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35801,7 +35684,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11477818
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35815,7 +35697,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11478024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35922,7 +35803,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11478390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36203,7 +36083,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11479530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36382,7 +36261,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11480810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36396,7 +36274,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11480826
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36498,7 +36375,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11481868
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36552,7 +36428,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11482300
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36652,7 +36527,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11483426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36973,7 +36847,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11485386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37067,7 +36940,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11485534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37356,7 +37228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11487616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37391,7 +37262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11487732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37467,7 +37337,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11488056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37611,7 +37480,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11489150
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37666,7 +37534,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11490080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37827,7 +37694,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11491220
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37841,7 +37707,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11491344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37896,7 +37761,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11491784
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37910,7 +37774,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11491958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37924,7 +37787,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11492002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38025,7 +37887,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11493032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38111,7 +37972,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11493678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38291,7 +38151,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11494680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38305,7 +38164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11494870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38319,7 +38177,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11495020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38430,7 +38287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11495432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38611,7 +38467,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11497034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38646,7 +38501,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11497130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38701,7 +38555,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11497422
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38735,7 +38588,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11497504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38749,7 +38601,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11497522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39142,7 +38993,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
-  collisionObjects: []
 --- !u!114 &11499702
 MonoBehaviour:
   m_ObjectHideFlags: 1

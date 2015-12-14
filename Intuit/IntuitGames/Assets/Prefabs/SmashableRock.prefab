@@ -59,7 +59,7 @@ GameObject:
   - 4: {fileID: 423466}
   - 95: {fileID: 9524646}
   - 114: {fileID: 11471030}
-  - 65: {fileID: 6598510}
+  - 64: {fileID: 6470500}
   m_Layer: 0
   m_Name: SmashableRock
   m_TagString: Untagged
@@ -108,8 +108,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 184378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 124.291557, y: 2.13020878e-17, z: 16.2438354}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 120.809998, y: .879999995, z: 5.69999981}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 483012}
   - {fileID: 494874}
@@ -161,8 +161,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 160950}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -.629999995, z: 0}
-  m_LocalScale: {x: 7.77690315, y: 7.77690315, z: 7.77690315}
+  m_LocalPosition: {x: 0, y: -.0670000017, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 423466}
   m_RootOrder: 0
@@ -174,7 +174,7 @@ Transform:
   m_GameObject: {fileID: 199788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.77690315, y: 7.77690315, z: 7.77690315}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 423466}
   m_RootOrder: 1
@@ -244,8 +244,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 199788}
   m_Mesh: {fileID: 4300000, guid: 4dc22aa2c287c1549a7b665476cdc8e5, type: 3}
---- !u!65 &6598510
-BoxCollider:
+--- !u!64 &6470500
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -254,8 +254,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.92000008, y: 1.45000005, z: 2.92000008}
-  m_Center: {x: 0, y: -.100000001, z: 0}
+  m_Convex: 1
+  m_Mesh: {fileID: 4300000, guid: 4dc22aa2c287c1549a7b665476cdc8e5, type: 3}
 --- !u!95 &9524646
 Animator:
   serializedVersion: 3
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9d74957aaf9f144af3a8e5b6977083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderComp: {fileID: 6598510}
+  colliderComp: {fileID: 6470500}
   proximityTimer:
     Length: 0
     IsPlaying: 0
@@ -295,7 +295,7 @@ MonoBehaviour:
     MinLength: 0
     MaxLength: 0
   triggerType: 1
-  volumeType: 0
+  volumeType: 3
   proximityDistance: 1
   proximityCheckFrequency: 1
   triggerLayer:
@@ -312,8 +312,9 @@ MonoBehaviour:
   smashedRock: {fileID: 160950}
   pickupDrop: {fileID: 11419112, guid: 19025b26a97b6b0419c0212ce99dd1ed, type: 2}
   dropChance:
-    chance: .75
+    chance: 1
   scoreValue: 50
+  requiredVelocity: 20
   smashSound:
     player: 2
     type: 0
@@ -571,7 +572,7 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 7
-    radius: 1
+    radius: .150000006
     angle: 25
     length: 5
     boxX: 1
