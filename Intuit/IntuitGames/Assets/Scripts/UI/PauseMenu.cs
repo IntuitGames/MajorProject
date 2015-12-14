@@ -14,6 +14,7 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
     public Button exitButton;
 
     [Header("Settings")]
+    public float selectScale = 1.2f;
     public SoundClip onSelectedSFX = new SoundClip();
 
 	private bool enableSound;
@@ -47,8 +48,14 @@ using UnityEngine.EventSystems;public class PauseMenu : BaseUI{
 
     public override void OnSelect(BaseEventData eventData)
     {
+        eventData.selectedObject.transform.localScale = new Vector3(selectScale, selectScale, selectScale);
 		if (enableSound)
         	onSelectedSFX.PlayAttached(GetComponent<AudioSource>(), AudioManager.GetFMODAttribute(eventData.selectedObject.transform, Vector3.zero), 1);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        eventData.selectedObject.transform.localScale = Vector3.one;
     }
 
     protected override void OnDestroy()
