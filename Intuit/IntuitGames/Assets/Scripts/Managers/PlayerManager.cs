@@ -73,6 +73,8 @@ using System;/// <summary>
     public int initialJelly = 10;
     public int maxJelly = 15;
 
+    private float tempTetherExt;
+
     // PROPERTIES
     public float distanceBetweenCharacters
     {
@@ -84,7 +86,7 @@ using System;/// <summary>
     }
     public float freeRadius
     {
-        get { return baseFreeRadius + (character1.isSprinting ? sprintRadiusExtension : 0) + (character2.isSprinting ? sprintRadiusExtension : 0); }
+        get { return baseFreeRadius + (character1.isSprinting ? sprintRadiusExtension : 0) + (character2.isSprinting ? sprintRadiusExtension : 0) + tempTetherExt; }
     }
     public Vector3 character1Pos
     {
@@ -119,6 +121,11 @@ using System;/// <summary>
 
         deathSound.Initialize();
         OnBothDead += () => deathSound.PlayAttached(character1.audioDataComp.audioSource, AudioManager.GetFMODAttribute(character1.transform, character1.targetVelocity), 1);
+    }
+
+    void Update()
+    {
+        tempTetherExt = Mathf.Max(tempTetherExt - Time.deltaTime * 2, 0);
     }
 
     public override void ManagerOnLevelLoad()
@@ -190,5 +197,13 @@ using System;/// <summary>
 
         if (currentJelly == 0)
             DeathAction();
+    }
+
+    public void TempTetherExtension(float value, bool isAdd)
+    {
+        if (isAdd)
+            tempTetherExt += value;
+        else
+            tempTetherExt = value;
     }
 }

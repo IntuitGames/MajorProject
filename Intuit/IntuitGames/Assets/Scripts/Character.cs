@@ -157,7 +157,7 @@ public class Character : MonoBehaviour, IBounce
     }
     public bool canUnheavy
     {
-        get { return !isHeavyTransitioning && isGrounded || !isHeavyTransitioning && isSuspended; }
+        get { return !isHeavyTransitioning && (isGrounded || isSuspended) && !isSlopeSliding; }
     }
 
     // BOUNCE
@@ -242,13 +242,7 @@ public class Character : MonoBehaviour, IBounce
         }
     }
     public bool isGrounded { get; set; }
-    public bool isFalling
-    {
-        get
-        {
-            return !isGrounded && transform.position.y < lastRecoredY;
-        }
-    }
+    public bool isFalling { get; set; }
     public bool isWeakened
     {
         get { return GameManager.PlayerManager.isWeakened; }
@@ -277,14 +271,16 @@ public class Character : MonoBehaviour, IBounce
         get { return isHeavyTransitioning || freezeMidHighJumpTimer.IsPlaying || isHeavy && isSuspended; }
     }
     public bool isKnockedBack { get; set; }
-    public bool isSuspended
-    {
-        get { return !isWeakened && !isGrounded && GetPartner().isGrounded && GameManager.TetherManager.tetherLength > GameManager.PlayerManager.maxRadius; }
-    }
+    public bool isSuspended { get; set; }
     public bool isSliding { get; set; }
+    public bool isSlopeSliding
+    {
+        get { return isGrounded && isHeavy && slopeAngle > heavySlopeAngle; }
+    }
 
     // EVENTS
     public event System.Action<bool> OnGrounded = delegate { };
+    public event System.Action<bool> OnSuspended = delegate { };
 
     #endregion
 
@@ -335,10 +331,14 @@ public class Character : MonoBehaviour, IBounce
         normalDrag = rigidbodyComp.drag;
 
         // Reset the jump dash flag when grounded
-        OnGrounded += (grounded) => { if (grounded) dashFlag = false; };
-        OnGrounded += (grounded) => { if (grounded) jumpDashFlag = false; };
-        OnGrounded += (grounded) => { if (grounded) isHeavyHighJump = false; };
-        OnGrounded += (grounded) => { if (grounded && isHeavy) audioDataComp.PlayGroundPound(); };
+        OnGrounded += OnGroundedChange;
+        OnSuspended += OnSuspendedChange;
+    }
+
+    private void OnSuspendedChange(bool newSuspended)
+    {
+        if (newSuspended)
+            rigidbodyComp.velocity *= 0.25f;
     }
 
     void Update()
@@ -347,6 +347,19 @@ public class Character : MonoBehaviour, IBounce
         bool oldGrounded = isGrounded;
         isGrounded = GroundedRayCheck(transform.position, Vector3.down, airborneRayOffset, out onObject);
         if (isGrounded != oldGrounded) OnGrounded(isGrounded);
+
+        // Check for falling changes
+        bool oldFalling = isFalling;
+        isFalling = !isGrounded && transform.position.y < lastRecoredY;
+        if (oldFalling != isFalling) colliderComp.enabled = true;
+
+        // Check for suspension changes
+        bool oldSuspended = isSuspended;
+        isSuspended = !isWeakened && !isGrounded
+                && GameManager.TetherManager.tetherLength > GameManager.PlayerManager.maxRadius
+                && transform.position.y + 5 < GameManager.TetherManager.HighestPoint();
+        if (oldSuspended != isSuspended)
+            OnSuspended(isSuspended);
 
         // Apply any changes to timer lengths
         dashTimer.ModifyLength(dashLength);
@@ -544,6 +557,7 @@ public class Character : MonoBehaviour, IBounce
         if (isPressed && isGrounded)
         {
             jumpFlag = true;
+            GameManager.PlayerManager.TempTetherExtension(1, false);
 
             // Play sound
             audioDataComp.PlayJumpAudio();
@@ -583,6 +597,7 @@ public class Character : MonoBehaviour, IBounce
 
         if (isPressed && canDash)
         {
+            GameManager.PlayerManager.TempTetherExtension(1, false);
             isDashing = true;
 
             if (isGrounded) targetVelocity.y += dashHeight;
@@ -616,8 +631,9 @@ public class Character : MonoBehaviour, IBounce
             audioDataComp.PlayHeavyAudio(false);
             isHeavy = false;
 
+            // Suspension force
             if (isSuspended)
-                AddConstrainedForce(Vector3.up * heavyJumpPower * 5, ForceMode.Impulse);
+                SuspensionRecovery();
         }
     }
 
@@ -696,7 +712,8 @@ public class Character : MonoBehaviour, IBounce
             TetherJoint joint; float distance;
             if (GameManager.TetherManager.GetClosestCollidingJoint(isPlayerOne, out joint, out distance))
             {
-                Vector3 targetPos = joint.transform.position + (Vector3.down * (GameManager.PlayerManager.maxRadius + 1 - distance));
+                //Vector3 targetPos = joint.transform.position + (Vector3.down * (GameManager.PlayerManager.maxRadius -5 - distance));
+                Vector3 targetPos = joint.transform.position; targetPos.y = Mathf.Max(transform.position.y, targetPos.y - (GameManager.PlayerManager.maxRadius - distance));
                 Vector3 direction = (targetPos - transform.position) * 100;
                 rigidbodyComp.AddForce(direction * GameManager.PlayerManager.constrainingPower * Time.fixedDeltaTime, ForceMode.Force);
             }
@@ -736,12 +753,13 @@ public class Character : MonoBehaviour, IBounce
         {
             if (GetPartner().isSuspended) return;
 
-            if (!GetPartner().isHeavy && length > GameManager.PlayerManager.maxRadius)
+            if (length < GameManager.PlayerManager.maxRadius && dashTimer.Percentage < 0.25f)
                 rigidbodyComp.MovePosition(transform.position + movement);
             else
                 isDashing = false;
 
-            GetPartner().Yank();
+            if (!GetPartner().isHeavy)
+                GetPartner().Yank();
         }
         else if (isSprinting)
         {
@@ -759,9 +777,9 @@ public class Character : MonoBehaviour, IBounce
         else
         {
             // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
-            float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
-            Vector3 additiveVec = movement * dotValue.Normalize(-1, 1, -0.25f, 1);
-            rigidbodyComp.MovePosition(transform.position + Vector3.ClampMagnitude(additiveVec, length.Normalize(GameManager.PlayerManager.freeRadius, GameManager.PlayerManager.maxRadius, additiveVec.magnitude, 0)));
+            //float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
+            Vector3 addVec = Vector3.ClampMagnitude(GetPartnerPosition() + (movement * GameManager.PlayerManager.freeRadius) - transform.position, movement.magnitude);
+            rigidbodyComp.MovePosition(transform.position + addVec);
         }
     }
 
@@ -789,6 +807,14 @@ public class Character : MonoBehaviour, IBounce
         }
     }
 
+    // Provides a massive upwards Y to recover from suspension
+    public void SuspensionRecovery()
+    {
+        float yDifference = Mathf.Abs(GameManager.TetherManager.HighestPoint() - transform.position.y);
+        AddConstrainedForce(Vector3.up * heavyJumpPower * yDifference.Normalize(0, GameManager.PlayerManager.maxRadius, 0, 8), ForceMode.Impulse);
+        colliderComp.enabled = false;
+    }
+
     // Called when the game mode is changed
     private void OnGameModeChange(ModeManager.GameMode newMode, ModeManager.GameMode oldMode)
     {
@@ -796,6 +822,23 @@ public class Character : MonoBehaviour, IBounce
             GameManager.InputManager.SubscribeCharacterEvents(this);
         else if (oldMode == ModeManager.GameMode.InGame)
             GameManager.InputManager.UnsubscribeCharacterEvents(this);
+    }
+
+    private void OnGroundedChange(bool newGrounded)
+    {
+        if (newGrounded)
+        {
+            // Play audio
+            if (isHeavy) audioDataComp.PlayGroundPound();
+
+            // Play animations
+            if (isHeavy) animatorComp.SetTrigger("HeavyImpact");
+
+            // Reset some flags
+            dashFlag = false;
+            jumpDashFlag = false;
+            isHeavyHighJump = false;
+        }
     }
 
     #endregion

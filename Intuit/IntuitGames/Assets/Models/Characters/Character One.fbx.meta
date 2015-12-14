@@ -453,7 +453,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Heavy State (Impact)
       takeName: Take 001
-      firstFrame: 349
+      firstFrame: 354
       lastFrame: 376
       wrapMode: 0
       orientationOffsetY: 0

@@ -401,7 +401,9 @@ public class TetherManager : Manager
             }
 
             if (anotherExperimentalStickThing && tetherLength > PlayerManager.freeRadius
-                && joint.isColliding && (joint.previousJoint.isColliding || joint.nextJoint.isColliding))
+                && joint.isColliding && (joint.previousJoint || joint.nextJoint)
+                && (joint.previousJoint.isColliding || joint.nextJoint.isColliding)
+                && !PlayerManager.character1.isSuspended && !PlayerManager.character2.isSuspended)
             {
                 Vector3 collidingRest = Vector3.Lerp(startPointPos, endPointPos, (float)relativeIndex / relativeCount);
                 Vector3 normalRest = Vector3.Lerp(startPoint.position, endPoint.position, ((float)index + 1) / (jointCount + 1));
@@ -569,5 +571,16 @@ public class TetherManager : Manager
         RaycastHit hit;
         if (!Physics.SphereCast(joint.transform.position, joint.transform.localScale.x, targetDirection, out hit, targetDirection.magnitude, 1 << 0 | 1 << 8))
             joint.rigidbodyComp.MovePosition(targetDirection);
+    }
+
+    // Returns the highest Y point in the tether system
+    public float HighestPoint()
+    {
+        float highPoint = Mathf.Max(startPoint.transform.position.y, endPoint.transform.position.y);
+
+        for (int i = 0; i < jointCount; i++)
+            highPoint = Mathf.Max(highPoint, joints[i].transform.position.y);
+
+        return highPoint;
     }
 }

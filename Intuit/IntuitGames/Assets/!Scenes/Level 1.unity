@@ -7989,7 +7989,7 @@ MonoBehaviour:
   proximityCheckFrequency: 1
   triggerLayer:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
   isMultiTrigger: 0
   hasBeenTriggered: 0
   onTriggeredEvent:
@@ -11337,7 +11337,7 @@ MonoBehaviour:
   proximityCheckFrequency: 1
   triggerLayer:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
   isMultiTrigger: 0
   hasBeenTriggered: 0
   onTriggeredEvent:
@@ -11460,7 +11460,7 @@ MonoBehaviour:
   proximityCheckFrequency: 1
   triggerLayer:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
   isMultiTrigger: 0
   hasBeenTriggered: 0
   onTriggeredEvent:
@@ -15130,7 +15130,7 @@ MonoBehaviour:
   proximityCheckFrequency: 1
   triggerLayer:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
   isMultiTrigger: 0
   hasBeenTriggered: 0
   onTriggeredEvent:

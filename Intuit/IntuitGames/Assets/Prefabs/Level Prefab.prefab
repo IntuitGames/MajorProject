@@ -27569,7 +27569,7 @@ MonoBehaviour:
   sprintMoveSpeed: 12.5
   rotationSpeed: 50
   sprintRotationSpeed: 20
-  maxSpeed: 1000
+  maxSpeed: 100
   normalGravity: -9.80000019
   maxGravity: -50
   gravityGrowthRate: 70
@@ -30706,7 +30706,7 @@ MonoBehaviour:
   sprintMoveSpeed: 12.5
   rotationSpeed: 50
   sprintRotationSpeed: 20
-  maxSpeed: 1000
+  maxSpeed: 100
   normalGravity: -9.80000019
   maxGravity: -50
   gravityGrowthRate: 70
