@@ -1136,7 +1136,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.57901835, y: 2.5, z: 66.2149124}
+  m_LocalPosition: {x: 129.593491, y: 0, z: 26.0451965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 447104}
@@ -1769,7 +1769,7 @@ MonoBehaviour:
   triggerLayer:
     serializedVersion: 2
     m_Bits: 1024
-  isMultiTrigger: 0
+  isMultiTrigger: 1
   hasBeenTriggered: 0
   onTriggeredEvent:
     m_PersistentCalls:

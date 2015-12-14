@@ -45,6 +45,11 @@ public abstract class Enemy : MonoBehaviour
         else UpdateAnimator();
     }
 
+    protected virtual void OnDestroy()
+    {
+        audioDataComp.Dispose();
+    }
+
     public virtual void DeathEffect()
     {
         riggedModel.SetActive(false);
@@ -71,6 +76,7 @@ public abstract class Enemy : MonoBehaviour
     public virtual void DestroyMe()
     {
         this.gameObject.SetActive(false);
+        audioDataComp.Dispose();
         //Destroy(this.gameObject, 5f);
     }
 

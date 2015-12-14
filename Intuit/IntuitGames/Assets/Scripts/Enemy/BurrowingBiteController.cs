@@ -6,26 +6,33 @@ public class BurrowingBiteController : Trigger {
 
     public Animator animatorComp;
 
-    private bool triggerEnabled = false;
+    private bool isBiting = false;
+
+    protected override bool canBeTriggered
+    {
+        get
+        {
+            return !TetherManager.TetherManager.disconnected && isBiting;
+        }
+    }
 
     protected override void OnTrigger(GameObject triggerObject)
     {
-        if(triggerEnabled)
+        if(isBiting)
         {
             TetherManager.TetherManager.Disconnect(TetherManager.TetherManager.jointCount / 2);
-            hasBeenTriggered = false;
         }
     }
 
     public void Bite()
     {
-        triggerEnabled = true;
+        isBiting = true;
         this.animatorComp.SetBool("biting", true);
     }
 
     public void StopBite()
     {
-        triggerEnabled = false;
+        isBiting = false;
         this.animatorComp.SetBool("biting", false);
     }
 }
