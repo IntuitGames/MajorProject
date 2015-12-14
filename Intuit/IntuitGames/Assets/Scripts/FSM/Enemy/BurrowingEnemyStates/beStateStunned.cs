@@ -9,12 +9,12 @@ public class beStateStunned : EnemyCoreState<BurrowingEnemy> {
 
     private bool onSurface = false;
 
-    //TimerPlus stunnedTimer;
+    TimerPlus stunnedTimer;
 
     public override void Begin(BurrowingEnemy obj)
     {
 		base.Begin (obj);
-        TimerPlus.Create(obj.stunDuration, TimerPlus.Presets.OneTimeUse, () => EndStun(obj));
+        stunnedTimer = TimerPlus.Create(obj.stunDuration, TimerPlus.Presets.OneTimeUse, () => EndStun(obj));
         onSurface = obj.fullSurface;
         obj.StopAgent();
         obj.animatorComp.SetBool("stunned", true);
@@ -47,9 +47,8 @@ public class beStateStunned : EnemyCoreState<BurrowingEnemy> {
 
     void EndStun(BurrowingEnemy obj) 
     {
-        if (!obj.isDead)
-        {
-            ownerFSM.popState();
-        }
+        if (obj != null)
+            if (!obj.isDead && obj.gameObject.activeInHierarchy)
+                ownerFSM.popState();
     }
 }
