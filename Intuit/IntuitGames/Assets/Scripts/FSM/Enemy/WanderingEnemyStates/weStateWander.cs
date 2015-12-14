@@ -44,7 +44,7 @@ public class weStateWander : EnemyCoreState<WanderingEnemy> {
                 }
             case NavMeshPathStatus.PathPartial:
                 {
-                    TimerPlus.Create(3f, TimerPlus.Presets.OneTimeUse, ()=>FindNewPath(obj) );
+                    TimerPlus.Create(3f, TimerPlus.Presets.OneTimeUse, () => { if (obj != null && obj)FindNewPath(obj); });
                     break;
                 }
             case NavMeshPathStatus.PathInvalid:

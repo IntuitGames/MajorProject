@@ -448,7 +448,7 @@ MonoBehaviour:
   dropChance:
     chance: .25
   requireBothToDash: 0
-  requireNotWeakened: 0
+  requireNotWeakened: 1
   swayDuration: .200000003
   scoreValue: 10
   cutSound:
@@ -2655,7 +2655,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: requireNotWeakened
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 136102}

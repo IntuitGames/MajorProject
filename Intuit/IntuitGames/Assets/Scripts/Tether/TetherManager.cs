@@ -36,8 +36,6 @@ public class TetherManager : Manager
     public DynamicThickness dynamicThickness = new DynamicThickness();
     [SerializeField]
     private bool blendColour = true;
-    [SerializeField]
-    private bool includeOriginal = true;
 
     [System.Serializable]
     public class DynamicThickness
@@ -130,12 +128,7 @@ public class TetherManager : Manager
         {
             for (int i = 0; i < joints.Count; i++)
             {
-                if (!includeOriginal)
-                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, endColour, ((float)i).Normalize(0, jointCount, 0, 1));
-                else if (i < jointCount / 2)
-                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, startColour, Mathf.Abs(((float)i - (jointCount / 2f))).Normalize(0, jointCount / 2f, 0, 1.5f));
-                else
-                    joints[i].rendererComp.material.color = Color.Lerp(originalColour, endColour, Mathf.Abs(((float)i - (jointCount / 2f))).Normalize(0, jointCount / 2f, 0, 1.5f));
+                joints[i].rendererComp.material.color = Color.Lerp(startColour, endColour, (float)i / jointCount);
             }
         }
     }

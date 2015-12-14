@@ -31,8 +31,8 @@ GameObject:
   m_Name: SmashedRock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!1 &163546
 GameObject:
@@ -98,8 +98,8 @@ GameObject:
   m_Name: Un_SmashedRock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &423466
 Transform:
@@ -107,8 +107,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 184378}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 120.809998, y: .879999995, z: 5.69999981}
+  m_LocalRotation: {x: 0, y: -.345266193, z: 0, w: .938504815}
+  m_LocalPosition: {x: 141.029999, y: -7.59000015, z: 18.6499996}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 483012}
