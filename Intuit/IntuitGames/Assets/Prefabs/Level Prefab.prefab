@@ -25986,17 +25986,6 @@ MonoBehaviour:
   OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11452490}
-        m_MethodName: OnNextSelect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11403792}
         m_MethodName: OnSelect
         m_Mode: 0
@@ -26478,17 +26467,6 @@ MonoBehaviour:
   OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11462846}
-        m_MethodName: OnPreviousSelect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11403792}
         m_MethodName: OnSelect
         m_Mode: 0
@@ -27695,6 +27673,8 @@ MonoBehaviour:
     m_Bits: 769
   normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
   normalMass: 1
+  knockBackForce: 15
+  knockBackSpeedMulti: .300000012
   canJump: 1
   jumpCurve:
     serializedVersion: 2
@@ -29623,17 +29603,6 @@ MonoBehaviour:
   OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11462846}
-        m_MethodName: OnNextSelect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11403792}
         m_MethodName: OnSelect
         m_Mode: 0
@@ -31001,6 +30970,8 @@ MonoBehaviour:
     m_Bits: 769
   normalMaterial: {fileID: 13400000, guid: c15e868ae8480524f9bafdbf9379143d, type: 2}
   normalMass: 1
+  knockBackForce: 15
+  knockBackSpeedMulti: .300000012
   canJump: 1
   jumpCurve:
     serializedVersion: 2
@@ -33452,17 +33423,6 @@ MonoBehaviour:
   OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11452490}
-        m_MethodName: OnPreviousSelect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11403792}
         m_MethodName: OnSelect
         m_Mode: 0

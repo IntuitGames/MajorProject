@@ -77,6 +77,8 @@ using CustomExtensions;public class GameOver : BaseUI{
         // Deselect
         if (UnityEngine.EventSystems.EventSystem.current)
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+
+        enableSound = false;
     }
 
     private void SetUIAlpha(float alpha)

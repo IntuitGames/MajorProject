@@ -70,6 +70,8 @@ using CustomExtensions;public class OptionsMenu : BaseUI{
         // Deselect
         if (UnityEngine.EventSystems.EventSystem.current)
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+
+        enableSound = false;
     }
 
     public override void OnSelect(BaseEventData eventData)
