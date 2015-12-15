@@ -238,7 +238,7 @@ public class Character : MonoBehaviour, IBounce
     {
         get
         {
-            return new Vector2(targetVelocity.x, targetVelocity.z).magnitude > 0;
+            return new Vector2(targetVelocity.x, targetVelocity.z).magnitude > 0 && !isDashing && !isDashJumping && !isBouncing;
         }
     }
     public bool isGrounded { get; set; }
@@ -744,7 +744,22 @@ public class Character : MonoBehaviour, IBounce
 
         if (!GameManager.PlayerManager.constrainMovement || length < GameManager.PlayerManager.freeRadius || GameManager.TetherManager.disconnected)
         {
-            rigidbodyComp.MovePosition(transform.position + movement);
+            // Walking down a slope
+            if (isWalking && slopeAngle > 0 && lastRecoredY > transform.position.y)
+            {
+                Vector3 newMovement = movement;
+                newMovement.y = slopeAngle.Normalize(0, 90, 0, -newMovement.magnitude * 2);
+                rigidbodyComp.MovePosition(transform.position + newMovement);
+            }
+            // Walking up a slope
+            else if (isWalking && slopeAngle > 0 && lastRecoredY < transform.position.y)
+            {
+                Vector3 newMovement = movement;
+                newMovement.y = slopeAngle.Normalize(0, 90, 0, newMovement.magnitude);
+                rigidbodyComp.MovePosition(transform.position + newMovement);
+            }
+            else
+                rigidbodyComp.MovePosition(transform.position + movement);
         }
         else if (isDashing)
         {
