@@ -40,6 +40,9 @@ public class Character : MonoBehaviour, IBounce
     public PhysicMaterial normalMaterial;
     [Range(0, 10)]
     public float normalMass = 1;
+    public float knockBackForce = 15;
+    [Range(0, 1)]
+    public float knockBackSpeedMulti = 0.3f;
 
     // JUMP
     [Header("Jump"), SerializeField]
@@ -213,6 +216,7 @@ public class Character : MonoBehaviour, IBounce
             if (isHeavy && isSprinting && isGrounded) value = (heavyMoveSpeed / baseMoveSpeed) * sprintMoveSpeed;
             if (!isGrounded) value *= aerialControl;
             if (isWeakened) value *= GameManager.PlayerManager.weakenedMoveSpeedMulti;
+            if (isKnockedBack) value *= knockBackSpeedMulti;
             return value;
         }
     }
@@ -813,7 +817,9 @@ public class Character : MonoBehaviour, IBounce
         if (!isKnockedBack)
         {
             isKnockedBack = true;
-            AddConstrainedForce(direction, ForceMode.Impulse);
+            Vector3 newDirection = direction;
+            newDirection.y = direction.magnitude;
+            AddConstrainedForce(newDirection.normalized * knockBackForce, ForceMode.Impulse);
             animatorComp.SetTrigger("KnockBack");
             TimerPlus.Create(0.3f, () => isKnockedBack = false);
         }
@@ -901,6 +907,10 @@ public class Character : MonoBehaviour, IBounce
             else // Below
             {
                 isBouncing = false;
+
+                if (GetPartner().isHeavy)
+                    Knockback(-Vector3.forward);
+
                 return;
             }
         }
