@@ -273,10 +273,7 @@ public class Character : MonoBehaviour, IBounce
     public bool isKnockedBack { get; set; }
     public bool isSuspended { get; set; }
     public bool isSliding { get; set; }
-    public bool isSlopeSliding
-    {
-        get { return isGrounded && isHeavy && slopeAngle > heavySlopeAngle; }
-    }
+    public bool isSlopeSliding { get; set; }
 
     // EVENTS
     public event System.Action<bool> OnGrounded = delegate { };
@@ -335,12 +332,6 @@ public class Character : MonoBehaviour, IBounce
         OnSuspended += OnSuspendedChange;
     }
 
-    private void OnSuspendedChange(bool newSuspended)
-    {
-        if (newSuspended)
-            rigidbodyComp.velocity *= 0.25f;
-    }
-
     void Update()
     {
         // Check for airborne changes
@@ -360,6 +351,12 @@ public class Character : MonoBehaviour, IBounce
                 && transform.position.y + 5 < GameManager.TetherManager.HighestPoint();
         if (oldSuspended != isSuspended)
             OnSuspended(isSuspended);
+
+        // Check for slope sliding changes
+        bool oldSlopeSliding = isSlopeSliding;
+        isSlopeSliding = isGrounded && isHeavy && slopeAngle > heavySlopeAngle;
+        if (oldSlopeSliding != isSlopeSliding)
+            audioDataComp.PlaySliding(isSlopeSliding);
 
         // Apply any changes to timer lengths
         dashTimer.ModifyLength(dashLength);
@@ -778,7 +775,7 @@ public class Character : MonoBehaviour, IBounce
         {
             // Dot value = 1 when facing towards the tether | 0 = perpendicular to the tether | -1 = facing away from the tether
             //float dotValue = Vector3.Dot(movement.normalized, GameManager.TetherManager.GetStartAndEndMoveDirection(isPlayerOne).normalized);
-            Vector3 addVec = Vector3.ClampMagnitude(GetPartnerPosition() + (movement * GameManager.PlayerManager.freeRadius) - transform.position, movement.magnitude);
+            Vector3 addVec = Vector3.ClampMagnitude(GetPartnerPosition() + (movement * (GameManager.PlayerManager.freeRadius + 5)) - transform.position, movement.magnitude);
             rigidbodyComp.MovePosition(transform.position + addVec);
         }
     }
@@ -839,6 +836,12 @@ public class Character : MonoBehaviour, IBounce
             jumpDashFlag = false;
             isHeavyHighJump = false;
         }
+    }
+
+    private void OnSuspendedChange(bool newSuspended)
+    {
+        if (newSuspended)
+            rigidbodyComp.velocity *= 0.25f;
     }
 
     #endregion

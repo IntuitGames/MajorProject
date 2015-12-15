@@ -30,6 +30,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
     public SoundClip collide = new SoundClip();
     public SoundClip heavyOn = new SoundClip();
     public SoundClip heavyOff = new SoundClip();	public SoundClip groundPound = new SoundClip();
+    public SoundClip sliding = new SoundClip();
 
     // FMOD PARAMS
     private float playerMoveSpeed
@@ -58,6 +59,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         collide.Initialize();
         heavyOn.Initialize();
         heavyOff.Initialize();		groundPound.Initialize();
+        sliding.Initialize();
     }
 
     void Update()
@@ -70,6 +72,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         collide.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
         heavyOn.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
         heavyOff.UpdateParameter(1, GameManager.TetherManager.weakenedParam);
+        sliding.UpdateParameter(0, GameManager.TetherManager.weakenedParam);
     }
 
     public bool ConditionalAudio(System.Action method, bool condition)
@@ -116,7 +119,16 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
             heavyOn.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
         else
             heavyOff.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
-    }	public void PlayGroundPound()	{		float[] parameters = { GameManager.TetherManager.weakenedParam, 0 };		groundPound.PlayAttached (audioSource, AudioManager.GetFMODAttribute (transform, rigidbodyComp.velocity), volume, parameters);	}
+    }	public void PlayGroundPound()	{		float[] parameters = { GameManager.TetherManager.weakenedParam, 0 };		groundPound.PlayAttached(audioSource, AudioManager.GetFMODAttribute (transform, rigidbodyComp.velocity), volume, parameters);	}
+
+    public void PlaySliding(bool isOn)
+    {
+        float[] parameters = { GameManager.TetherManager.weakenedParam, 0 };
+        if (isOn)
+            sliding.PlayAttached(audioSource, AudioManager.GetFMODAttribute(transform, rigidbodyComp.velocity), volume, parameters);
+        else
+            sliding.TriggerCue(0);
+    }
 
     public void Dispose()
     {
@@ -126,6 +138,7 @@ public class CharacterAudio : MonoBehaviour, System.IDisposable
         jump.Dispose();
         dash.Dispose();
         collide.Dispose();
+        sliding.Dispose();
     }
 
     #endregion

@@ -2,8 +2,9 @@
     public float victoryDelay = 0.5f;
     public bool loadNewScene = true;
     public int sceneIndex = 0;
+    public bool noDashingRequired = true;
     public bool requireBothToDash = false;
-    public bool requireNotWeakened = false;
+    public bool requireNotWeakened = true;
     public SoundClip cutSound = new SoundClip(AudioManager.Player.FMOD, AudioManager.Type.SoundEffect, AudioManager.Group.Game);
 
     protected override bool canBeTriggered
@@ -11,7 +12,9 @@
         get
         {
             if (requireNotWeakened && GameManager.PlayerManager.isWeakened) return false;
-            if (requireBothToDash)
+            if (noDashingRequired)
+                return true;
+            else if (requireBothToDash)
                 return GameManager.PlayerManager.character1.isDashing && GameManager.PlayerManager.character2.isDashing;
             else
                 return GameManager.PlayerManager.character1.isDashing || GameManager.PlayerManager.character2.isDashing;

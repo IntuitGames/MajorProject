@@ -31,6 +31,8 @@ public class SmoothCameraFollow : MonoBehaviour
     public float initialFOV;
     [System.NonSerialized]
     public float targetFOV;
+    [System.NonSerialized]
+    public Vector3 initialOverrideOffset;
 
     void Awake()
     {
@@ -40,6 +42,7 @@ public class SmoothCameraFollow : MonoBehaviour
         initialDistance = distance;
         initialFOV = cameraComp.fieldOfView;
         targetFOV = initialFOV;
+        initialOverrideOffset = overridenOffsetDirection;
     }
 
     void Update()

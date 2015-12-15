@@ -7715,6 +7715,8 @@ GameObject:
   - 114: {fileID: 11441712}
   - 114: {fileID: 11414714}
   - 114: {fileID: 11439526}
+  - 114: {fileID: 11470774}
+  - 114: {fileID: 11451704}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8733,7 +8735,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 109474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 206.660004, y: 59.2799988, z: 36.5099983}
+  m_LocalPosition: {x: 119.300003, y: 1.00999999, z: -2.07999992}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 474552}
@@ -9633,7 +9635,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116992}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 206.789993, y: 59.2799988, z: 31.4200001}
+  m_LocalPosition: {x: 130.649994, y: 1.00999999, z: -2.3499999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 470656}
@@ -11576,9 +11578,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 104986}
-  m_LocalRotation: {x: .164026573, y: -.797991455, z: .250187993, w: .523173869}
-  m_LocalPosition: {x: 168.361877, y: 30.1399994, z: 14.710001}
-  m_LocalScale: {x: .200000003, y: .200000003, z: 102.080032}
+  m_LocalRotation: {x: .005320122, y: -.529584885, z: .00332155661, w: .848233759}
+  m_LocalPosition: {x: 130.291885, y: 1.005, z: -2.17499995}
+  m_LocalScale: {x: .200000003, y: .200000003, z: .797224402}
   m_Children: []
   m_Father: {fileID: 469278}
   m_RootOrder: 300
@@ -12973,9 +12975,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180784}
-  m_LocalRotation: {x: 0, y: -.0127660017, z: -0, w: .99991852}
-  m_LocalPosition: {x: 206.725006, y: 59.2799988, z: 33.9650002}
-  m_LocalScale: {x: .200000003, y: .200000003, z: 5.09165812}
+  m_LocalRotation: {x: 0, y: -.698648095, z: -0, w: .715465486}
+  m_LocalPosition: {x: 124.974998, y: 1.00999999, z: -2.21499991}
+  m_LocalScale: {x: .200000003, y: .200000003, z: 11.3532019}
   m_Children: []
   m_Father: {fileID: 494334}
   m_RootOrder: 3
@@ -13009,9 +13011,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164048}
-  m_LocalRotation: {x: -.228249758, y: .524246097, z: .148296013, w: .80689311}
-  m_LocalPosition: {x: 163.363113, y: 30.1399994, z: 17.2549992}
-  m_LocalScale: {x: .200000003, y: .200000003, z: 111.256737}
+  m_LocalRotation: {x: -.00434421282, y: -.742898881, z: -.00482139969, w: .669372141}
+  m_LocalPosition: {x: 119.683113, y: 1.005, z: -2.03999996}
+  m_LocalScale: {x: .200000003, y: .200000003, z: .770449996}
   m_Children: []
   m_Father: {fileID: 469278}
   m_RootOrder: 150
@@ -26814,6 +26816,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
+  sliding:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 104d6fe66fe5cc24890d6d0dad8f93f7, type: 2}
 --- !u!114 &11408028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27271,8 +27281,8 @@ MonoBehaviour:
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 36fbdedf459d15e4b8d69076cd75b3ed, type: 2}
   disconnected: 0
-  directLength: 5.09165812
-  tetherLength: 223.204315
+  directLength: 11.3532019
+  tetherLength: 11.4352283
   collidingJointCount: 0
 --- !u!114 &11408618
 MonoBehaviour:
@@ -28758,6 +28768,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 62791f2eca5516046ab7474d2d9cd366, type: 2}
+  sliding:
+    player: 2
+    type: 0
+    group: 2
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 11400000, guid: 104d6fe66fe5cc24890d6d0dad8f93f7, type: 2}
 --- !u!114 &11418546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -29360,6 +29378,8 @@ MonoBehaviour:
   followCamera: {fileID: 11484838}
   backgroundMusic: {fileID: 11414714}
   audioSourceComp: {fileID: 8244056}
+  bloomComp: {fileID: 11470774}
+  vignetteComp: {fileID: 11451704}
   unsnapCameraModes: 2
   isDynamic: 0
   dynamicZoom: 1
@@ -29376,6 +29396,14 @@ MonoBehaviour:
   shakeFrequency: .0250000004
   refocusToAlive: 1
   singleCamZoom: 6
+  dynamicVignette: 1
+  vignetteSmoothSpeed: .5
+  normalVignette: .150000006
+  disconnectedVignette: 4
+  swoopCamera: 1
+  swoopThreshold: 8
+  swoopCap: 23
+  maxSwoopValue: .200000003
 --- !u!114 &11423108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -31444,7 +31472,7 @@ MonoBehaviour:
   strainedColour: {r: 1, g: 0, b: 0, a: .392156869}
   closeDistance: 10
   farDistance: 13
-  distanceBetweenObjects: 111.256737
+  distanceBetweenObjects: .770449996
   rendererComp: {fileID: 2397756}
 --- !u!114 &11438544
 MonoBehaviour:
@@ -32308,7 +32336,7 @@ MonoBehaviour:
   strainedColour: {r: 1, g: 0, b: 0, a: 1}
   closeDistance: 10
   farDistance: 13
-  distanceBetweenObjects: 5.09165812
+  distanceBetweenObjects: 11.3532019
   rendererComp: {fileID: 2382126}
 --- !u!114 &11445340
 MonoBehaviour:
@@ -32897,6 +32925,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isColliding: 0
   _collisionCount: 0
+--- !u!114 &11451704
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd6d4281e5d7cd44d8c6e38bc2c1b8d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 0
+  intensity: .150000006
+  chromaticAberration: .200000003
+  axialAberration: .5
+  blur: 0
+  blurSpread: .75
+  luminanceDependency: .25
+  blurDistance: 2.5
+  vignetteShader: {fileID: 4800000, guid: 627943dc7a9a74286b70a4f694a0acd5, type: 3}
+  separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1, type: 3}
+  chromAberrationShader: {fileID: 4800000, guid: 2b4f29398d9484ccfa9fd220449f5eee,
+    type: 3}
 --- !u!114 &11452198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35281,6 +35332,23 @@ MonoBehaviour:
   passingThroughWeakSpot: 0
   disconnectedEnd: 0
   angle: 0
+--- !u!114 &11470774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4975a6e437fc3b149a8cd508ce5bdd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threshold: .349999994
+  intensity: .150000006
+  blurSize: 1
+  blurIterations: 1
+  blurType: 0
+  fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
 --- !u!114 &11470884
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35621,7 +35689,7 @@ MonoBehaviour:
   strainedColour: {r: 1, g: 0, b: 0, a: .392156869}
   closeDistance: 10
   farDistance: 13
-  distanceBetweenObjects: 102.080032
+  distanceBetweenObjects: .797224402
   rendererComp: {fileID: 2357218}
 --- !u!114 &11474148
 MonoBehaviour:
