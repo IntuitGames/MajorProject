@@ -2288,7 +2288,7 @@ MonoBehaviour:
     player: 2
     type: 0
     group: 3
-    volume: .5
+    volume: 1
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: fd8600d3ce0f1c745ae25cf7b11578cd, type: 2}
@@ -2316,6 +2316,14 @@ MonoBehaviour:
     pitch: 1
     unityClip: {fileID: 0}
     FMODAsset: {fileID: 11400000, guid: 23800f111170a1f478e8448d678eb598, type: 2}
+  stunned:
+    player: 2
+    type: 0
+    group: 0
+    volume: 1
+    pitch: 1
+    unityClip: {fileID: 0}
+    FMODAsset: {fileID: 0}
 --- !u!114 &11481602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3789,6 +3797,10 @@ Prefab:
       propertyPath: parentEnemy
       value: 
       objectReference: {fileID: 11452554}
+    - target: {fileID: 0}
+      propertyPath: vocalise.volume
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 127518}
