@@ -314,7 +314,7 @@ InputManager:
     descriptiveName: Player 1 dash joystick and keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: 
+    positiveButton: joystick 1 button 5
     altNegativeButton: 
     altPositiveButton: left ctrl
     gravity: 1000
@@ -346,7 +346,7 @@ InputManager:
     descriptiveName: Player 1 heavy keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: 
+    positiveButton: joystick 1 button 4
     altNegativeButton: 
     altPositiveButton: left alt
     gravity: 1000
@@ -522,7 +522,7 @@ InputManager:
     descriptiveName: Player 2 dash keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: 
+    positiveButton: joystick 2 button 5
     altNegativeButton: 
     altPositiveButton: '[1]'
     gravity: 1000
@@ -554,7 +554,7 @@ InputManager:
     descriptiveName: Player 2 heavy keyboard
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: 
+    positiveButton: joystick 2 button 4
     altNegativeButton: 
     altPositiveButton: '[2]'
     gravity: 1000

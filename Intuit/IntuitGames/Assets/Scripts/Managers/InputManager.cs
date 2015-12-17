@@ -31,8 +31,8 @@ public class InputManager : Manager
 
     // Input Booleans
     [System.NonSerialized] public InputData jumpData = new InputData(jumpStr);
-    [System.NonSerialized] public InputData dashData = new InputData(dashStr, true);
-    [System.NonSerialized] public InputData heavyData = new InputData(heavyStr, true);
+    [System.NonSerialized] public InputData dashData = new InputData(dashStr);
+    [System.NonSerialized] public InputData heavyData = new InputData(heavyStr);
     [System.NonSerialized] public InputData pauseData = new InputData(pauseStr);
     [System.NonSerialized] public InputData unpauseData = new InputData(unpauseStr);
     [System.NonSerialized] public InputData sprintData = new InputData(sprintStr);
